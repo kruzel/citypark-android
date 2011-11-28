@@ -82,5 +82,6 @@
 <string name="first_name">first name</string>
 <string name="license_plate">license plate</string>
 <string name="register">Register</string>
+<string name="payment_method">Payment Method</string>
     
 </resources>

@@ -65,6 +65,14 @@
             android:hint="@string/license_plate" android:inputType="textCapCharacters"/>
 
         <Button
+            android:id="@+id/id_payment_method"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_method" 
+            android:layout_marginTop="10dp" 
+            android:layout_gravity="center_horizontal" android:clickable="true" android:onClick="OnPaymenMethodClick"/>
+
+        <Button
             android:id="@+id/id_register"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
