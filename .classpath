@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="lib" path="lib/achartengine-0.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/acra-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/osmdroid-android-3.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-android-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/libssrckdtree-j-1.0.2.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
