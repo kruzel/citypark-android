@@ -75,4 +75,12 @@
 <string name="geocodeconnecterror">No response from geocoding service.</string>
 <string name="tts_msg">Spoken directions require text to speech to be installed. Install now?</string>
 <string name="tts_msg_title">Text to Speech</string>
+
+<string name="email_hint">user@domain</string>
+<string name="password">password</string>
+<string name="last_name">last name</string>
+<string name="first_name">first name</string>
+<string name="license_plate">license plate</string>
+<string name="register">Register</string>
+    
 </resources>

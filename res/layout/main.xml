@@ -2,6 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent">
+  
 <org.osmdroid.views.MapView
 android:id="@+id/mapview"
 android:layout_width="fill_parent" 
@@ -9,6 +10,16 @@ android:layout_height="fill_parent"
 android:enabled="true"
 android:clickable="true"
 />
+
+
+<ImageView
+    android:id="@+id/imageViewLogo"
+    android:layout_width="fill_parent"
+    android:layout_height="40dp"
+    android:layout_gravity="center_horizontal"
+    android:gravity="top"
+    android:src="@drawable/logo" />
+
 <LinearLayout
 android:id="@+id/directions_layout"
 android:focusableInTouchMode="true"
@@ -20,6 +31,7 @@ android:gravity="bottom"
 android:paddingLeft="5px"
 android:paddingTop="5px"
 android:paddingRight="5px">
+
 <com.citypark.view.StepView
 android:layout_width="fill_parent"
 android:id="@+id/directions_overlay"

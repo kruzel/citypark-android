@@ -80,6 +80,11 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	private NavigationService mBoundService;
 	/** Receiver for navigation updates. **/
 	private NavigationReceiver mBroadcastReceiver = new NavigationReceiver();
+	
+	/** user info**/
+	private String strEmail = null;
+	private String strPassword = null;
+	
 	/** Connection to navigation service. **/
 	private ServiceConnection mConnection = new ServiceConnection() {
 	    @Override
@@ -115,6 +120,13 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		}
 		registerReceiver(mBroadcastReceiver, 
 				new IntentFilter(getString(R.string.navigation_intent)));
+		
+		strEmail = mPrefs.getString("email", null);
+        strPassword = mPrefs.getString("password", null);
+        
+        if(strEmail == null || strPassword == null) {
+        	LiveRouteMap.this.startActivity(new Intent(LiveRouteMap.this, Register.class));
+        }
 	}
 	
 	@Override
