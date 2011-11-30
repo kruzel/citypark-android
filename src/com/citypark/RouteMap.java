@@ -439,6 +439,8 @@ public class RouteMap extends OpenStreetMapActivity {
 									new PGeoPoint(self.getLatitude(), self.getLongitude()));
 							}
 					}
+					
+					//TODO switch to pay activity
 				}
 			});
 			break;

@@ -1,9 +1,20 @@
+Central Park - garages
+IPI - street signs
+
+hosting
+-------
+netvision
+
+user CRUD
+---------
+	
+
 garages on map
 --------------
 	need to add our garages list to LiveMarkers and Garages classes and show them (not only OSM)
 	
 	OSM query example
-	 - http://jxapi.CityPark.org/xapi/api/0.6/node[amenity=garage][bbox=34.978609,32.781483,34.996061,32.795951]
+	 - http://api.CityPark.com/xapi/api/0.6/node[amenity=garage][bbox=34.978609,32.781483,34.996061,32.795951]
 	 
 	 <?xml version='1.0' standalone='no'?>
 	  <osm version='0.6' generator='xapi: CityPark Extended API' 
@@ -30,7 +41,7 @@ on-street search time query
 	also show on map, need new classes
 	
 	use API similar to OSM 
-	 - http://jxapi.CityPark.org/xapi/api/0.6/node[amenity=on-street_parking][bbox=34.978609,32.781483,34.996061,32.795951]
+	 - http://api.CityPark.com/xapi/api/0.6/node[amenity=on-street_parking][bbox=34.978609,32.781483,34.996061,32.795951]
 	 
 	 <?xml version='1.0' standalone='no'?>
 	  <osm version='0.6' generator='xapi: CityPark Extended API' 

@@ -83,5 +83,13 @@
 <string name="license_plate">license plate</string>
 <string name="register">Register</string>
 <string name="payment_method">Payment Method</string>
+
+<string name="reminder_button">Remind Me</string>
+
+<string name="pay">pay</string>
+
+<string name="payment_progress">Payment in progress</string>
+
+<string name="skip_payment">Skip</string>
     
 </resources>

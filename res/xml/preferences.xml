@@ -6,11 +6,11 @@
                         android:title="Route Provider"
                         android:summary="Select route provider"
                         android:key="router"
-                        android:defaultValue="CycleStreets"
+                        android:defaultValue="MapQuest"
                         android:entries="@array/routerArray"
                         android:entryValues="@array/routerValues" />
                         <ListPreference
-                        android:title="Journey Type (CycleStreets Routes)"
+                        android:title="Journey Type (CityPark Routes)"
                         android:summary="Fast, quiet or balanced route"
                         android:key="cyclestreetsJourneyPref"
                         android:defaultValue="balanced"

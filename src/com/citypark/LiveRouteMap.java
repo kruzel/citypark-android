@@ -430,6 +430,9 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					}
 					showStep();
 					traverse(current);
+					
+					//TODO rotate map to north
+					
 				}
 			}
 		}

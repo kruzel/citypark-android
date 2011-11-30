@@ -19,23 +19,19 @@
 <item>Shortest</item>
 </string-array>
 <string-array name="routerArray">
-<item>CycleStreets (UK only)</item>
 <item>MapQuest (Worldwide)</item>
 <item>Google (US only)</item>
 </string-array>
 <string-array name="routerValues">
-<item>CycleStreets</item>
 <item>MapQuest</item>
 <item>Google</item>
 </string-array>
 <string-array name="tileEntries">
     <item>MapQuest</item>
-    <item>Cyclemap</item>
     <item>Default</item>
 </string-array>
 <string-array name="tileValues">
     <item>MapquestOSM</item>
-    <item>CycleMap</item>
     <item>Mapnik</item>
 </string-array>
 </resources>
