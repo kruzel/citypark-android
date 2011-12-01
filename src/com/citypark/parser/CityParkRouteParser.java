@@ -1,5 +1,11 @@
 package com.citypark.parser;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import org.xml.sax.Attributes;
+
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.RootElement;
@@ -10,12 +16,6 @@ import android.util.Xml;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
-
-import org.xml.sax.Attributes;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 /**
  * An xml parser for routes from other BikeRoutes.

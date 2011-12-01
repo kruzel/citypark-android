@@ -5,6 +5,7 @@ package com.citypark.parser;
 
 import android.sax.Element;
 import android.sax.EndElementListener;
+import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.sax.StartElementListener;
 import android.util.Log;
@@ -42,6 +43,7 @@ import java.util.List;
  * @version Jun 26, 2010
  */
 public class CityParkGaragesParser extends XMLParser {
+	static final String XMLNS = "http://tempuri.org/";
 
 	/**
 	 * @param feedUrl
@@ -50,25 +52,47 @@ public class CityParkGaragesParser extends XMLParser {
 		super(feedUrl);
 	}
 
+	//TODO:make it nicer
+	public class Point{
+		double latitude;
+		double longitude;
+		public double getLatitude() {
+			return latitude;
+		}
+		public void setLatitude(double latitude) {
+			this.latitude = latitude;
+		}
+		public double getLongitude() {
+			return longitude;
+		}
+		public void setLongitude(double longitude) {
+			this.longitude = longitude;
+		}
+		public PGeoPoint getPGeoPoint(){
+			return new PGeoPoint(latitude,longitude);
+		}
+		
+	}
 
 	public List<PGeoPoint> parse() {
-			final RootElement root = new RootElement("ArrayOfParking");
+			final Point p = new Point();
+
+			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
 			final List<PGeoPoint> marks = new ArrayList<PGeoPoint>();
-			final Element node = root.getChild("Parking");
+			final Element node = root.getChild(XMLNS,"Parking");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
-			node.setStartElementListener(new StartElementListener() {
-				@Override
-				public void start(final Attributes attributes) {
-					marks.add(new PGeoPoint(
-							Double.parseDouble(attributes.getValue("Latitude")),
-							Double.parseDouble(attributes.getValue("Longitude"))));
+			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
+			node.getChild(XMLNS,"Longitude").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {				
+					p.setLongitude(Double.parseDouble(body));
 				}
-
 			});
-			node.setEndElementListener(new EndElementListener() {
-				@Override
-				public void end() {
+			
+			node.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {	
+					p.setLatitude(Double.parseDouble(body));
+					marks.add(p.getPGeoPoint());
 				}
 			});
 			try {
