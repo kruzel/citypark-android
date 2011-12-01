@@ -3,22 +3,19 @@
  */
 package com.citypark.parser;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.xml.sax.SAXException;
+
 import android.sax.Element;
-import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
-import android.sax.StartElementListener;
 import android.util.Log;
 import android.util.Xml;
 
 import com.citypark.utility.route.PGeoPoint;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This file is part of BikeRoute.
@@ -53,9 +50,12 @@ public class CityParkGaragesParser extends XMLParser {
 	}
 
 	//TODO:make it nicer
-	public class Point{
+	public class GaragePoint{
 		double latitude;
 		double longitude;
+		double price;
+		String name;
+		
 		public double getLatitude() {
 			return latitude;
 		}
@@ -71,18 +71,35 @@ public class CityParkGaragesParser extends XMLParser {
 		public PGeoPoint getPGeoPoint(){
 			return new PGeoPoint(latitude,longitude);
 		}
-		
+		public void setPrice(double price) {
+			this.price = price;
+		}
+		public double getPrice(){
+			return price;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getName(){
+			return name;
+		}
 	}
 
-	public List<PGeoPoint> parse() {
-			final Point p = new Point();
+	public List<GaragePoint> parse() {
+			final GaragePoint p = new GaragePoint();
 
 			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
-			final List<PGeoPoint> marks = new ArrayList<PGeoPoint>();
+			final List<GaragePoint> marks = new ArrayList<GaragePoint>();
 			final Element node = root.getChild(XMLNS,"Parking");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
 			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
+			node.getChild(XMLNS,"Name").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {	
+					p.setName(body);
+				}
+			});
+			
 			node.getChild(XMLNS,"Longitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {				
 					p.setLongitude(Double.parseDouble(body));
@@ -92,16 +109,23 @@ public class CityParkGaragesParser extends XMLParser {
 			node.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setLatitude(Double.parseDouble(body));
-					marks.add(p.getPGeoPoint());
+					marks.add(p);
 				}
 			});
+			
+//			node.getChild(XMLNS,"Price").setEndTextElementListener(new EndTextElementListener() {
+//				public void end(String body) {	
+//					p.setPrice(Double.parseDouble(body));
+//				}
+//			});
+			
 			try {
 				Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 						.getContentHandler());
 			} catch (IOException e) {
-				Log.e(e.getMessage(), "OSMParser - " + feedUrl);
+				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
 			} catch (SAXException e) {
-				Log.e(e.getMessage(), "OSMParser - " + feedUrl);
+				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
 			}
 			return marks;
 	}
