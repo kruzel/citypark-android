@@ -8,7 +8,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 
 import com.citypark.utility.Parking;
-import com.citypark.utility.Garages;
+import com.citypark.utility.GaragesOverlayHandler;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.RouteManager;
 import com.citypark.utility.route.RouteManager.GeocodeConnectException;
@@ -134,7 +134,7 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
         				msg = R.id.result_ok;
         				try {
         					planner.setStart(startAddressInput);
-        					planner.setDest(Garages.getNearest(planner.getStart(), mAct.getContext()));	
+        					planner.setDest(GaragesOverlayHandler.getNearest(planner.getStart(), mAct.getContext()));	
         				} catch (GeocodeException e) {
 							msg = R.id.geocodeerror;
         				}  catch (GeocodeConnectException e) {

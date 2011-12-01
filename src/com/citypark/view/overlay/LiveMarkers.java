@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import com.citypark.utility.Garages;
+import com.citypark.utility.GaragesOverlayHandler;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -71,7 +71,7 @@ public class LiveMarkers implements OnItemGestureListener<OverlayItem> {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				markers = Garages.getMarkers(p, RADIUS, context);
+				markers = GaragesOverlayHandler.getMarkers(p, RADIUS, context);
 				LiveMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};

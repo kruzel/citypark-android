@@ -79,7 +79,7 @@ import java.util.ListIterator;
 
 public class RouteMap extends OpenStreetMapActivity {
 
-	/** Garages markers overlay. */
+	/** GaragesOverlayHandler markers overlay. */
 	private LiveMarkers garages;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;

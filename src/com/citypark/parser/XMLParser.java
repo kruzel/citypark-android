@@ -60,13 +60,16 @@ public class XMLParser {
 	        final HttpResponse response = new DefaultHttpClient().execute(request);
 	        Header ce = response.getFirstHeader("Content-Encoding");
 	        String contentEncoding = null;
+	      
+	        InputStream instream = response.getEntity().getContent();
+	        
 	        if (ce != null) {
-	        	contentEncoding = ce.getValue();
-	        }
-	         InputStream instream = response.getEntity().getContent();
-			if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip")) {
-			    instream = new GZIPInputStream(instream);
+	        	 contentEncoding = ce.getValue();
+	        	 if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip")) {
+				    instream = new GZIPInputStream(instream);
+				}
 			}
+	        
 			return instream;
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);

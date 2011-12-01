@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.parser.CityParkGaragesParser;
 import com.citypark.parser.OSMParser;
 import com.citypark.R;
 import org.osmdroid.util.GeoPoint;
@@ -37,8 +38,8 @@ import java.util.List;
  * @version Jun 21, 2010
  */
 
-public final class Garages {
-	private Garages() {
+public final class GaragesOverlayHandler {
+	private GaragesOverlayHandler() {
 	}
 	
 	/**
@@ -79,9 +80,17 @@ public final class Garages {
 
 	public static List<OverlayItem> getMarkers(final GeoPoint p,
 			final double distance, final Context mAct) {
-		final String query = mAct.getString(R.string.stands_api) + getOSMBounds(getBounds(p, distance));
+		
 		final List<OverlayItem> markers = new ArrayList<OverlayItem>();
-		final OSMParser parser = new OSMParser(query);
+		
+		//final String query = mAct.getString(R.string.stands_api) + getOSMBounds(getBounds(p, distance));
+		//final OSMParser parser = new OSMParser(query);
+		
+		//use CityPark to find garages
+		//final String query = mAct.getString(R.string.citypark_garages_api) + "latitude="+ p.getLatitudeE6() + "&longitude=" + p.getLongitudeE6() + "&distance=" + distance;
+		final String query = mAct.getString(R.string.citypark_garages_api) + "latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "1000";
+		final CityParkGaragesParser parser = new CityParkGaragesParser(query);
+		
 		//final HotspotPlace hotspot = new HotspotPlace(0, 20);
 		final Drawable markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_default);
 
