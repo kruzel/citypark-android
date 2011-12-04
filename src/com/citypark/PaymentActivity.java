@@ -5,19 +5,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import com.citypark.utility.Parking;
 import com.citypark.utility.PayTask;
 import com.citypark.utility.PaymentListener;
 import com.citypark.utility.StopPaymentTask;
 
-public class PayActivity extends Activity implements PaymentListener {
+public class PaymentActivity extends Activity implements PaymentListener {
 	
-	//TODO add initialization from preferences file to cover case app is restarting
-	
+	private ToggleButton tgBtnPay = null;
+	private ToggleButton tgBtnRemind = null;
 	private TextView txtProgressMsg = null;
 	private ProgressBar progBarPayment = null;
 	private PayTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
+	
+	/** Parking manager. */
+	Parking parking_manager = null;
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -25,13 +30,22 @@ public class PayActivity extends Activity implements PaymentListener {
 		
 		setContentView(R.layout.pay);
 		
+		// Initialize parking manager
+		parking_manager = new Parking(this);
+		
+		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
 		txtProgressMsg = (TextView) findViewById(R.id.textViewPaymentMessage);
 		progBarPayment = (ProgressBar) findViewById(R.id.progressBarPayment);
+		
+		boolean isPaymentActive = parking_manager.isPaymentActive();
+		
+		tgBtnPay.setChecked(isPaymentActive);
+		
 	}
 	
 	public void OnPay(View view) {
 		
-		if(view.isSelected()){
+		if(parking_manager.isPaymentActive()){
 			txtProgressMsg.setVisibility(View.VISIBLE);
 			txtProgressMsg.setText(R.string.payment_progress);
 			progBarPayment.setVisibility(View.VISIBLE);
@@ -64,12 +78,24 @@ public class PayActivity extends Activity implements PaymentListener {
 	@Override
 	public void PaymentComplete(Boolean success) {
 		
-         if(success)
-        	 txtProgressMsg.setText(R.string.payment_succeeded);
-         else
-        	 txtProgressMsg.setText(R.string.payment_failes);
-         
-         progBarPayment.setVisibility(View.INVISIBLE);
+		progBarPayment.setVisibility(View.INVISIBLE);
+		
+		if(parking_manager.isPaymentActive()) {
+			 if(success){
+				 parking_manager.setPaymentEnd();
+				 txtProgressMsg.setText(R.string.payment_succeeded);
+			 }
+	         else
+	        	 txtProgressMsg.setText(R.string.payment_failes);
+			 
+		} else {
+			 if(success) {
+				 parking_manager.setPaymentStart();
+				 txtProgressMsg.setText(R.string.payment_succeeded);
+			 }
+	         else
+	        	 txtProgressMsg.setText(R.string.payment_failes);
+		}
          
 	}
 	

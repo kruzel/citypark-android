@@ -1,8 +1,10 @@
 package com.citypark.utility;
 
+import org.osmdroid.util.GeoPoint;
+
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.osmdroid.util.GeoPoint;
+import android.text.format.Time;
 
 /**
  * A class to handle parking a bike.
@@ -38,6 +40,11 @@ public class Parking {
 	private static final String LAT = "lat";
 	/** Preference key (longitude) **/
 	private static final String LNG = "lng";
+	/** Preference key (payment start time) **/
+	private static final String PAYMENT_START_TIME = "paystarttime";
+	/** Preference key (alarm target time) **/
+	private static final String ALARM_TIME = "alarmtime";
+	
 	/** Shared preferences object. **/
 	private final SharedPreferences settings;
 	/** Preferences editor. **/
@@ -97,5 +104,33 @@ public class Parking {
 		final int lng = settings.getInt(LNG, -1);
 		return new GeoPoint(lat, lng);
 	}
+	
+	/**
+	 * set payment start time.
+	 */
+	public final void setPaymentStart() {
+		Time now = new Time();
+		now.setToNow();
+		editor.putString(PAYMENT_START_TIME, now.toString());
+		editor.commit();
+	}
 
+	/**
+	 * unset payment.
+	 */
+
+	public final void setPaymentEnd() {
+		editor.remove(PAYMENT_START_TIME);
+		editor.commit();
+	}
+
+	/**
+	 * Check if parking is active.
+	 * 
+	 * @return a boolean indicating if values are set payment
+	 */
+
+	public final boolean isPaymentActive() {
+		return settings.contains(PAYMENT_START_TIME);
+	}
 }

@@ -406,6 +406,8 @@ public class RouteMap extends OpenStreetMapActivity {
 			break;
 		case R.id.unpark:
 			parking_manager.unPark();
+			intent = new Intent(this, PaymentActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.center:
 			RouteMap.this.mLocationOverlay.followLocation(true);
@@ -445,7 +447,7 @@ public class RouteMap extends OpenStreetMapActivity {
 					}
 				}
 			});
-			intent = new Intent(this, PayActivity.class);
+			intent = new Intent(this, PaymentActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.directions:

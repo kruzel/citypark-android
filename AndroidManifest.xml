@@ -54,7 +54,7 @@
         android:finishOnTaskLaunch="true" />
 	   <service android:exported="false" android:name=".service.NavigationService" 
 	       android:enabled="true" android:label="Router"></service>
-	   <activity android:name="PayActivity" android:theme="@android:style/Theme.Black.NoTitleBar" 
+	   <activity android:name=".PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" 
 	       android:label="Pay"></activity>
 </application>
 
