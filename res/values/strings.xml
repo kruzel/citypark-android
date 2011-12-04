@@ -84,12 +84,13 @@
 <string name="register">Register</string>
 <string name="payment_method">Payment Method</string>
 
-<string name="reminder_button">Remind Me</string>
-
-<string name="pay">pay</string>
-
+<string name="reminder_button">Set Reminder</string>
+<string name="start_payment">Start Payment</string>
 <string name="payment_progress">Payment in progress</string>
-
+<string name="payment_succeeded">Payment succeeded</string>
+<string name="payment_failes">Payment failed</string>
 <string name="skip_payment">Skip</string>
+<string name="stop_payment">Stop Payment</string>
+
     
 </resources>

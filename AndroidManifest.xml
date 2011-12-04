@@ -45,15 +45,17 @@
        <activity android:name="org.achartengine.GraphicalActivity" android:label="Elevations" />
        <activity android:name="com.citypark.Feedback" android:label="Feedback">
        </activity>
-       <activity android:name="com.citypark.Register" android:label="Registration" 
-            android:theme="@android:style/Theme.Black.NoTitleBar">
-        </activity>
+       <activity android:name="com.citypark.RegisterActivity" android:label="Registration" 
+           android:theme="@android:style/Theme.Black.NoTitleBar" />
        <activity android:name="org.acra.CrashReportDialog"
         android:theme="@android:style/Theme.Dialog"
         android:launchMode="singleInstance"
         android:excludeFromRecents="true"
         android:finishOnTaskLaunch="true" />
-   <service android:exported="false" android:name=".service.NavigationService" android:enabled="true" android:label="Router"></service>
+	   <service android:exported="false" android:name=".service.NavigationService" 
+	       android:enabled="true" android:label="Router"></service>
+	   <activity android:name="PayActivity" android:theme="@android:style/Theme.Black.NoTitleBar" 
+	       android:label="Pay"></activity>
 </application>
 
 

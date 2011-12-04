@@ -1,5 +1,18 @@
 package com.citypark;
 
+import java.io.FileOutputStream;
+import java.util.ListIterator;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.acra.ErrorReporter;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MyLocationOverlay;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.PathOverlay;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -18,7 +31,12 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.view.*;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
@@ -36,20 +54,6 @@ import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Segment;
 import com.citypark.view.overlay.LiveMarkers;
 import com.citypark.view.overlay.RouteOverlay;
-import com.citypark.R;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.acra.ErrorReporter;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MyLocationOverlay;
-import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.PathOverlay;
-
-import java.io.FileOutputStream;
-import java.util.ListIterator;
 
 /**
  * A class for displaying a route map with overlays for directions and
@@ -188,7 +192,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		}
 		
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
-			carAlert.setBikeAlert(parking_manager.getLocation());
+			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 	}
 	
@@ -204,7 +208,7 @@ public class RouteMap extends OpenStreetMapActivity {
 			mOsmv.getController().setCenter(app.getSegment().startPoint());
 		}
 		if (intent.getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
-			carAlert.setBikeAlert(parking_manager.getLocation());
+			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 	}
 	
@@ -439,10 +443,10 @@ public class RouteMap extends OpenStreetMapActivity {
 									new PGeoPoint(self.getLatitude(), self.getLongitude()));
 							}
 					}
-					
-					//TODO switch to pay activity
 				}
 			});
+			intent = new Intent(this, PayActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.directions:
 			intent = new Intent(this, DirectionsView.class);

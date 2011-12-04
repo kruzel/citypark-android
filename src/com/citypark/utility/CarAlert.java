@@ -69,7 +69,7 @@ public final class CarAlert extends BroadcastReceiver {
 	 * @param bikeLoc point to alert at.
 	 */
 
-	public void setBikeAlert(final GeoPoint bikeLoc) {
+	public void setCarAlert(final GeoPoint bikeLoc) {
 		final LocationManager lm = (LocationManager) act.getSystemService(Context.LOCATION_SERVICE);
 		lm.addProximityAlert(Convert.asDegrees(bikeLoc.getLatitudeE6()),
 				Convert.asDegrees(bikeLoc.getLongitudeE6()), 5f, -1, pi);

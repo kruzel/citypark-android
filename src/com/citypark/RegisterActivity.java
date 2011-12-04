@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class Register extends Activity {
+public class RegisterActivity extends Activity {
 
 	private EditText txtEmail = null;
 	private EditText txtPassword  = null;
@@ -47,7 +47,7 @@ public class Register extends Activity {
     } 
    
     public void onRegister(View view) {
-    	Register.this.startActivity(new Intent(Register.this, LiveRouteMap.class));
+    	RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
     	
     	SharedPreferences mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();

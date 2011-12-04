@@ -125,7 +125,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
         strPassword = mPrefs.getString("password", null);
         
         if(strEmail == null || strPassword == null) {
-        	LiveRouteMap.this.startActivity(new Intent(LiveRouteMap.this, Register.class));
+        	LiveRouteMap.this.startActivity(new Intent(LiveRouteMap.this, RegisterActivity.class));
         }
 	}
 	
