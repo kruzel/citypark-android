@@ -277,6 +277,7 @@ public final class R {
         public static final int stop_nav_title=0x7f060054;
         public static final int stop_payment=0x7f06007d;
         public static final int thanks_message=0x7f060059;
+        public static final int time_limit_reached=0x7f06007e;
         public static final int topo=0x7f06002b;
         public static final int tts_msg=0x7f06006e;
         public static final int tts_msg_title=0x7f06006f;

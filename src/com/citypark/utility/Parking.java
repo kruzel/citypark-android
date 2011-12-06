@@ -133,4 +133,31 @@ public class Parking {
 	public final boolean isPaymentActive() {
 		return settings.contains(PAYMENT_START_TIME);
 	}
+	
+	/**
+	 * set payment start time.
+	 */
+	public final void setReminder(Time time) {
+		editor.putString(ALARM_TIME, time.toString());
+		editor.commit();
+	}
+
+	/**
+	 * unset payment.
+	 */
+
+	public final void stopReminder() {
+		editor.remove(ALARM_TIME);
+		editor.commit();
+	}
+
+	/**
+	 * Check if parking is active.
+	 * 
+	 * @return a boolean indicating if values are set payment
+	 */
+
+	public final boolean isReminderActive() {
+		return settings.contains(ALARM_TIME);
+	}
 }

@@ -1,16 +1,24 @@
 package com.citypark;
 
+import java.util.Calendar;
+
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.citypark.utility.Parking;
 import com.citypark.utility.PayTask;
 import com.citypark.utility.PaymentListener;
 import com.citypark.utility.StopPaymentTask;
+import com.citypark.utility.TimeLimitAlert;
 
 public class PaymentActivity extends Activity implements PaymentListener {
 	
@@ -20,6 +28,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	private ProgressBar progBarPayment = null;
 	private PayTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
+	private TimePicker timePicker = null;
 	
 	/** Parking manager. */
 	Parking parking_manager = null;
@@ -34,12 +43,15 @@ public class PaymentActivity extends Activity implements PaymentListener {
 		parking_manager = new Parking(this);
 		
 		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
+		tgBtnRemind = (ToggleButton) findViewById(R.id.toggleButtonRemind);
 		txtProgressMsg = (TextView) findViewById(R.id.textViewPaymentMessage);
 		progBarPayment = (ProgressBar) findViewById(R.id.progressBarPayment);
+		timePicker = (TimePicker) findViewById(R.id.timePickerEnd);
+				
+		timePicker.setIs24HourView(true);
 		
-		boolean isPaymentActive = parking_manager.isPaymentActive();
-		
-		tgBtnPay.setChecked(isPaymentActive);
+		tgBtnPay.setChecked(parking_manager.isPaymentActive());
+		tgBtnRemind.setChecked(parking_manager.isReminderActive());
 		
 	}
 	
@@ -65,13 +77,39 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	}
 	
 	public void OnRemind(View view) {
-		if(view.isSelected()){
-			
-			//TODO stop reminder service
-			
+		if(!parking_manager.isReminderActive()){
+			//start reminder service
+			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlert.class);
+            PendingIntent sender = PendingIntent.getBroadcast(PaymentActivity.this,
+                    0, intent, 0);
+            
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR,timePicker.getCurrentHour());
+            calendar.set(Calendar.MINUTE,timePicker.getCurrentMinute());
+                        
+            // Schedule the alarm!
+            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);
+            
+        	Time now = new Time();
+    		now.setToNow();
+    		parking_manager.setReminder(now);
+            
 		} else {
-			//TODO start reminder service
-			
+
+			//stop reminder service
+			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlert.class);
+            PendingIntent sender = PendingIntent.getBroadcast(PaymentActivity.this,
+                    0, intent, 0);
+
+            // And cancel the alarm.
+            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.cancel(sender);
+            
+            parking_manager.stopReminder();
+
+
 		}
 	}
 

@@ -91,6 +91,7 @@
 <string name="payment_failes">Payment failed</string>
 <string name="skip_payment">Skip</string>
 <string name="stop_payment">Stop Payment</string>
+<string name="time_limit_reached">time limit reached</string>
 
     
 </resources>
