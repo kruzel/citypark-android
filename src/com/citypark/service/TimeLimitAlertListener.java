@@ -1,4 +1,4 @@
-package com.citypark.utility;
+package com.citypark.service;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.citypark.R;
 
-public class TimeLimitAlert extends BroadcastReceiver {
+public class TimeLimitAlertListener extends BroadcastReceiver {
 	
    @Override
     public void onReceive(Context context, Intent intent)

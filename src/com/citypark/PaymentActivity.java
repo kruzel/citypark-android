@@ -14,11 +14,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
-import com.citypark.utility.Parking;
-import com.citypark.utility.PayTask;
-import com.citypark.utility.PaymentListener;
-import com.citypark.utility.StopPaymentTask;
-import com.citypark.utility.TimeLimitAlert;
+import com.citypark.service.PaymentListener;
+import com.citypark.service.PaymentTask;
+import com.citypark.service.StopPaymentTask;
+import com.citypark.service.TimeLimitAlertListener;
+import com.citypark.utility.ParkingSessionPersist;
 
 public class PaymentActivity extends Activity implements PaymentListener {
 	
@@ -26,12 +26,12 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	private ToggleButton tgBtnRemind = null;
 	private TextView txtProgressMsg = null;
 	private ProgressBar progBarPayment = null;
-	private PayTask payTask = null;
+	private PaymentTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
 	
-	/** Parking manager. */
-	Parking parking_manager = null;
+	/** ParkingSessionPersist manager. */
+	ParkingSessionPersist parking_manager = null;
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -40,7 +40,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 		setContentView(R.layout.pay);
 		
 		// Initialize parking manager
-		parking_manager = new Parking(this);
+		parking_manager = new ParkingSessionPersist(this);
 		
 		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
 		tgBtnRemind = (ToggleButton) findViewById(R.id.toggleButtonRemind);
@@ -71,7 +71,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			progBarPayment.setVisibility(View.VISIBLE);
 			
 			//TODO add inheritance classes for the different payment methods (Pango, Celopark,..)
-			payTask = new PayTask(this);
+			payTask = new PaymentTask(this);
 			payTask.execute();
 		}
 	}
@@ -79,7 +79,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	public void OnRemind(View view) {
 		if(!parking_manager.isReminderActive()){
 			//start reminder service
-			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlert.class);
+			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlertListener.class);
             PendingIntent sender = PendingIntent.getBroadcast(PaymentActivity.this,
                     0, intent, 0);
             
@@ -99,7 +99,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 		} else {
 
 			//stop reminder service
-			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlert.class);
+			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlertListener.class);
             PendingIntent sender = PendingIntent.getBroadcast(PaymentActivity.this,
                     0, intent, 0);
 

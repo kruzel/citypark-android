@@ -1,18 +1,20 @@
-package com.citypark.utility;
+package com.citypark.service;
+
 
 import android.os.AsyncTask;
 import android.text.format.Time;
 
-public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
-
+public class PaymentTask extends AsyncTask<Void, Void, Boolean> {
+	
 	PaymentListener payLitener = null;
 	
-	public StopPaymentTask(PaymentListener payLitener){
+	public PaymentTask(PaymentListener payLitener){
 		this.payLitener = payLitener;
 	}
-	
+
 	@Override
 	protected Boolean doInBackground(Void... params) {
+				
 		//TODO start payment request (SMS,..)
 		//TODO update citypark through API
 		
@@ -47,5 +49,6 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
 		//TODO error handling
 		
      }
+
 
 }

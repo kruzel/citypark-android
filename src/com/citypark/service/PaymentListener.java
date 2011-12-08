@@ -1,4 +1,4 @@
-package com.citypark.utility;
+package com.citypark.service;
 
 public interface PaymentListener {
 

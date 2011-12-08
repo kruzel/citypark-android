@@ -47,7 +47,7 @@ import com.citypark.constants.CityParkConsts;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.CarAlert;
 import com.citypark.utility.Convert;
-import com.citypark.utility.Parking;
+import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.TurnByTurnGestureListener;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.utility.route.PGeoPoint;
@@ -97,8 +97,8 @@ public class RouteMap extends OpenStreetMapActivity {
 	private static final int ZOOM = 15;
 	protected boolean isSearching = false;
 
-	/** Parking manager. */
-	private Parking parking_manager;
+	/** ParkingSessionPersist manager. */
+	protected ParkingSessionPersist parking_manager;
 
 	/** Bike alert manager. **/
 	private CarAlert carAlert;
@@ -179,7 +179,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		garages.refresh(mOsmv.getMapCenter());
 
 		// Initialize parking manager
-		parking_manager = new Parking(this);
+		parking_manager = new ParkingSessionPersist(this);
 
 		// Initialize car alert manager
 		carAlert = new CarAlert(this);

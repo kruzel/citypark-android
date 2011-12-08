@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LoginTask;
 import com.citypark.service.NavigationService;
 import com.citypark.service.RouteListener;
 import com.citypark.service.RoutePlannerTask;
@@ -127,6 +128,10 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
         if(strEmail == null || strPassword == null) {
         	LiveRouteMap.this.startActivity(new Intent(LiveRouteMap.this, RegisterActivity.class));
         }
+        else {
+        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this, parking_manager);
+          	loginTask.execute((Void[])null);
+        }
 	}
 	
 	@Override
@@ -231,7 +236,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		} else {
 			dismissDialog(R.id.plan);
 			showDialog(R.id.plan_fail);
-		}
+		}	
 			
 	}
 	

@@ -40,8 +40,8 @@ import com.citypark.utility.route.PGeoPoint;
  * @version Jun 26, 2010
  */
 public class CityParkGaragesParser extends XMLParser {
-	static final String XMLNS = "http://tempuri.org/";
-
+	static final String XMLNS = "http://citypark.co.il/ws/";
+	
 	/**
 	 * @param feedUrl
 	 */
@@ -90,7 +90,7 @@ public class CityParkGaragesParser extends XMLParser {
 
 			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
 			final List<GaragePoint> marks = new ArrayList<GaragePoint>();
-			final Element node = root.getChild(XMLNS,"Parking");
+			final Element node = root.getChild(XMLNS,"ParkingSessionPersist");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
 			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
@@ -113,11 +113,11 @@ public class CityParkGaragesParser extends XMLParser {
 				}
 			});
 			
-//			node.getChild(XMLNS,"Price").setEndTextElementListener(new EndTextElementListener() {
-//				public void end(String body) {	
-//					p.setPrice(Double.parseDouble(body));
-//				}
-//			});
+			node.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {	
+					p.setPrice(Double.parseDouble(body));
+				}
+			});
 			
 			try {
 				Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root

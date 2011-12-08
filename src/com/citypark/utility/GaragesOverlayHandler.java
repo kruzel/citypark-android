@@ -39,6 +39,10 @@ import com.citypark.parser.CityParkGaragesParser.GaragePoint;
  */
 
 public final class GaragesOverlayHandler {
+	
+	/** ParkingSessionPersist manager. */
+	private static ParkingSessionPersist parking_manager;
+	
 	private GaragesOverlayHandler() {
 	}
 	
@@ -86,22 +90,27 @@ public final class GaragesOverlayHandler {
 		//final String query = mAct.getString(R.string.stands_api) + getOSMBounds(getBounds(p, distance));
 		//final OSMParser parser = new OSMParser(query);
 		
-		//use CityPark to find garages
-		//final String query = mAct.getString(R.string.citypark_garages_api) + "latitude="+ p.getLatitudeE6() + "&longitude=" + p.getLongitudeE6() + "&distance=" + distance;
-		final String query = mAct.getString(R.string.citypark_garages_api) + "latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "1000";
-		final CityParkGaragesParser parser = new CityParkGaragesParser(query);
+		parking_manager = new ParkingSessionPersist(mAct);
 		
-		//final HotspotPlace hotspot = new HotspotPlace(0, 20);
-		//final Drawable markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_default);
+		//use CityPark to find garages
+		String cpSessionId = parking_manager.getCPSessionId();
+		if (cpSessionId != null) {
+			//final String query = mAct.getString(R.string.citypark_garages_api) + "?sessionId=" + parking_manager.getCPSessionId() + "&latitude="+ p.getLatitudeE6() + "&longitude=" + p.getLongitudeE6() + "&distance=" + distance;
+			final String query = mAct.getString(R.string.citypark_garages_api) + "?sessionId=" + parking_manager.getCPSessionId() + "&latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "1000";
+			final CityParkGaragesParser parser = new CityParkGaragesParser(query);
+			
+			//final HotspotPlace hotspot = new HotspotPlace(0, 20);
+			//final Drawable markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_default);
 
-		// Parse XML to overlayitems (cycle stands)
-		for (GaragePoint garagePoint : parser.parse()) {
-			OverlayItem marker = new OverlayItem(Double.toString(garagePoint.getPrice()), "", garagePoint.getPGeoPoint());
-			//marker.setMarker(markerIcon);
-			marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
-			markers.add(marker);
+			// Parse XML to overlayitems (cycle stands)
+			for (GaragePoint garagePoint : parser.parse()) {
+				OverlayItem marker = new OverlayItem(Double.toString(garagePoint.getPrice()), "", garagePoint.getPGeoPoint());
+				//marker.setMarker(markerIcon);
+				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
+				markers.add(marker);
+			}
 		}
-
+		
 		return markers;
 	}
 
