@@ -52,22 +52,16 @@ public class CityParkLoginParser extends XMLParser {
 	public String parse() {
 		final SessionId sessionId = new SessionId();
 		final RootElement root = new RootElement(XMLNS,"SessionData");
-		//final Element node = root.getChild("SessionId");
+		final Element node = root.getChild(XMLNS,"SessionId");
 		// Listen for start of tag, get attributes and set them
 		// on current marker.
 		//Please note that the order should stay as they appear in the XML!!!!
-		root.getChild(XMLNS,"SessionId").setEndTextElementListener(new EndTextElementListener() {
+		node.setEndTextElementListener(new EndTextElementListener() {
 			@Override
 			public void end(String body) {	
 				sessionId.mSessionId = body;
 			}
 		});
-		/*node.setEndTextElementListener(new EndTextElementListener() {
-			@Override
-			public void end(String body) {	
-				sessionId.mSessionId = body;
-			}
-		});*/
 		
 		try {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root

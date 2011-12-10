@@ -2,6 +2,7 @@ package com.citypark.parser;
 
 import android.util.Log;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -57,11 +58,16 @@ public class XMLParser {
 		try {
 			HttpUriRequest request = new HttpGet(feedUrl.toString());
 			request.addHeader("Accept-Encoding", "gzip");
+			//request.addHeader("encoding", "utf-8");
 	        final HttpResponse response = new DefaultHttpClient().execute(request);
 	        Header ce = response.getFirstHeader("Content-Encoding");
 	        String contentEncoding = null;
+	        
+	        HttpEntity entity = response.getEntity();
+	        InputStream instream = null;
 	      
-	        InputStream instream = response.getEntity().getContent();
+	        if (entity != null)
+	        	instream = entity.getContent();
 	        
 	        if (ce != null) {
 	        	 contentEncoding = ce.getValue();
