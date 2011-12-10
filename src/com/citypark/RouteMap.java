@@ -44,6 +44,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LoginListener;
+import com.citypark.service.LoginTask;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.CarAlert;
 import com.citypark.utility.Convert;
@@ -81,7 +83,7 @@ import com.citypark.view.overlay.RouteOverlay;
  * 
  */
 
-public class RouteMap extends OpenStreetMapActivity {
+public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 
 	/** GaragesOverlayHandler markers overlay. */
 	private LiveMarkers garages;
@@ -123,6 +125,10 @@ public class RouteMap extends OpenStreetMapActivity {
 	protected SharedPreferences mSettings;
 	/** Wakelock. **/
 	private PowerManager.WakeLock wl;
+	
+	/** user info**/
+	private String strEmail = null;
+	private String strPassword = null;
 
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -173,11 +179,6 @@ public class RouteMap extends OpenStreetMapActivity {
 		//Get application reference
 		app = (CityParkApp)getApplication();
 
-
-		// Initialize garages overlay
-		garages = new LiveMarkers(mOsmv, this);
-		garages.refresh(mOsmv.getMapCenter());
-
 		// Initialize parking manager
 		parking_manager = new ParkingSessionPersist(this);
 
@@ -194,6 +195,17 @@ public class RouteMap extends OpenStreetMapActivity {
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
+		
+		strEmail = mPrefs.getString("email", null);
+        strPassword = mPrefs.getString("password", null);
+        
+        if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
+        	this.startActivity(new Intent(this, RegisterActivity.class));
+        }
+        else {
+        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
+          	loginTask.execute((Void[])null);
+        }
 	}
 	
 	/**
@@ -689,6 +701,18 @@ public class RouteMap extends OpenStreetMapActivity {
 			
 		}
 		
+	}
+
+	@Override
+	public void loginComplete(String sessionId) {
+		// Initialize garages overlay
+		if(sessionId == null) {
+			Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
+		} else {
+			parking_manager.setCPSessionId(sessionId);
+			garages = new LiveMarkers(mOsmv, this);
+			garages.refresh(mOsmv.getMapCenter());
+		}
 	}
 
 }

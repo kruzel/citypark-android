@@ -7,6 +7,7 @@
 <string name="stands_api">http://open.mapquestapi.com/xapi/api/0.6/node%5Bamenity=parking%5D</string>
 <string name="feedback_api">https://www.cyclestreets.net/api/feedback.xml?key=&amp;</string>
 <string name="mq_api">http://open.mapquestapi.com/directions/v0/route?outFormat=json&amp;routeType=fastest&amp;from=</string>
-<string name="citypark_garages_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/findGarageParkingByLatitudeLongitude</string>
 <string name="citypark_login_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/login</string>
+<string name="citypark_garages_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/findGarageParkingByLatitudeLongitude</string>
+<string name="citypark_street_parking_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/getStreetParkingPrediction</string>
 </resources>

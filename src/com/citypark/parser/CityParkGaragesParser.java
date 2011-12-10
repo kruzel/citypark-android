@@ -4,17 +4,21 @@
 package com.citypark.parser;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.xml.sax.SAXException;
 
+import android.content.Context;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
 
+import com.citypark.R;
 import com.citypark.utility.route.PGeoPoint;
 
 /**
@@ -45,8 +49,16 @@ public class CityParkGaragesParser extends XMLParser {
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkGaragesParser(final String feedUrl) {
-		super(feedUrl);
+	public CityParkGaragesParser(final Context context, final String sessionId, final double latitude, final double longitude, final double distance) {
+		
+		try {
+			//TODO use real lat long
+			//feedUrl = new URL(context.getString(R.string.citypark_garages_api) + "?sessionId=" + sessionId + "&latitude="+ latitude + "&longitude=" + longitude + "&distance=" + distance);
+			feedUrl = new URL(context.getString(R.string.citypark_garages_api) + "?sessionId=" + sessionId + "&latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "1000");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//TODO:make it nicer
@@ -56,6 +68,15 @@ public class CityParkGaragesParser extends XMLParser {
 		double price;
 		String name;
 		
+		public GaragePoint() {
+			// TODO Auto-generated constructor stub
+		}
+		public GaragePoint(GaragePoint p) {
+			this.latitude = p.latitude;
+			this.longitude = p.longitude;
+			this.price = p.price;
+			this.name = p.name;
+		}
 		public double getLatitude() {
 			return latitude;
 		}
@@ -90,7 +111,7 @@ public class CityParkGaragesParser extends XMLParser {
 
 			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
 			final List<GaragePoint> marks = new ArrayList<GaragePoint>();
-			final Element node = root.getChild(XMLNS,"ParkingSessionPersist");
+			final Element node = root.getChild(XMLNS,"Parking");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
 			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
@@ -109,13 +130,13 @@ public class CityParkGaragesParser extends XMLParser {
 			node.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setLatitude(Double.parseDouble(body));
-					marks.add(p);
 				}
 			});
 			
 			node.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setPrice(Double.parseDouble(body));
+					marks.add(new GaragePoint(p));
 				}
 			});
 			

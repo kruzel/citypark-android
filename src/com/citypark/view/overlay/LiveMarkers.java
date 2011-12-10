@@ -76,6 +76,8 @@ public class LiveMarkers implements OnItemGestureListener<OverlayItem> {
 			}
 		};
 		update.start();
+		
+		//TODO create thread and run OnStreetParkingOverlayHandler
 	}
 	
 	/**

@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.GaragesOverlayHandler;
+import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.RouteManager;
 import com.citypark.utility.route.RouteManager.GeocodeConnectException;

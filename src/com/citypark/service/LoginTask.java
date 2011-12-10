@@ -12,13 +12,13 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 	private String email; 
 	private String password;
 	private Context mAct;
-	private ParkingSessionPersist parking_manager;
+	private LoginListener loginListener;
 	
-	public LoginTask(String email, String password, Context mAct, ParkingSessionPersist parking_manager) {
+	public LoginTask(String email, String password, Context mAct, LoginListener loginListener) {
 		this.email = email;
 		this.password = password;
 		this.mAct = mAct;
-		this.parking_manager = parking_manager;
+		this.loginListener = loginListener;
 	}
 	
 	@Override
@@ -32,10 +32,6 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 	}
 	
 	protected void onPostExecute(String sessionId) {
-		if(sessionId == null) {
-			Toast.makeText(mAct, mAct.getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-		} else {
-			parking_manager.setCPSessionId(sessionId);
-		}
+		loginListener.loginComplete(sessionId);
 	}
 }
