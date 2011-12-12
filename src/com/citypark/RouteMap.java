@@ -54,7 +54,8 @@ import com.citypark.utility.TurnByTurnGestureListener;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Segment;
-import com.citypark.view.overlay.LiveMarkers;
+import com.citypark.view.overlay.LiveGarageMarkers;
+import com.citypark.view.overlay.LiveStreetParkingMarkers;
 import com.citypark.view.overlay.RouteOverlay;
 
 /**
@@ -86,7 +87,9 @@ import com.citypark.view.overlay.RouteOverlay;
 public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 
 	/** GaragesOverlayHandler markers overlay. */
-	private LiveMarkers garages;
+	private LiveGarageMarkers garages;
+	/** Street parking segments overlay **/
+	private LiveStreetParkingMarkers streetSegments;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;
 	/** Travelled route overlay. **/
@@ -705,13 +708,17 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 
 	@Override
 	public void loginComplete(String sessionId) {
-		// Initialize garages overlay
+		// Initialize garages and street parking segments overlay
 		if(sessionId == null) {
 			Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
 		} else {
 			parking_manager.setCPSessionId(sessionId);
-			garages = new LiveMarkers(mOsmv, this);
+			garages = new LiveGarageMarkers(mOsmv, this);
 			garages.refresh(mOsmv.getMapCenter());
+			
+			// street parking segments
+			streetSegments = new LiveStreetParkingMarkers(mOsmv, this);
+			streetSegments.refresh(mOsmv.getMapCenter());
 		}
 	}
 

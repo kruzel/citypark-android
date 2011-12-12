@@ -40,7 +40,7 @@ import java.util.List;
  * @version Jun 21, 2010
  */
 
-public class LiveMarkers implements OnItemGestureListener<OverlayItem> {
+public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	/** Reference to map view to draw markers over. **/
 	private final MapView mv;
 	/** Markers list for use by thread. **/
@@ -53,7 +53,7 @@ public class LiveMarkers implements OnItemGestureListener<OverlayItem> {
 	/** Itemized Overlay. **/
 	private ItemizedOverlay<OverlayItem> iOverlay;
 
-	public LiveMarkers(final MapView mOsmv, final Context ctxt) {
+	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
@@ -72,12 +72,10 @@ public class LiveMarkers implements OnItemGestureListener<OverlayItem> {
 			@Override
 			public void run() {
 				markers = GaragesOverlayHandler.getMarkers(p, RADIUS, context);
-				LiveMarkers.this.messageHandler.sendEmptyMessage(MSG);
+				LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
 		update.start();
-		
-		//TODO create thread and run OnStreetParkingOverlayHandler
 	}
 	
 	/**
@@ -94,7 +92,7 @@ public class LiveMarkers implements OnItemGestureListener<OverlayItem> {
 			}
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedIconOverlay<OverlayItem>(mOverlays, LiveMarkers.this, mv.getResourceProxy());
+			iOverlay = new ItemizedIconOverlay<OverlayItem>(mOverlays, LiveGarageMarkers.this, mv.getResourceProxy());
 			mv.getOverlays().add(iOverlay);
 			mv.postInvalidate();
 		}
