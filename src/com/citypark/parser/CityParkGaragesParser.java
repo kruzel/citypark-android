@@ -134,8 +134,17 @@ public class CityParkGaragesParser extends XMLParser {
 			});
 			
 			node.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {	
-					p.setPrice(Double.parseDouble(body));
+				public void end(String body) {
+					
+					try  
+					{  
+						p.setPrice(Double.parseDouble(body));  
+				    }  
+				    catch( NumberFormatException e )  
+				    {  
+				    	p.setPrice(0);
+				    } 
+						
 					marks.add(new GaragePoint(p));
 				}
 			});
