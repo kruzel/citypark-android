@@ -89,6 +89,9 @@ public class LiveStreetParkingMarkers {
 				overlay.addPoint(point1);
 				GeoPoint point2 = new GeoPoint(streetSegment.getEnd_latitude(),streetSegment.getEnd_longitude());
 				overlay.addPoint(point2);
+				overlay.setEnabled(true);
+				overlay.getPaint().setStrokeWidth(5.0f);
+				//overlay.getPaint().setAlpha(175);
 				
 				segments.add(overlay);
 			}
