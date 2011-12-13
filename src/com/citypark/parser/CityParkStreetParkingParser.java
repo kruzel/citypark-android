@@ -49,12 +49,12 @@ public class CityParkStreetParkingParser extends XMLParser {
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkStreetParkingParser(final Context context, final String sessionId, final double latitude, final double longitude, final double distance) {
+	public CityParkStreetParkingParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
 		
 		try {
 			//TODO use real lat long
-			//feedUrl = new URL(context.getString(R.string.citypark_garages_api) + "?sessionId=" + sessionId + "&latitude="+ latitude + "&longitude=" + longitude + "&distance=" + distance);
-			feedUrl = new URL(context.getString(R.string.citypark_street_parking_api) + "?sessionId=" + sessionId + "&latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "2000");
+			feedUrl = new URL(context.getString(R.string.citypark_street_parking_api) + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
+			//feedUrl = new URL(context.getString(R.string.citypark_street_parking_api) + "?sessionId=" + sessionId + "&latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "2000");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

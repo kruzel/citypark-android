@@ -47,7 +47,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	private List<OverlayItem> markers;
 	private final Context context;
 	/** Radius to return markers within. **/
-	protected static final double RADIUS = 0.5;
+	protected static final int RADIUS = 500;
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
@@ -94,7 +94,8 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			mOverlays.addAll(markers);
 			iOverlay = new ItemizedIconOverlay<OverlayItem>(mOverlays, LiveGarageMarkers.this, mv.getResourceProxy());
 			mv.getOverlays().add(iOverlay);
-			mv.postInvalidate();
+			//mv.postInvalidate();
+			mv.invalidate();
 		}
 	};
 

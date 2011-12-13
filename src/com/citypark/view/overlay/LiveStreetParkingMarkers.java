@@ -25,7 +25,7 @@ public class LiveStreetParkingMarkers {
 	/** OSM MapView reference **/
 	protected MapView mOsmv;
 	/** Radius to return markers within. **/
-	protected static final double RADIUS = 0.5;
+	protected static final int RADIUS = 500;
 
 	public LiveStreetParkingMarkers(MapView osmv, final Context ctxt) {
 		this.mOsmv = osmv;
@@ -58,7 +58,7 @@ public class LiveStreetParkingMarkers {
 	 */
 
 	public List<PathOverlay> getSegments(final GeoPoint p,
-			final double distance, final Context mAct) {
+			final int distance, final Context mAct) {
 		
 		final List<PathOverlay> segments = new ArrayList<PathOverlay>();
 		
@@ -91,7 +91,7 @@ public class LiveStreetParkingMarkers {
 				overlay.addPoint(point2);
 				overlay.setEnabled(true);
 				overlay.getPaint().setStrokeWidth(5.0f);
-				//overlay.getPaint().setAlpha(175);
+				overlay.getPaint().setAlpha(175);
 				
 				segments.add(overlay);
 			}

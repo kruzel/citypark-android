@@ -82,12 +82,9 @@ public final class GaragesOverlayHandler {
 	 */
 
 	public static List<OverlayItem> getMarkers(final GeoPoint p,
-			final double distance, final Context mAct) {
+			final int distance, final Context mAct) {
 		
 		final List<OverlayItem> markers = new ArrayList<OverlayItem>();
-		
-		//final String query = mAct.getString(R.string.stands_api) + getOSMBounds(getBounds(p, distance));
-		//final OSMParser parser = new OSMParser(query);
 		
 		ParkingSessionPersist parking_manager = new ParkingSessionPersist(mAct);
 		
