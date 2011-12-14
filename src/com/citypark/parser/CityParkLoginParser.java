@@ -9,12 +9,14 @@ import java.util.List;
 
 import org.xml.sax.SAXException;
 
+import android.content.Context;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
 
+import com.citypark.R;
 import com.citypark.utility.route.PGeoPoint;
 
 /**
@@ -45,8 +47,8 @@ public class CityParkLoginParser extends XMLParser {
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkLoginParser(final String feedUrl) {
-		super(feedUrl);
+	public CityParkLoginParser(final Context context, String email, String password) {
+		super(context.getString(R.string.citypark_login_api) + "?username="+ email + "&password=" + password);
 	}
 
 	public String parse() {

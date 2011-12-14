@@ -49,7 +49,7 @@ public class CityParkGaragesParser extends XMLParser {
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkGaragesParser(final Context context, final String sessionId, final double latitude, final double longitude, final double distance) {
+	public CityParkGaragesParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
 		
 		try {
 			feedUrl = new URL(context.getString(R.string.citypark_garages_api) + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
