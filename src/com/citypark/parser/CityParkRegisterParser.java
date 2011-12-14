@@ -4,20 +4,14 @@
 package com.citypark.parser;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.xml.sax.SAXException;
-
 import android.content.Context;
-import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
 
 import com.citypark.R;
-import com.citypark.utility.route.PGeoPoint;
 
 /**
  * This file is part of BikeRoute.
@@ -43,6 +37,7 @@ import com.citypark.utility.route.PGeoPoint;
  */
 public class CityParkRegisterParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";
+	public static final String USER_ALREADY_EXISTS = "USER ALREADY EXISTS";
 	
 	/**
 	 * @param feedUrl
@@ -54,16 +49,12 @@ public class CityParkRegisterParser extends XMLParser {
 	public String parse() {
 		final Reponse res = new Reponse();
 		final RootElement root = new RootElement(XMLNS,"string");
-		//final Element node = root.getChild(XMLNS,"String");
-		// Listen for start of tag, get attributes and set them
-		// on current marker.
-		//Please note that the order should stay as they appear in the XML!!!!
 		root.setEndTextElementListener(new EndTextElementListener() {
-			@Override
-			public void end(String body) {	
-				res.response = body;
-			}
-		});
+				@Override
+				public void end(String body) {	
+					res.response = body;
+				}
+			});
 		
 		try {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
@@ -73,6 +64,12 @@ public class CityParkRegisterParser extends XMLParser {
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
 		}
+		
+		if(USER_ALREADY_EXISTS.equalsIgnoreCase(res.response)){
+			//DO WHAT EVER YOU WANT TO DO OR MAYBE THE CONSTATN AND LOGIC SHOULD BE IN UPPER LEVEL LIKE THE RegisterActivity
+			Log.e(USER_ALREADY_EXISTS,"This user already exists in the system!");
+		}
+		
 		return res.response;
 	}
 	
