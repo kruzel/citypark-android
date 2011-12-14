@@ -41,27 +41,27 @@ import com.citypark.utility.route.PGeoPoint;
  * @author jono@nanosheep.net
  * @version Jun 26, 2010
  */
-public class CityParkRegisterParser extends XMLParser {
+public class CityParkReportLocationParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";
 	
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkRegisterParser(final Context context, final String email, final String password, final String firstName, final String familyName, final String phoneNumber, final String licensesPlate, final String paymentService) {
-		super(context.getString(R.string.citypark_register_api) + "?email=" + email + "&password=" + password + "&firstName=" + firstName + "&familyName=" + familyName + "&phoneNumber=" + phoneNumber + "&licensesPlate=" + licensesPlate + "&paymentService=" + paymentService);
+	public CityParkReportLocationParser(final Context context, final String sessionId, final double latitude, final double longitude) {
+		super(context.getString(R.string.citypark_report_location_api)  + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 );
 	}
 
-	public String parse() {
-		final Reponse res = new Reponse();
-		final RootElement root = new RootElement(XMLNS,"string");
-		//final Element node = root.getChild(XMLNS,"String");
+	public boolean parse() {
+		final Result res = new Result();
+		final RootElement root = new RootElement(XMLNS,"boolean ");
+		final Element node = root.getChild(XMLNS,"boolean ");
 		// Listen for start of tag, get attributes and set them
 		// on current marker.
 		//Please note that the order should stay as they appear in the XML!!!!
-		root.setEndTextElementListener(new EndTextElementListener() {
+		node.setEndTextElementListener(new EndTextElementListener() {
 			@Override
 			public void end(String body) {	
-				res.response = body;
+				res.res = true; // body;
 			}
 		});
 		
@@ -69,15 +69,15 @@ public class CityParkRegisterParser extends XMLParser {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 					.getContentHandler());
 		} catch (IOException e) {
-			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
 		} catch (SAXException e) {
-			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
 		}
-		return res.response;
+		return res.res;
 	}
 	
-	private class Reponse {
-		public String response;
+	private class Result {
+		public boolean res;
 	}
 
 }

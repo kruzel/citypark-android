@@ -113,6 +113,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 
 	@Override
 	public void RegistrationComplete(final String successCode) {
+		//TODO "USER ALREADY EXIST"
 //		if(successCode == txtEmail.getText().toString()) {	
 //	        // Commit the edits!
 //	        if(mEditor.commit()){
@@ -129,7 +130,6 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 		
 		//currently the api does not return a result, so finish anyhow
 		if(mEditor.commit()){
-        	//RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
         	finish();
         } else {
         	Log.e("onRegister", "registration failed");

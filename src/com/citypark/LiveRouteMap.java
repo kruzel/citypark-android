@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.LoginTask;
 import com.citypark.service.NavigationService;
+import com.citypark.service.ReportLocationTask;
 import com.citypark.service.RouteListener;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.dialog.DialogFactory;
@@ -380,6 +381,14 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	}
 	
 	
+	@Override
+	public void loginComplete(String sessionId) {
+		// TODO Auto-generated method stub
+		super.loginComplete(sessionId);
+		mBroadcastReceiver.setSessionId(sessionId);
+	}
+
+
 	/**
 	 * Receiver for updates from the live navigation service.
 	 * @author jono@nanosheep.net
@@ -388,6 +397,18 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	
 	private class NavigationReceiver extends BroadcastReceiver {
 
+		PGeoPoint last = null;
+		private String sessionId = null;
+		
+		public String getSessionId() {
+			return sessionId;
+		}
+
+
+		public void setSessionId(String sessionId) {
+			this.sessionId = sessionId;
+		}
+		
 		/* (non-Javadoc)
 		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
 		 */
@@ -423,6 +444,13 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					
 					//TODO rotate map to north
 					
+					//update citypark server on location
+					if((sessionId != null) && (last != null) && (last.distanceTo(current) > 20.0)) { //meters
+						ReportLocationTask locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
+						locTask.execute();
+					}
+					
+					last = current;
 				}
 			}
 		}
