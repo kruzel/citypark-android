@@ -3,23 +3,33 @@ package com.citypark;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegisterActivity extends Activity {
+import com.citypark.service.RegisterationListener;
+import com.citypark.service.RegistrationTask;
 
+public class RegisterActivity extends Activity implements RegisterationListener {
+
+	SharedPreferences mPrefs = null;
+    SharedPreferences.Editor mEditor = null;
+    
 	private EditText txtEmail = null;
 	private EditText txtPassword  = null;
 	private EditText txtFirstName  = null;
 	private EditText txtLastName  = null;
 	private EditText txtLicensePlate  = null;
 	private String strPaymentMethod = "None";
+	private Button btnPaymentMethod = null;
+	private EditText txtPhoneNumber = null;
 	
 	static final int DIALOG_PAYMENT_METHOD_ID = 0;
 	
@@ -30,39 +40,48 @@ public class RegisterActivity extends Activity {
         setContentView(R.layout.register);
         
      // Restore preferences
-        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
-        
+        mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
+        mEditor = mPrefs.edit();
+                
         txtEmail = (EditText) findViewById(R.id.id_email);
         txtPassword = (EditText) findViewById(R.id.id_password); 
         txtFirstName = (EditText) findViewById(R.id.id_firstname); 
         txtLastName = (EditText) findViewById(R.id.id_lastname);
         txtLicensePlate = (EditText) findViewById(R.id.id_licenseplate);
-                
+        btnPaymentMethod = (Button) findViewById(R.id.id_payment_method);
+        txtPhoneNumber = (EditText) findViewById(R.id.id_phone_number);
+        
         txtEmail.setText(mPrefs.getString("email", null));
         txtPassword.setText(mPrefs.getString("password", null));
         txtFirstName.setText(mPrefs.getString("first_name", null));
         txtLastName.setText(mPrefs.getString("last_name", null));
         txtLicensePlate.setText(mPrefs.getString("license_plate", null));
-        strPaymentMethod = mPrefs.getString("payment_method", "None");
+        
+        //get phone number, depends on operator support, may return null
+        TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        txtPhoneNumber.setText(mPrefs.getString("phone_number", tMgr.getLine1Number()));
+        
+        strPaymentMethod = mPrefs.getString("payment_method", getString(R.string.payment_method));
+        btnPaymentMethod.setText(strPaymentMethod);
     } 
    
     public void onRegister(View view) {
-    	RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
-    	
-    	SharedPreferences mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString("email", txtEmail.getText().toString());
-        editor.putString("password", txtPassword.getText().toString());
-        editor.putString("first_name", txtFirstName.getText().toString());
-        editor.putString("last_name", txtLastName.getText().toString());
-        editor.putString("license_plate", txtLicensePlate.getText().toString());
-        editor.putString("payment_method", strPaymentMethod);
-
-        // Commit the edits!
-        if(!editor.commit())
-        	Log.e("onRegister", "registration failed");
-        finish();
+    	    	
+        mEditor.putString("email", txtEmail.getText().toString());
+        mEditor.putString("password", txtPassword.getText().toString());
+        mEditor.putString("first_name", txtFirstName.getText().toString());
+        mEditor.putString("last_name", txtLastName.getText().toString());
+        mEditor.putString("license_plate", txtLicensePlate.getText().toString());
+        mEditor.putString("payment_method", strPaymentMethod);
         
+        
+        
+        //spawn registration task
+        //we finish only after receiving response from the server
+        RegistrationTask regTask = new RegistrationTask(this, this, txtEmail.getText().toString(), 
+        		txtPassword.getText().toString(), txtFirstName.getText().toString(), 
+        		txtLastName.getText().toString(), txtPhoneNumber.getText().toString(), txtLicensePlate.getText().toString(), strPaymentMethod);
+        regTask.execute((Void[])null);
     }
     
     public void OnPaymenMethodClick(View view) {
@@ -81,6 +100,7 @@ public class RegisterActivity extends Activity {
         	        //Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
         	    	strPaymentMethod = items[item].toString();
         	    	dialog.dismiss();
+        	    	btnPaymentMethod.setText(strPaymentMethod);
         	    }
         	});
         	dialog = builder.create();
@@ -90,4 +110,21 @@ public class RegisterActivity extends Activity {
         }
         return dialog;
     }
+
+	@Override
+	public void RegistrationComplete(final String successCode) {
+		if(successCode == txtEmail.getText().toString()) {	
+	        // Commit the edits!
+	        if(mEditor.commit()){
+	        	//RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
+	        	finish();
+	        } else {
+	        	Log.e("onRegister", "registration failed");
+	        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
+	        }	        
+		} else {
+        	Log.e("onRegister", "registration failed");
+        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
+        }	
+	}
 }  

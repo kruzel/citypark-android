@@ -82,7 +82,7 @@
 <string name="first_name">first name</string>
 <string name="license_plate">license plate</string>
 <string name="register">Register</string>
-<string name="payment_method">Payment Method</string>
+<string name="registration_succeeded">Registration Succeeded</string><string name="registration_failed">Registration Failed</string><string name="payment_method">Payment Method</string>
 
 <string name="reminder_button">Set Reminder</string>
 <string name="start_payment">Start Payment</string>
@@ -93,6 +93,9 @@
 <string name="stop_payment">Stop Payment</string>
 <string name="time_limit_reached">time limit reached</string>
 <string name="login_failed">Login Failed</string>
+
+
+<string name="phone_number">Phone number</string>
 
     
 </resources>

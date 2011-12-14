@@ -62,7 +62,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:hint="@string/license_plate" android:inputType="textCapCharacters"/>
+            android:hint="@string/license_plate" android:inputType="textCapCharacters" android:cursorVisible="false"/>
+
+        <EditText
+            android:id="@+id/id_phone_number"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" 
+            android:layout_marginTop="10dp" 
+            android:hint="@string/phone_number" android:inputType="phone"/>
 
         <Button
             android:id="@+id/id_payment_method"

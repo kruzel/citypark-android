@@ -14,8 +14,7 @@ import com.citypark.utility.route.Route;
 public interface LoginListener {
 	/**
 	 * Called when a login completes.
-	 * @param msg Response code
-	 * @param route Route computed or null
+	 * @param session ID or null
 	 */
 	public void loginComplete(String sessionId);
 }

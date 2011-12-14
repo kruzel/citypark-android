@@ -49,7 +49,7 @@ public class ParkingSessionPersist {
 	
 	/** Shared preferences object. **/
 	private final SharedPreferences settings;
-	/** Preferences editor. **/
+	/** Preferences mEditor. **/
 	private final SharedPreferences.Editor editor;
 
 	public ParkingSessionPersist(final Context context) {

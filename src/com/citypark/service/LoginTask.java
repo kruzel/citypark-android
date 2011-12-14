@@ -23,8 +23,8 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 	
 	@Override
 	protected String doInBackground(Void... arg) {
-		final String query = mAct.getString(R.string.citypark_login_api) + "?username="+ email + "&password=" + password;
-		CityParkLoginParser loginParser = new CityParkLoginParser(query);
+		
+		CityParkLoginParser loginParser = new CityParkLoginParser(mAct, email, password);
 		
 		String sessionId = loginParser.parse();
 

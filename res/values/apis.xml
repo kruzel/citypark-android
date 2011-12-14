@@ -10,4 +10,10 @@
 <string name="citypark_login_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/login</string>
 <string name="citypark_garages_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/findGarageParkingByLatitudeLongitude</string>
 <string name="citypark_street_parking_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/getStreetParkingPrediction</string>
+<string name="citypark_register_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/register</string>
+<string name="citypark_payment_provider_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/getAllPaymentServices</string>
+<string name="citypark_report_location_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/reportSearchLocation</string>
+<string name="citypark_report_parking_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/reportStreetParkingByLatitudeLongitude</string>
+<string name="citypark_report_start_payment_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/reportStartPayment</string>
+<string name="citypark_report_stop_payment_api">http://ec2-79-125-66-6.eu-west-1.compute.amazonaws.com/CityParkWS/CityParkService.asmx/reportStopPayment</string>
 </resources>
