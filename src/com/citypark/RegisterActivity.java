@@ -113,16 +113,25 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 
 	@Override
 	public void RegistrationComplete(final String successCode) {
-		if(successCode == txtEmail.getText().toString()) {	
-	        // Commit the edits!
-	        if(mEditor.commit()){
-	        	//RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
-	        	finish();
-	        } else {
-	        	Log.e("onRegister", "registration failed");
-	        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
-	        }	        
-		} else {
+//		if(successCode == txtEmail.getText().toString()) {	
+//	        // Commit the edits!
+//	        if(mEditor.commit()){
+//	        	//RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
+//	        	finish();
+//	        } else {
+//	        	Log.e("onRegister", "registration failed");
+//	        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
+//	        }	        
+//		} else {
+//        	Log.e("onRegister", "registration failed");
+//        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
+//        }	
+		
+		//currently the api does not return a result, so finish anyhow
+		if(mEditor.commit()){
+        	//RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
+        	finish();
+        } else {
         	Log.e("onRegister", "registration failed");
         	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
         }	
