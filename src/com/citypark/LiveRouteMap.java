@@ -167,10 +167,11 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		final MenuItem stopService = menu.findItem(R.id.stop_nav);
 		if (app.getRoute() != null) {
 			replan.setVisible(true);
-		}
-		if (mIsBound) {
 			stopService.setVisible(true);
 		}
+//		if (mIsBound) {
+//			stopService.setVisible(true);
+//		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 	

@@ -71,8 +71,8 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			progBarPayment.setVisibility(View.VISIBLE);
 			
 			//TODO add inheritance classes for the different payment methods (Pango, Celopark,..)
-			//operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
 			//TODO add payment verification logic and update operationStatus accordingly
+			//operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
 			payTask = new StartPaymentTask(this, this, parking_manager.getCPSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
 			payTask.execute();
 		}

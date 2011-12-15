@@ -113,7 +113,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 
 	@Override
 	public void RegistrationComplete(final String successCode) {
-		//TODO "USER ALREADY EXIST"
+		//TODO handle successCode values: "USER ALREADY EXIST",...
 //		if(successCode == txtEmail.getText().toString()) {	
 //	        // Commit the edits!
 //	        if(mEditor.commit()){

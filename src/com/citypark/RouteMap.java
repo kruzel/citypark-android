@@ -378,18 +378,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		}
 		if (app.getRoute() != null) {
 			save.setVisible(true);
-			steps.setVisible(true);
-			elev.setVisible(true);
-			share.setVisible(true);
-			if (directionsVisible) {
-				turnByTurn.setVisible(false);
-				map.setVisible(true);
-			} else {
-				turnByTurn.setVisible(true);
-				map.setVisible(false);
-			}
+			//steps.setVisible(true);
+			//elev.setVisible(true);
+			//share.setVisible(true);
+//			if (directionsVisible) {
+//				turnByTurn.setVisible(false);
+//				map.setVisible(true);
+//			} else {
+//				turnByTurn.setVisible(true);
+//				map.setVisible(false);
+//			}
+			//alway show turn by turn
+			turnByTurn.setVisible(false);
+			map.setVisible(false);
 			if (app.getRoute().getRouter().equals(CityParkConsts.CS)) {
-				csShare.setVisible(true);
+				//csShare.setVisible(true);
 				menu.setGroupVisible(R.id.cyclestreets, true);
 			}
 		}

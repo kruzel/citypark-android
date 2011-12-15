@@ -32,8 +32,7 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
 	
 	@Override
 	protected Boolean doInBackground(Void... params) {
-		//TODO start payment request (SMS,..)
-		//TODO update citypark through API
+		//TODO stop payment request (SMS,..)
 		
 		Time timeStart = new Time();
 		Time timeNow = new Time();

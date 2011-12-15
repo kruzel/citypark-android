@@ -34,7 +34,6 @@ public class StartPaymentTask extends AsyncTask<Void, Void, Boolean> {
 	protected Boolean doInBackground(Void... params) {
 				
 		//TODO start payment request (SMS,..)
-		//TODO update citypark through API
 		
 		Time timeStart = new Time();
 		Time timeNow = new Time();
