@@ -19,9 +19,9 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.LoginTask;
 import com.citypark.service.NavigationService;
 import com.citypark.service.ReportLocationTask;
 import com.citypark.service.RouteListener;
@@ -118,6 +118,8 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		}
 		registerReceiver(mBroadcastReceiver, 
 				new IntentFilter(getString(R.string.navigation_intent)));
+		
+		doBindService();
 	}
 	
 	@Override
@@ -297,7 +299,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			replan();
 			break;
 		case R.id.stop_nav:
-			doUnbindService();
+			//doUnbindService();
 			finishActivity(R.id.trace);
 			setResult(1);
 			this.finish();
@@ -340,7 +342,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	
 	@Override
 	public void onDestroy() {
-		doUnbindService();
+		//doUnbindService();
 	    unregisterReceiver(mBroadcastReceiver);
 	    super.onDestroy();
 	}
@@ -362,7 +364,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	 */
 	
 	private void startNavigation() {
-		doUnbindService();
+		//doUnbindService();
 		liveNavigation = mSettings.getBoolean("gps", false);
 		if (app.getRoute() != null) {
 			//Disable live navigation for Google routes to comply with Google tos
@@ -383,7 +385,6 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	
 	@Override
 	public void loginComplete(String sessionId) {
-		// TODO Auto-generated method stub
 		super.loginComplete(sessionId);
 		mBroadcastReceiver.setSessionId(sessionId);
 	}
@@ -414,6 +415,8 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		 */
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			PGeoPoint current = (PGeoPoint) intent.getExtras().get(getString(R.string.point));
+			
 			if (liveNavigation && directionsVisible && !arrived && !isSearching) {
 				if (intent.getBooleanExtra(getString(R.string.replan), false)) {
 					isSearching = true;
@@ -422,7 +425,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					arrive();
 					spoken = true;
 				} else if (app.getRoute() != null) {
-					PGeoPoint current = (PGeoPoint) intent.getExtras().get(getString(R.string.point));
+					
 					if (!app.getSegment().equals(lastSegment)) {
 						lastSegment = app.getSegment();
 						spoken = false;
@@ -442,17 +445,16 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					showStep();
 					traverse(current);
 					
-					//TODO rotate map to north
-					
-					//update citypark server on location
-					if((sessionId != null) && (last != null) && (last.distanceTo(current) > 20.0)) { //meters
-						ReportLocationTask locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
-						locTask.execute();
-					}
-					
-					last = current;
 				}
 			}
+			
+			//update citypark server on location
+			if((sessionId != null) && (last != null) && (last.distanceTo(current) > 20.0)) { //meters
+				ReportLocationTask locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
+				locTask.execute();
+			}
+			
+			last = current;
 		}
 	}
 	
@@ -482,7 +484,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		if (msg != null) {
 			
 			if (msg == R.id.result_ok) {
-				doUnbindService();
+				//doUnbindService();
 				app.setRoute(route);
 				app.setSegment(app.getRoute().getSegments().get(0));
 				//viewRoute();
@@ -527,7 +529,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	 */
 	
 	private void arrive() {
-		doUnbindService();
+		//doUnbindService();
 		arrived = true;
 		app.setSegment(app.getRoute().getSegment(app.getRoute().getEndPoint()));
 		traverse(app.getRoute().getEndPoint());

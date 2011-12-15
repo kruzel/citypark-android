@@ -106,8 +106,8 @@ public class NavigationService extends Service implements LocationListener {
 				app.getSegment().getInstruction(), contentIntent);
         	mNM.notify(R.id.notifier, notification);
         } else {
-        	shutdown();
-        	stopSelf();
+//        	shutdown();
+//        	stopSelf();
         }
     }
 
@@ -133,12 +133,14 @@ public class NavigationService extends Service implements LocationListener {
     
     @Override
 	public void onLocationChanged(Location location) {
+    	
+    	Intent update = new Intent((String) getText(R.string.navigation_intent));
+    	//Find the nearest points and unless it is far, assume we're there
+		PGeoPoint self = new PGeoPoint(location);
+		
     	if (app.getRoute() != null) {
-    		Intent update = new Intent((String) getText(R.string.navigation_intent));
-        	//Find the nearest points and unless it is far, assume we're there
-    		PGeoPoint self = new PGeoPoint(location);
-    		List<PGeoPoint> near = app.getRoute().nearest(self, 2);
     		
+    		List<PGeoPoint> near = app.getRoute().nearest(self, 2);
     		double range = range(self, near.get(0), near.get(1)) - 50;
     		double accuracy = location.getAccuracy();
     		
@@ -164,8 +166,10 @@ public class NavigationService extends Service implements LocationListener {
     		
     		mNM.notify(R.id.notifier, notification);
     	} else {
-    		stopSelf();
-    		shutdown();
+//    		stopSelf();
+//    		shutdown();
+    		update.putExtra(getString(R.string.point), (Parcelable)self);
+    		sendBroadcast(update);
     	}
 	}
     
