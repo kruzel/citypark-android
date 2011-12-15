@@ -449,9 +449,15 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			}
 			
 			//update citypark server on location
-			if((sessionId != null) && (last != null) && (last.distanceTo(current) > 20.0)) { //meters
-				ReportLocationTask locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
-				locTask.execute();
+			if(sessionId != null) {
+				ReportLocationTask locTask = null;
+				if (last == null) { // report first position
+					locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
+					locTask.execute();
+				} else if (last.distanceTo(current) > 20.0) {  //report progress, distance in meters
+						locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
+						locTask.execute();
+				}
 			}
 			
 			last = current;

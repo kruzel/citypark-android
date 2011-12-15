@@ -15,7 +15,7 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.citypark.service.PaymentListener;
-import com.citypark.service.PaymentTask;
+import com.citypark.service.StartPaymentTask;
 import com.citypark.service.StopPaymentTask;
 import com.citypark.service.TimeLimitAlertListener;
 import com.citypark.utility.ParkingSessionPersist;
@@ -26,7 +26,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	private ToggleButton tgBtnRemind = null;
 	private TextView txtProgressMsg = null;
 	private ProgressBar progBarPayment = null;
-	private PaymentTask payTask = null;
+	private StartPaymentTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
 	
@@ -62,7 +62,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			txtProgressMsg.setText(R.string.payment_progress);
 			progBarPayment.setVisibility(View.VISIBLE);
 			
-			stopPayTask = new StopPaymentTask(this);
+			stopPayTask = new StopPaymentTask(this, this, parking_manager.getCPSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
 			stopPayTask.execute();
 			
 		} else {
@@ -71,7 +71,9 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			progBarPayment.setVisibility(View.VISIBLE);
 			
 			//TODO add inheritance classes for the different payment methods (Pango, Celopark,..)
-			payTask = new PaymentTask(this);
+			//operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
+			//TODO add payment verification logic and update operationStatus accordingly
+			payTask = new StartPaymentTask(this, this, parking_manager.getCPSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
 			payTask.execute();
 		}
 	}
@@ -108,7 +110,6 @@ public class PaymentActivity extends Activity implements PaymentListener {
             am.cancel(sender);
             
             parking_manager.stopReminder();
-
 
 		}
 	}

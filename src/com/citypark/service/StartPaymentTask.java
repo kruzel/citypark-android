@@ -1,14 +1,14 @@
 package com.citypark.service;
 
 
-import com.citypark.parser.CityParkStartPaymentParser;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.format.Time;
 
-public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
+import com.citypark.parser.CityParkStartPaymentParser;
 
+public class StartPaymentTask extends AsyncTask<Void, Void, Boolean> {
+	
 	private PaymentListener payLitener = null;
 	private Context context;
 	private String sessionId;
@@ -16,8 +16,8 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
 	private double latitude;
 	private double longitude;
 	private String operationStatus;	
-	
-	public StopPaymentTask(PaymentListener payLitener, Context context,
+
+	public StartPaymentTask(PaymentListener payLitener, Context context,
 			String sessionId, String paymentProviderName, double latitude,
 			double longitude, String operationStatus) {
 		super();
@@ -29,9 +29,10 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
 		this.longitude = longitude;
 		this.operationStatus = operationStatus;
 	}
-	
+
 	@Override
 	protected Boolean doInBackground(Void... params) {
+				
 		//TODO start payment request (SMS,..)
 		//TODO update citypark through API
 		
@@ -53,7 +54,7 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
         	timeNow.setToNow();
         }
         
-      //update citypark through API on success or failure
+        //update citypark through API on success or failure
         CityParkStartPaymentParser parser = new CityParkStartPaymentParser(context, sessionId, paymentProviderName, latitude, longitude, operationStatus);
         
 		return true;
@@ -67,5 +68,6 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
 		//TODO error handling
 		
      }
+
 
 }
