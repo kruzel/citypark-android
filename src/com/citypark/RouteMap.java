@@ -8,6 +8,7 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.acra.ErrorReporter;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 import org.osmdroid.views.overlay.Overlay;
@@ -716,13 +717,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
 		} else {
 			parking_manager.setCPSessionId(sessionId);
-			garages = new LiveGarageMarkers(mOsmv, this);
-			garages.refresh(mOsmv.getMapCenter());
-			
-			// street parking segments
-			streetSegments = new LiveStreetParkingMarkers(mOsmv, this);
-			streetSegments.refresh(mOsmv.getMapCenter());
+			showAllParkings(mOsmv.getMapCenter());
 		}
 	}
 
+	public void showAllParkings(GeoPoint p) {
+		if(parking_manager.getCPSessionId() != null) {
+			garages = new LiveGarageMarkers(mOsmv, this);
+			garages.refresh(p);
+			
+			// street parking segments
+			streetSegments = new LiveStreetParkingMarkers(mOsmv, this);
+			streetSegments.refresh(p);
+			
+			mOsmv.invalidate();
+		}
+	}
+	
 }
