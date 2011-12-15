@@ -477,9 +477,22 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
      */
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if ((requestCode == R.id.trace) && (resultCode == 1)) {
-        	setResult(1);
-        	finish();
+        if (requestCode == R.id.trace) {
+        	if (resultCode == 1) { 
+        		setResult(1);
+            	finish();
+        	} else {
+        		//show parking around destination
+				int index = app.getRoute().getSegments().size()-1;
+				Segment seg = null;
+				if(index>=0)
+					seg = app.getRoute().getSegments().get(index);
+				if(seg!=null) {
+					List<PGeoPoint> pList = seg.getPoints();
+					GeoPoint p = pList.get(pList.size()-1);
+					showAllParkings(p);
+				}
+        	}
         }
     }
 

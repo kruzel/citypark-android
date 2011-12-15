@@ -20,7 +20,7 @@ public class LiveStreetParkingMarkers {
 	
 	/** street segments overlay **/
 	protected List<PathOverlay> mSegmentsOverlays = null;
-	protected List<PathOverlay> mOldSegmentsOverlays = null;
+	protected List<PathOverlay> mOldSegmentsOverlays = new ArrayList<PathOverlay>();
 	
 	/** OSM MapView reference **/
 	protected MapView mOsmv;
@@ -110,7 +110,6 @@ public class LiveStreetParkingMarkers {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				mOldSegmentsOverlays = mSegmentsOverlays;
 				mSegmentsOverlays = getSegments(p, RADIUS, context);
 				LiveStreetParkingMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
@@ -128,8 +127,10 @@ public class LiveStreetParkingMarkers {
 		@Override
 		public void handleMessage(final Message msg) {
 			clearSegments(mOldSegmentsOverlays);
-			mOldSegmentsOverlays = null;
 			setSegments(mSegmentsOverlays);
+			
+			mOldSegmentsOverlays.clear();
+			mOldSegmentsOverlays.addAll(mSegmentsOverlays);
 		}
 	};
 	

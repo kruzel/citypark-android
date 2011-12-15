@@ -188,6 +188,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 
 		// Initialize car alert manager
 		carAlert = new CarAlert(this);
+		
+		//init live marker updaters
+		garages = new LiveGarageMarkers(mOsmv, this);
+		streetSegments = new LiveStreetParkingMarkers(mOsmv, this);
 				
 		//Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -723,11 +727,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 
 	public void showAllParkings(GeoPoint p) {
 		if(parking_manager.getCPSessionId() != null) {
-			garages = new LiveGarageMarkers(mOsmv, this);
-			garages.refresh(p);
 			
-			// street parking segments
-			streetSegments = new LiveStreetParkingMarkers(mOsmv, this);
+			garages.refresh(p);
 			streetSegments.refresh(p);
 			
 			mOsmv.invalidate();
