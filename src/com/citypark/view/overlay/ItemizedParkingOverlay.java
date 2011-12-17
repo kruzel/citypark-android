@@ -64,16 +64,16 @@ public class ItemizedParkingOverlay extends ItemizedOverlay<OverlayItem> {
 	            paintText.getTextBounds(item.getTitle(), 0, item.getTitle().length(), rect);
 	
 	            rect.inset(-TITLE_MARGIN, -TITLE_MARGIN);
-	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight - rect.height());
+	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight - rect.height()); 
 	
 	            paintText.setTextAlign(Paint.Align.CENTER);
 	            paintText.setTextSize(FONT_SIZE);
 	            paintText.setARGB(255, 255, 255, 255);
-	            paintRect.setARGB(130, 0, 0, 0);
+	            paintRect.setARGB(255, 0, 0, 0);
 	
 	            canvas.drawRoundRect( new RectF(rect), 2, 2, paintRect);
 	            canvas.drawText(item.getTitle(), rect.left + rect.width() / 2,
-	                    rect.bottom - TITLE_MARGIN, paintText);
+	                    rect.bottom - TITLE_MARGIN , paintText);
         	}
         }
 	}

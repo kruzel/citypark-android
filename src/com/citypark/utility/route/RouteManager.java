@@ -179,12 +179,12 @@ public class RouteManager {
 		//Untidy.
 		//If not using cyclestreets, need to query elevations api for
 		//this route.
-		if (!CityParkConsts.CS.equals(router)) {
-			final StringBuffer elev = new StringBuffer(ctxt.getString(R.string.elev_api));
-			elev.append(URLEncoder.encode(r.getPolyline()));
-			parser = new GoogleElevationParser(elev.toString(), r);
-			r = parser.parse();
-		}
+//		if (!CityParkConsts.CS.equals(router)) {
+//			final StringBuffer elev = new StringBuffer(ctxt.getString(R.string.elev_api));
+//			elev.append(URLEncoder.encode(r.getPolyline()));
+//			parser = new GoogleElevationParser(elev.toString(), r);
+//			r = parser.parse();
+//		}
 		r.setCountry(country);
 		r.setRouteId(id);
 		return r;
