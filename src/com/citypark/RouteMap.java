@@ -1,6 +1,7 @@
 package com.citypark;
 
 import java.io.FileOutputStream;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.achartengine.ChartFactory;
@@ -54,6 +55,7 @@ import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.TurnByTurnGestureListener;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.utility.route.PGeoPoint;
+import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
 import com.citypark.view.overlay.LiveGarageMarkers;
 import com.citypark.view.overlay.LiveStreetParkingMarkers;
@@ -190,8 +192,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		carAlert = new CarAlert(this);
 		
 		//init live marker updaters
-		garages = new LiveGarageMarkers(mOsmv, this);
-		streetSegments = new LiveStreetParkingMarkers(mOsmv, this);
+		garages = new LiveGarageMarkers(mOsmv, this, app);
+		streetSegments = new LiveStreetParkingMarkers(mOsmv, this, app);
 				
 		//Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -204,15 +206,20 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		
-		strEmail = mPrefs.getString("email", null);
-        strPassword = mPrefs.getString("password", null);
-        
-        if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
-        	this.startActivity(new Intent(this, RegisterActivity.class));
-        }
+        if(app.getSessionId() == null) {       	
+        	strEmail = mPrefs.getString("email", null);
+            strPassword = mPrefs.getString("password", null);
+            
+        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
+	        	this.startActivity(new Intent(this, RegisterActivity.class));
+	        }
+	        else {
+	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
+	          	loginTask.execute((Void[])null);
+	        }
+		}
         else {
-        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
-          	loginTask.execute((Void[])null);
+			showAllParkings();
         }
 	}
 	
@@ -386,16 +393,14 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			//steps.setVisible(true);
 			//elev.setVisible(true);
 			//share.setVisible(true);
-//			if (directionsVisible) {
-//				turnByTurn.setVisible(false);
-//				map.setVisible(true);
-//			} else {
-//				turnByTurn.setVisible(true);
-//				map.setVisible(false);
-//			}
-			//alway show turn by turn
-			turnByTurn.setVisible(false);
-			map.setVisible(false);
+			if (directionsVisible) {
+				turnByTurn.setVisible(false);
+				map.setVisible(true);
+			} else {
+				turnByTurn.setVisible(true);
+				map.setVisible(false);
+			}
+			
 			if (app.getRoute().getRouter().equals(CityParkConsts.CS)) {
 				//csShare.setVisible(true);
 				menu.setGroupVisible(R.id.cyclestreets, true);
@@ -438,7 +443,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
 					Toast.LENGTH_LONG).show();
-			garages.refresh(mOsmv.getMapCenter());
+			showAllParkings(mOsmv.getMapCenter());
 			return true;
 		case R.id.export:
 			String xml = app.getRoute().toXml();
@@ -720,18 +725,35 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		if(sessionId == null) {
 			Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
 		} else {
-			parking_manager.setCPSessionId(sessionId);
-			showAllParkings(mOsmv.getMapCenter());
+			app.setSessionId(sessionId);
+			showAllParkings();
 		}
 	}
 
 	public void showAllParkings(GeoPoint p) {
-		if(parking_manager.getCPSessionId() != null) {
-			
+		if(app.getSessionId() != null) {
 			garages.refresh(p);
 			streetSegments.refresh(p);
-			
 			mOsmv.invalidate();
+		}
+	}
+	
+	public void showAllParkings() {
+		Route route = app.getRoute();
+		
+		if(route == null) {
+			showAllParkings(mOsmv.getMapCenter());
+		} else {
+			//show parking around destination
+			int index = app.getRoute().getSegments().size()-1;
+			Segment seg = null;
+			if(index>=0)
+				seg = app.getRoute().getSegments().get(index);
+			if(seg!=null) {
+				List<PGeoPoint> pList = seg.getPoints();
+				GeoPoint p = pList.get(pList.size()-1);
+				showAllParkings(p);
+			}
 		}
 	}
 	

@@ -222,7 +222,7 @@ public class Navigate extends Activity implements RouteListener {
 		searchIntent.putExtra(RoutePlannerTask.ROUTE_ID, random.nextInt(2147483647));
 		showDialog(R.id.plan);
 		isSearching = true;
-		search = new RoutePlannerTask(this, searchIntent);
+		search = new RoutePlannerTask(this, searchIntent, app);
 		search.execute();
 	}
 

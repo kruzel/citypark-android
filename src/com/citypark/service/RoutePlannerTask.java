@@ -13,6 +13,7 @@ import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.RouteManager;
 import com.citypark.utility.route.RouteManager.GeocodeConnectException;
 import com.citypark.utility.route.RouteManager.GeocodeException;
+import com.citypark.CityParkApp;
 import com.citypark.R;
 
 /**
@@ -70,13 +71,16 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
     protected String endAddressInput;
 	private RouteListener mAct;
 	private Intent mIntent;
+	/** Application reference. **/
+	protected CityParkApp app;
         
         
-        public RoutePlannerTask(RouteListener act, Intent intent) {
+        public RoutePlannerTask(RouteListener act, Intent intent, CityParkApp app) {
                 super();
                 mIntent = intent;
                 mAct = act;
                 planner = new RouteManager(mAct.getContext());
+                this.app = app;
         }
         
         public void setListener(final RouteListener listener) {
@@ -134,7 +138,7 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
         				msg = R.id.result_ok;
         				try {
         					planner.setStart(startAddressInput);
-        					planner.setDest(GaragesOverlayHandler.getNearest(planner.getStart(), mAct.getContext()));	
+        					planner.setDest(GaragesOverlayHandler.getNearest(planner.getStart(), mAct.getContext(),app.getSessionId()));	
         				} catch (GeocodeException e) {
 							msg = R.id.geocodeerror;
         				}  catch (GeocodeConnectException e) {

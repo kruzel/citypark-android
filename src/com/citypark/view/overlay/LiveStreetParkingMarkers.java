@@ -12,11 +12,15 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 
+import com.citypark.CityParkApp;
+import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkStreetParkingParser;
 import com.citypark.utility.ParkingSessionPersist;
 
 public class LiveStreetParkingMarkers {
 	private final Context context;
+	/** Application reference. **/
+	protected static CityParkApp app;
 	
 	/** street segments overlay **/
 	protected List<PathOverlay> mSegmentsOverlays = null;
@@ -27,9 +31,10 @@ public class LiveStreetParkingMarkers {
 	/** Radius to return markers within. **/
 	protected static final int RADIUS = 500;
 
-	public LiveStreetParkingMarkers(MapView osmv, final Context ctxt) {
+	public LiveStreetParkingMarkers(MapView osmv, final Context ctxt, CityParkApp app) {
 		this.mOsmv = osmv;
 		context = ctxt.getApplicationContext();	
+		this.app = app;
 	}
 	
 	public void clearSegments(final List<PathOverlay> segmentsOverlays){
@@ -62,23 +67,21 @@ public class LiveStreetParkingMarkers {
 		
 		final List<PathOverlay> segments = new ArrayList<PathOverlay>();
 		
-		ParkingSessionPersist parking_manager = new ParkingSessionPersist(mAct);
-		
 		//use CityPark to find street segments
-		String cpSessionId = parking_manager.getCPSessionId();
+		String cpSessionId = app.getSessionId();
 		PathOverlay overlay;
 		int color = Color.TRANSPARENT;
 		if (cpSessionId != null) {
-			final CityParkStreetParkingParser parser = new CityParkStreetParkingParser(mAct,parking_manager.getCPSessionId(),p.getLatitudeE6(),p.getLongitudeE6(),distance);
+			final CityParkStreetParkingParser parser = new CityParkStreetParkingParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
 			
 			// Parse XML to street segments
 			// and add each street segment as a separate overlay with color according to street segment wait time
 			for (StreetSegment streetSegment : parser.parse()) {
 				if(streetSegment.getSearch_time() == -1 )
 					color = Color.TRANSPARENT;
-				else if(streetSegment.getSearch_time() < 5) //minutes
+				else if(streetSegment.getSearch_time() < CityParkConsts.FAST_PARKING_LIMIT) //sec
 					color = Color.GREEN;
-				else if(streetSegment.getSearch_time() < 15) //minutes
+				else if(streetSegment.getSearch_time() < CityParkConsts.MEDIUM_PARKING_LIMIT) //sec
 					color = Color.YELLOW;
 				else 
 					color = Color.RED;

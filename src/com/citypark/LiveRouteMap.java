@@ -146,7 +146,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			searchIntent.putExtra(RoutePlannerTask.ROUTE_ID, (new Random()).nextInt(2147483647));
 			searchIntent.putExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.FILE_PLAN);
 			searchIntent.putExtra(RoutePlannerTask.FILE, uri.getPath());
-			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this, searchIntent);
+			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this, searchIntent, app);
 			LiveRouteMap.this.search.execute();
 			//Set the launching intent to one without file data now route is loaded.
 			setIntent(getIntent().setData(null));
@@ -227,7 +227,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			searchIntent.putExtra(RoutePlannerTask.START_LOCATION, self);
 			searchIntent.putExtra(RoutePlannerTask.END_POINT,
 					(Parcelable) app.getRoute().getPoints().get(app.getRoute().getPoints().size() - 1));
-			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this, searchIntent);
+			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this, searchIntent, app);
 			LiveRouteMap.this.search.execute();
 		} else {
 			dismissDialog(R.id.plan);
@@ -478,20 +478,12 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == R.id.trace) {
-        	if (resultCode == 1) { 
-        		setResult(1);
-            	finish();
-        	} else {
-        		//show parking around destination
-				int index = app.getRoute().getSegments().size()-1;
-				Segment seg = null;
-				if(index>=0)
-					seg = app.getRoute().getSegments().get(index);
-				if(seg!=null) {
-					List<PGeoPoint> pList = seg.getPoints();
-					GeoPoint p = pList.get(pList.size()-1);
-					showAllParkings(p);
-				}
+        	if (resultCode == 1) {
+	        	setResult(1);
+	        	finish();
+	        }
+        	else {
+        		showAllParkings();
         	}
         }
     }
@@ -519,15 +511,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				traverse(app.getSegment().startPoint());
 				
 				//show parking around destination
-				int index = app.getRoute().getSegments().size()-1;
-				Segment seg = null;
-				if(index>=0)
-					seg = app.getRoute().getSegments().get(index);
-				if(seg!=null) {
-					List<PGeoPoint> pList = seg.getPoints();
-					GeoPoint p = pList.get(pList.size()-1);
-					showAllParkings(p);
-				}
+				showAllParkings();
 				
 				arrived = false;
 				if (directionsVisible) {

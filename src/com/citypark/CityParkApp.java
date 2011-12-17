@@ -56,6 +56,16 @@ public class CityParkApp extends Application {
 	private AddressDatabase addressDB;
 	/** Favourite routes db. **/
 	private RouteDatabase routeDB;
+	
+	public String getSessionId() {
+		return mSessionId;
+	}
+
+	public void setSessionId(String mSessionId) {
+		this.mSessionId = mSessionId;
+	}
+
+	public String mSessionId = null;
 
 	public CityParkApp () {
 		super();

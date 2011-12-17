@@ -2,15 +2,11 @@ package com.citypark.utility;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.OverlayItem.HotspotPlace;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
-
 import com.citypark.R;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkGaragesParser;
@@ -42,9 +38,6 @@ import com.citypark.parser.CityParkGaragesParser.GaragePoint;
 
 public final class GaragesOverlayHandler {
 		
-	private GaragesOverlayHandler() {
-	}
-	
 	/**
 	 * Find the nearest cycle stand to the point given, or
 	 * return null if there's not one in a mile.
@@ -52,12 +45,12 @@ public final class GaragesOverlayHandler {
 	 * @return a GeoPoint representing the cycle stand position or null.
 	 */
 	
-	public static GeoPoint getNearest(final GeoPoint point, final Context mAct) {
+	public static GeoPoint getNearest(final GeoPoint point, final Context mAct, final String cpSessionId) {
 		GeoPoint closest = null;
 		double best = 9999999;
 		double dist;
 		
-		for (OverlayItem o : getMarkers(point, 1, mAct)) {
+		for (OverlayItem o : getMarkers(point, 1, mAct, cpSessionId)) {
 			dist = point.distanceTo(o.mGeoPoint);
 		
 			if (best > dist) {
@@ -68,9 +61,9 @@ public final class GaragesOverlayHandler {
 		return closest;
 	}
 	
-	public static GeoPoint getNearest(final Address address, final Context mAct) {
+	public static GeoPoint getNearest(final Address address, final Context mAct, final String cpSessionId) {
 		return getNearest(new GeoPoint(Convert.asMicroDegrees(address.getLatitude()),
-				Convert.asMicroDegrees(address.getLongitude())), mAct);
+				Convert.asMicroDegrees(address.getLongitude())), mAct, cpSessionId);
 	}
 
 	/**
@@ -82,16 +75,13 @@ public final class GaragesOverlayHandler {
 	 */
 
 	public static List<OverlayItem> getMarkers(final GeoPoint p,
-			final int distance, final Context mAct) {
+			final int distance, final Context mAct, final String cpSessionId) {
 		
 		final List<OverlayItem> markers = new ArrayList<OverlayItem>();
 		
-		ParkingSessionPersist parking_manager = new ParkingSessionPersist(mAct);
-		
 		//use CityPark to find garages
-		String cpSessionId = parking_manager.getCPSessionId();
 		if (cpSessionId != null) {
-			final CityParkGaragesParser parser = new CityParkGaragesParser(mAct,parking_manager.getCPSessionId(),p.getLatitudeE6(),p.getLongitudeE6(),distance);
+			final CityParkGaragesParser parser = new CityParkGaragesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
 			
 			//final HotspotPlace hotspot = new HotspotPlace(0, 10);
 			final Drawable markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage);

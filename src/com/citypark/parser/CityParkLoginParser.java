@@ -4,11 +4,7 @@
 package com.citypark.parser;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.xml.sax.SAXException;
-
 import android.content.Context;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
@@ -17,7 +13,6 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.citypark.R;
-import com.citypark.utility.route.PGeoPoint;
 
 /**
  * This file is part of BikeRoute.

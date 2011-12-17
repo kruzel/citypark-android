@@ -2,11 +2,7 @@ package com.citypark.service;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
-
-import com.citypark.R;
 import com.citypark.parser.CityParkLoginParser;
-import com.citypark.utility.ParkingSessionPersist;
 
 public class LoginTask extends AsyncTask<Void, Void, String> {
 	private String email; 

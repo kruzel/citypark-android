@@ -30,8 +30,16 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
 	
+	/** Application reference. **/
+	private CityParkApp app;
+	
 	/** ParkingSessionPersist manager. */
-	ParkingSessionPersist parking_manager = null;
+	private ParkingSessionPersist parking_manager = null;
+
+	public PaymentActivity(CityParkApp app) {
+		super();
+		this.app = app;
+	}
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -62,7 +70,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			txtProgressMsg.setText(R.string.payment_progress);
 			progBarPayment.setVisibility(View.VISIBLE);
 			
-			stopPayTask = new StopPaymentTask(this, this, parking_manager.getCPSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
+			stopPayTask = new StopPaymentTask(this, this, app.getSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
 			stopPayTask.execute();
 			
 		} else {
@@ -73,7 +81,7 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			//TODO add inheritance classes for the different payment methods (Pango, Celopark,..)
 			//TODO add payment verification logic and update operationStatus accordingly
 			//operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
-			payTask = new StartPaymentTask(this, this, parking_manager.getCPSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
+			payTask = new StartPaymentTask(this, this, app.getSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
 			payTask.execute();
 		}
 	}

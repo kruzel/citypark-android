@@ -43,6 +43,10 @@ public final class CityParkConsts {
 	/** Radius of the earth for degrees - miles calculations. **/
 	public static final double EARTH_RADIUS = 3960.0;
 	
+	/** parking consts **/
+	public static final double FAST_PARKING_LIMIT = 5*60;
+	public static final double MEDIUM_PARKING_LIMIT = 15*60;
+	
 	/** Router Consts. **/
 	/** Google. **/
 	public static final String G = "Google";

@@ -44,8 +44,6 @@ public class ParkingSessionPersist {
 	private static final String PAYMENT_START_TIME = "paystarttime";
 	/** Preference key (alarm target time) **/
 	private static final String ALARM_TIME = "alarmtime";
-	/** Preference key city park session id **/
-	private static final String CP_SESSION_ID = "cp_session_id";
 	
 	/** Shared preferences object. **/
 	private final SharedPreferences settings;
@@ -161,19 +159,5 @@ public class ParkingSessionPersist {
 
 	public final boolean isReminderActive() {
 		return settings.contains(ALARM_TIME);
-	}
-	
-	public final String getCPSessionId(){
-		return settings.getString(CP_SESSION_ID,null);
-	}
-	
-	public final void setCPSessionId(String cpSessionId){
-		editor.putString(CP_SESSION_ID, cpSessionId);
-		editor.commit();
-	}
-	
-	public final void removeCPSessionId(){
-		editor.remove(CP_SESSION_ID);
-		editor.commit();
 	}
 }

@@ -54,6 +54,7 @@ public class StopPaymentTask extends AsyncTask<Void, Void, Boolean> {
         
       //update citypark through API on success or failure
         CityParkStartPaymentParser parser = new CityParkStartPaymentParser(context, sessionId, paymentProviderName, latitude, longitude, operationStatus);
+        parser.parse();
         
 		return true;
 	}

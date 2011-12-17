@@ -14,6 +14,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.citypark.CityParkApp;
 import com.citypark.R;
 import com.citypark.utility.GaragesOverlayHandler;
 
@@ -53,12 +54,15 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
 	private ItemizedParkingOverlay iOverlay;
+	/** Application reference. **/
+	protected CityParkApp app;
 
-	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
+	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt, CityParkApp app) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
 		iOverlay = new ItemizedParkingOverlay(ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
+		this.app = app;
 	}
 
 	/**
@@ -71,7 +75,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				markers = GaragesOverlayHandler.getMarkers(p, RADIUS, context);
+				markers = GaragesOverlayHandler.getMarkers(p, RADIUS, context,app.getSessionId());
 				LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
