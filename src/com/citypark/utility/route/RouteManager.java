@@ -125,29 +125,11 @@ public class RouteManager {
 		Parser parser;
 		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctxt);
-		//Default router is cyclestreets in UK, MapQuest elsewhere.
-		String defaultRouter = Locale.getDefault().equals(Locale.UK) ? CityParkConsts.CS : CityParkConsts.MQ;
+		
+		String defaultRouter = CityParkConsts.G;
 		String router = settings.getString("router", defaultRouter);
 		
-		if (CityParkConsts.CS.equals(router)) {
-			String routeType = settings.getString("cyclestreetsJourneyPref", "balanced");
-			final StringBuffer sBuf = new StringBuffer(ctxt.getString(R.string.cs_api));
-			sBuf.append("start_lat=");
-			sBuf.append(Convert.asDegrees(start.getLatitudeE6()));
-			sBuf.append("&start_lng=");
-			sBuf.append(Convert.asDegrees(start.getLongitudeE6()));
-			sBuf.append("&dest_lat=");
-			sBuf.append(Convert.asDegrees(dest.getLatitudeE6()));
-			sBuf.append("&dest_lng=");
-			sBuf.append(Convert.asDegrees(dest.getLongitudeE6()));
-			sBuf.append("&plan=");
-			sBuf.append(routeType);
-			sBuf.append("&route_id=");
-			sBuf.append(id);
-
-			parser = new CycleStreetsParser(sBuf
-				.toString());
-		} else if (CityParkConsts.G.equals(router)) {
+		if (CityParkConsts.G.equals(router)) {
 			final StringBuffer sBuf = new StringBuffer(ctxt.getString(R.string.us_api));
 			sBuf.append("origin=");
 			sBuf.append(Convert.asDegrees(start.getLatitudeE6()));
@@ -162,8 +144,8 @@ public class RouteManager {
 			} else {
 				sBuf.append("&sensor=true&mode=driving");
 			}
-		parser = new GoogleDirectionsParser(sBuf.toString());
-		} else {
+			parser = new GoogleDirectionsParser(sBuf.toString());
+		} else { //very inaccurate - don't use
 			final StringBuffer sBuf = new StringBuffer(ctxt.getString(R.string.mq_api));
 			sBuf.append(start.getLatitudeE6()/1E6);
 			sBuf.append(',');
