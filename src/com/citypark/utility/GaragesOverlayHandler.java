@@ -98,7 +98,7 @@ public final class GaragesOverlayHandler {
 
 			// Parse XML to overlayitems (cycle stands)
 			for (GaragePoint garagePoint : parser.parse()) {
-				OverlayItem marker = new OverlayItem(Double.toString(garagePoint.getPrice()), garagePoint.getName(), garagePoint.getPGeoPoint());
+				OverlayItem marker = new OverlayItem(Integer.toString((int)garagePoint.getPrice()), garagePoint.getName(), garagePoint.getPGeoPoint());
 				marker.setMarker(markerIcon);
 				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
 				markers.add(marker);

@@ -1,10 +1,7 @@
 package com.citypark.view.overlay;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-
-import com.citypark.utility.GaragesOverlayHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -13,8 +10,12 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
 import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+
+import com.citypark.R;
+import com.citypark.utility.GaragesOverlayHandler;
 
 /**
  * This file is part of BikeRoute.
@@ -51,14 +52,13 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
-	private ItemizedOverlay<OverlayItem> iOverlay;
+	private ItemizedParkingOverlay iOverlay;
 
 	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
-		iOverlay = new ItemizedIconOverlay<OverlayItem>(mOverlays,
-				this, mv.getResourceProxy());
+		iOverlay = new ItemizedParkingOverlay(ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
 	}
 
 	/**
@@ -79,8 +79,8 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	}
 	
 	/**
-	 * Handler for stands thread.
-	 * Remove the existing stands overlay if it exists and
+	 * Handler for parking thread.
+	 * Remove the existing parking overlay if it exists and
 	 * replace it with the new one from the thread.
 	 */
 	
@@ -92,7 +92,8 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			}
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedIconOverlay<OverlayItem>(mOverlays, LiveGarageMarkers.this, mv.getResourceProxy());
+			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
+			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
 			//mv.postInvalidate();
 		}
