@@ -445,7 +445,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
 					Toast.LENGTH_LONG).show();
-			showAllParkings(mOsmv.getMapCenter());
+			showAllParkings();
 			return true;
 		case R.id.export:
 			String xml = app.getRoute().toXml();
