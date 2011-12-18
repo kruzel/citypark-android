@@ -38,7 +38,7 @@ public class RegistrationTask extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... params) {
 		CityParkRegisterParser parser = new CityParkRegisterParser(mAct, email, password, firstName, familyName, phoneNumber, licensePlate, paymentMethod);
 		
-		String res = "OK"; // parser.parse();
+		String res = parser.parse();
 
 		return res;
 	}
