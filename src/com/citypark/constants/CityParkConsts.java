@@ -55,5 +55,8 @@ public final class CityParkConsts {
 	/** CycleStreets. **/
 	public static final String CS = "CycleStreets";
 	
+	/** registration **/
+	public static final String USER_ALREADY_EXISTS = "USER ALREADY EXISTS";
+	
 	private CityParkConsts() { }
 }

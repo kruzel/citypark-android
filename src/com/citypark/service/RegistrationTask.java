@@ -29,6 +29,7 @@ public class RegistrationTask extends AsyncTask<Void, Void, String> {
 		this.password = password;
 		this.firstName = firstName;
 		this.familyName = familyName;
+		this.phoneNumber = phoneNumber;
 		this.licensePlate = licensePlate;
 		this.paymentMethod = paymentMethod;
 	}
@@ -37,7 +38,7 @@ public class RegistrationTask extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... params) {
 		CityParkRegisterParser parser = new CityParkRegisterParser(mAct, email, password, firstName, familyName, phoneNumber, licensePlate, paymentMethod);
 		
-		String res = parser.parse();
+		String res = "OK"; // parser.parse();
 
 		return res;
 	}

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.citypark.constants.CityParkConsts;
 import com.citypark.service.RegisterationListener;
 import com.citypark.service.RegistrationTask;
 
@@ -66,15 +68,17 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     } 
    
     public void onRegister(View view) {
-    	    	
+    	if(txtEmail.getText().length() == 0 || txtPassword.getText().length() == 0) {
+    		Toast.makeText(this, R.string.registration_missing_fields, Toast.LENGTH_LONG).show();
+    		return;
+    	}
+    	
         mEditor.putString("email", txtEmail.getText().toString());
         mEditor.putString("password", txtPassword.getText().toString());
         mEditor.putString("first_name", txtFirstName.getText().toString());
         mEditor.putString("last_name", txtLastName.getText().toString());
         mEditor.putString("license_plate", txtLicensePlate.getText().toString());
         mEditor.putString("payment_method", strPaymentMethod);
-        
-        
         
         //spawn registration task
         //we finish only after receiving response from the server
@@ -113,22 +117,12 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 
 	@Override
 	public void RegistrationComplete(final String successCode) {
-		//TODO handle successCode values: "USER ALREADY EXIST",...
-//		if(successCode == txtEmail.getText().toString()) {	
-//	        // Commit the edits!
-//	        if(mEditor.commit()){
-//	        	//RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LiveRouteMap.class));
-//	        	finish();
-//	        } else {
-//	        	Log.e("onRegister", "registration failed");
-//	        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
-//	        }	        
-//		} else {
-//        	Log.e("onRegister", "registration failed");
-//        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
-//        }	
+		if(CityParkConsts.USER_ALREADY_EXISTS.equalsIgnoreCase(successCode)){
+			Log.e(CityParkConsts.USER_ALREADY_EXISTS,"User already exists in the system!");
+			
+			//TODO get user data from server and store locally
+		}
 		
-		//currently the api does not return a result, so finish anyhow
 		if(mEditor.commit()){
         	finish();
         } else {
@@ -136,4 +130,11 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
         }	
 	}
+	
+	@Override
+	public void onBackPressed() {
+
+	   return;
+	}
+
 }  

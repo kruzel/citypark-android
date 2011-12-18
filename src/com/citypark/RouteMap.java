@@ -206,21 +206,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		
-        if(app.getSessionId() == null) {       	
-        	strEmail = mPrefs.getString("email", null);
-            strPassword = mPrefs.getString("password", null);
-            
-        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
-	        	this.startActivity(new Intent(this, RegisterActivity.class));
-	        }
-	        else {
-	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
-	          	loginTask.execute((Void[])null);
-	        }
-		}
-        else {
-			showAllParkings();
-        }
 	}
 	
 	/**
@@ -258,6 +243,22 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
     		if(mSettings.getBoolean("keepAwake", false)) {
     			wl.acquire();
     		}
+        }
+        
+        if(app.getSessionId() == null) {       	
+        	strEmail = mPrefs.getString("email", null);
+            strPassword = mPrefs.getString("password", null);
+            
+        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
+	        	this.startActivity(new Intent(this, RegisterActivity.class));
+	        }
+	        else {
+	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
+	          	loginTask.execute((Void[])null);
+	        }
+		}
+        else {
+			showAllParkings();
         }
 	}
 	

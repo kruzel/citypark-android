@@ -37,7 +37,6 @@ import com.citypark.R;
  */
 public class CityParkRegisterParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";
-	public static final String USER_ALREADY_EXISTS = "USER ALREADY EXISTS";
 	
 	/**
 	 * @param feedUrl
@@ -63,11 +62,6 @@ public class CityParkRegisterParser extends XMLParser {
 			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
-		}
-		
-		if(USER_ALREADY_EXISTS.equalsIgnoreCase(res.response)){
-			//DO WHAT EVER YOU WANT TO DO OR MAYBE THE CONSTATN AND LOGIC SHOULD BE IN UPPER LEVEL LIKE THE RegisterActivity
-			Log.e(USER_ALREADY_EXISTS,"This user already exists in the system!");
 		}
 		
 		return res.response;
