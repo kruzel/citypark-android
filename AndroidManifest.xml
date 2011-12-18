@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.citypark" android:versionCode="1135" android:versionName="Beta 1135">
+    
+    <uses-sdk android:minSdkVersion="7" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,58 +12,39 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     
-    <application android:label="@string/app_name"
-            android:icon="@drawable/logo" android:name=".CityParkApp" android:debuggable="true">
-            <receiver android:name="TimeLimitAlert"></receiver>
-
-
-       <activity android:name="com.citypark.Navigate" android:label="CityPark">
-       </activity>
-       <activity android:name="com.citypark.LiveRouteMap" android:label="Map" 
-       android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask"
-       android:finishOnTaskLaunch="true">
-    	<intent-filter>
-        	<action android:name="android.intent.action.VIEW" />
-        	<category android:name="android.intent.category.DEFAULT" />
-        	<category android:name="android.intent.category.BROWSABLE" />
-        	<data android:scheme="http" /> 
-  			<data android:scheme="https" /> 
-  			<data android:scheme="ftp"  /> 
-  			<data android:scheme="file"  /> 
-  			<data android:scheme="content" /> 
-  			<data android:host="*" />
-  			<data android:pathPattern=".*\\.citypark" />
-  			<data android:mimeType="*/*" />
-    
-  			<category android:name="android.intent.category.LAUNCHER"></category>
-            <action android:name="android.intent.action.MAIN"></action>
-  		</intent-filter>
-	</activity>
-       <activity android:name="com.citypark.DirectionsView" android:label="Directions">
-       </activity>
-       <activity android:name="com.citypark.SavedRoutes" android:label="Favourites">
-       </activity>
-       <activity android:name="com.citypark.Preferences" android:label="Preferences">
-       </activity>
-       <activity android:name="org.achartengine.GraphicalActivity" android:label="Elevations" />
-       <activity android:name="com.citypark.Feedback" android:label="Feedback">
-       </activity>
-       <activity android:name="com.citypark.RegisterActivity" android:label="Registration" 
-           android:theme="@android:style/Theme.Black.NoTitleBar" />
-       <activity android:name="org.acra.CrashReportDialog"
-        android:theme="@android:style/Theme.Dialog"
-        android:launchMode="singleInstance"
-        android:excludeFromRecents="true"
-        android:finishOnTaskLaunch="true" />
-	   <service android:exported="false" android:name=".service.NavigationService" 
-	       android:enabled="true" android:label="Router"></service>
-	   <activity android:name=".PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" 
-	       android:label="Pay"></activity>
-</application>
-
-
-<uses-sdk android:minSdkVersion="7" />
-
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <application android:label="@string/app_name" 
+        android:icon="@drawable/logo" 
+        android:name="CityParkApp" 
+        android:debuggable="false">
+        <activity android:name="com.citypark.Navigate" android:label="CityPark" />
+        <activity android:name="com.citypark.LiveRouteMap" android:label="Map" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
+	    	<intent-filter>
+	        	<action android:name="android.intent.action.VIEW" />
+	        	<action android:name="android.intent.action.MAIN" />
+	        	<category android:name="android.intent.category.DEFAULT" />
+	        	<category android:name="android.intent.category.BROWSABLE" />
+	        	<category android:name="android.intent.category.LAUNCHER" />
+	        	<data android:scheme="http" /> 
+	  			<data android:scheme="https" /> 
+	  			<data android:scheme="ftp" /> 
+	  			<data android:scheme="file" /> 
+	  			<data android:scheme="content" /> 
+	  			<data android:host="*" />
+	  			<data android:pathPattern=".*\\.citypark" />
+	  			<data android:mimeType="*/*" />
+	  		</intent-filter>
+		</activity>
+		<activity android:name="com.citypark.DirectionsView" android:label="Directions" /> 
+		<activity android:name="com.citypark.SavedRoutes" android:label="Favourites" />
+		<activity android:name="com.citypark.Preferences" android:label="Preferences" />
+		<activity android:name="org.achartengine.GraphicalActivity" android:label="Elevations" />
+		<activity android:name="com.citypark.Feedback" android:label="Feedback" />
+		<activity android:name="com.citypark.RegisterActivity" android:label="Registration" android:theme="@android:style/Theme.Black.NoTitleBar" />
+		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
+		<activity android:name=".PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
+		<service android:name=".service.NavigationService" android:enabled="true" android:label="Router" android:exported="false" />
+		<receiver android:name="TimeLimitAlert" />
+	</application>
 </manifest>
