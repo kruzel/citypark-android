@@ -35,16 +35,12 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	
 	/** ParkingSessionPersist manager. */
 	private ParkingSessionPersist parking_manager = null;
-
-	public PaymentActivity(CityParkApp app) {
-		super();
-		this.app = app;
-	}
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
 		super.onCreate(savedState);
 		
+		app = (CityParkApp) getApplication();
 		setContentView(R.layout.pay);
 		
 		// Initialize parking manager
