@@ -440,6 +440,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			break;
 		case R.id.center:
 			RouteMap.this.mLocationOverlay.followLocation(true);
+			showAllParkings();
 			break;
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
