@@ -19,6 +19,7 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.citypark.R;
+import com.citypark.constants.GarageAvailability;
 import com.citypark.utility.route.PGeoPoint;
 
 /**
@@ -66,15 +67,26 @@ public class CityParkGaragesParser extends XMLParser {
 		double longitude;
 		double price;
 		String name;
+		GarageAvailability availability;
 		
 		public GaragePoint() {
 			// TODO Auto-generated constructor stub
 		}
+		
+		public GarageAvailability getAvailability() {
+			return availability;
+		}
+
+		public void setAvailability(GarageAvailability availability) {
+			this.availability = availability;
+		}
+
 		public GaragePoint(GaragePoint p) {
 			this.latitude = p.latitude;
 			this.longitude = p.longitude;
 			this.price = p.price;
 			this.name = p.name;
+			this.availability = p.availability;
 		}
 		public double getLatitude() {
 			return latitude;
@@ -129,6 +141,18 @@ public class CityParkGaragesParser extends XMLParser {
 			node.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setLatitude(Double.parseDouble(body));
+				}
+			});
+			
+			//TODO Current_Pnuyot
+			node.getChild(XMLNS,"Current_Pnuyot").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {	
+					try{
+						int currentFree = Integer.parseInt(body);
+						p.setAvailability(GarageAvailability.getByValue(currentFree));
+					}catch(Exception ex){
+						p.setAvailability(GarageAvailability.UNKNOWN);
+					}					
 				}
 			});
 			

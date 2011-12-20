@@ -20,9 +20,6 @@
     <item android:id="@+id/map"
     android:title="@string/map_title"
     android:icon="@drawable/ic_menu_map" android:visible="false"></item>
-    <item android:id="@+id/stop_nav"
-    android:title="@string/stop_nav_title"
-    android:icon="@drawable/ic_menu_close_clear_cancel" android:visible="false"></item>
     <item android:id="@+id/center"
           android:title="@string/center_title"
           android:icon="@drawable/ic_menu_mylocation" >
@@ -39,7 +36,11 @@
         <item android:id="@+id/turnbyturn"
     	android:title="@string/turnbyturn"
     	android:icon="@drawable/ic_menu_turnbyturn" android:visible="false" >
-    	</item>
+    </item>
+    <item android:id="@+id/stop_nav"
+    android:title="@string/stop_nav_title"
+    android:icon="@drawable/ic_menu_close_clear_cancel" android:visible="false">
+    </item>
     <item android:id="@+id/prefs"
     android:title="@string/prefs_title"
     android:icon="@drawable/ic_menu_preferences"></item>

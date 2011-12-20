@@ -2,11 +2,14 @@ package com.citypark.utility;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
+
 import com.citypark.R;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkGaragesParser;
@@ -81,13 +84,25 @@ public final class GaragesOverlayHandler {
 		
 		//use CityPark to find garages
 		if (cpSessionId != null) {
+			Drawable markerIcon;
 			final CityParkGaragesParser parser = new CityParkGaragesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
 			
-			//final HotspotPlace hotspot = new HotspotPlace(0, 10);
-			final Drawable markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage);
+			//final HotspotPlace hotspot = new HotspotPlace(0, 10);	
 
 			// Parse XML to overlayitems (cycle stands)
 			for (GaragePoint garagePoint : parser.parse()) {
+				switch (garagePoint.getAvailability()) {
+				case UNKNOWN:
+					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage);
+					break;
+				case BUSY:
+					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage_red);
+					break;
+				default:
+					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage_green);
+					break;
+				}
+				
 				OverlayItem marker = new OverlayItem(Integer.toString((int)garagePoint.getPrice()), garagePoint.getName(), garagePoint.getPGeoPoint());
 				marker.setMarker(markerIcon);
 				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);

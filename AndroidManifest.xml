@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.citypark" android:versionCode="2" android:versionName="Alpha 2">
+    package="com.citypark" android:versionCode="5" android:versionName="Alpha 5">
     
     <uses-sdk android:minSdkVersion="7" />
 
@@ -47,6 +47,9 @@
 		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
 		<activity android:name="com.citypark.PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
 		<service android:name="com.citypark.service.NavigationService" android:enabled="true" android:label="Router" android:exported="false" />
-		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert"/>
+		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert">
+		    <intent-filter>
+		    </intent-filter>
+		</receiver>
 	</application>
 </manifest>

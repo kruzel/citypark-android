@@ -90,7 +90,7 @@ public class NavigationService extends Service implements LocationListener {
         /* Get location manager. */
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         app = (CityParkApp) getApplication();
-        int icon = R.drawable.bikeroute;
+        int icon = R.drawable.logo;
         CharSequence tickerText = "";
         long when = System.currentTimeMillis();
 
