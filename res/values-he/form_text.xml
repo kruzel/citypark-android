@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="search">חפש</string>
+<string name="start_input">כתובת התחלה</string>
+<string name="end_input">כתובת סיום</string>
+<string name="start">מ </string>
+<string name="end">אל</string>
+<string name="email">דוא"ל</string>
+<string name="name">שם</string>
+<string name="comment">משוב</string>
+</resources>

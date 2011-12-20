@@ -17,7 +17,7 @@
     <application android:label="@string/app_name" 
         android:icon="@drawable/logo" 
         android:name="CityParkApp" 
-        android:debuggable="false">
+        android:debuggable="true">
         <activity android:name="com.citypark.Navigate" android:label="CityPark" />
         <activity android:name="com.citypark.LiveRouteMap" android:label="Map" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
 	    	<intent-filter>

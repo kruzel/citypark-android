@@ -1,0 +1,33 @@
+<resources><string-array name="unitsArray">
+<item>אימפריאל</item>
+<item>מטרי</item>
+</string-array>
+<string-array name="unitsValues">
+<item>m</item>
+<item>km</item>
+</string-array>
+<string-array name="journeyTypeValues">
+<item>מאוזן</item>
+<item>מהיר</item>
+<item>שקט</item>
+<item>קצר</item>
+</string-array>
+<string-array name="journeyTypeArray">
+<item>מאוזן</item>
+<item>מהיר</item>
+<item>שקט</item>
+<item>קצר</item>
+</string-array>
+<string-array name="routerArray">
+<item>Google</item>
+</string-array>
+<string-array name="routerValues">
+<item>Google</item>
+</string-array>
+<string-array name="tileEntries">
+    <item>Default</item>
+</string-array>
+<string-array name="tileValues">
+    <item>Mapnik</item>
+</string-array>
+</resources>

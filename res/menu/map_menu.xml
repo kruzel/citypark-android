@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
+      <item android:id="@+id/park"
+          android:title="@string/park_title" 
+          android:icon="@drawable/ic_menu_park">
+    </item>
+    <item android:id="@+id/unpark"
+          android:title="@string/unpark_title" android:visible="false" 
+          android:icon="@drawable/ic_menu_unpark">
+    </item>
     <item android:id="@+id/navigate"
           android:title="@string/navigate_title" 
           android:icon="@drawable/ic_menu_navigate">
@@ -19,10 +27,6 @@
           android:title="@string/center_title"
           android:icon="@drawable/ic_menu_mylocation" >
     </item>
-    <item android:id="@+id/turnbyturn"
-    	android:title="@string/turnbyturn"
-    	android:icon="@drawable/ic_menu_turnbyturn" android:visible="false" >
-    	</item>
     <item android:id="@+id/replan"
           android:title="@string/replan_title"
           android:icon="@drawable/ic_menu_rotate"
@@ -32,14 +36,10 @@
           android:title="@string/showparking_title"
           android:icon="@drawable/ic_menu_stand" android:visible="false">
     </item>
-    <item android:id="@+id/park"
-          android:title="@string/park_title" 
-          android:icon="@drawable/ic_menu_park">
-    </item>
-    <item android:id="@+id/unpark"
-          android:title="@string/unpark_title" android:visible="false" 
-          android:icon="@drawable/ic_menu_unpark">
-    </item>
+        <item android:id="@+id/turnbyturn"
+    	android:title="@string/turnbyturn"
+    	android:icon="@drawable/ic_menu_turnbyturn" android:visible="false" >
+    	</item>
     <item android:id="@+id/prefs"
     android:title="@string/prefs_title"
     android:icon="@drawable/ic_menu_preferences"></item>

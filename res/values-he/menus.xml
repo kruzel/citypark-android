@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="park_title">חנה</string>
+<string name="unpark_title">פנה חניה</string>
+<string name="center_title">מיקום שלי</string>
+<string name="navigate_title">נווט</string>
+<string name="back_title">חזרה לרכב</string>
+<string name="showparking_title">מצא חניה</string>
+<string name="directions_title">כיוונים</string>
+<string name="turnbyturn">פניה פניה</string>
+<string name="map_title">מפה</string>
+<string name="prefs_title">הגדרות</string>
+<string name="nearparking_title">חניה קרובה</string>
+<string name="contacts_title">נווט לחבר</string>
+<string name="feedback_title">משוב על מסלול</string>
+<string name="save_title">שמור</string>
+<string name="favourites">מועדפים</string>
+</resources>

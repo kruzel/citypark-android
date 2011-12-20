@@ -61,7 +61,7 @@ public class DirectionsView extends ListActivity {
 	@Override
 	public void onCreate(final Bundle in) {
 		requestWindowFeature(Window.FEATURE_RIGHT_ICON);
-		setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.ic_bar_bikeroute);
+		setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.logo);
 		super.onCreate(in);
 		//Create a header to display route distance
 		header = new TextView(this);

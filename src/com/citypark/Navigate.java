@@ -97,7 +97,7 @@ public class Navigate extends Activity implements RouteListener {
 	mContactAccessor = AbstractContactAccessor.getInstance();
 	requestWindowFeature(Window.FEATURE_RIGHT_ICON);
 	setContentView(R.layout.findplace);
-	setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.ic_bar_bikeroute);
+	setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.logo);
 	
 	searchIntent = new Intent();
 	

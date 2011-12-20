@@ -67,7 +67,7 @@ public class Feedback extends Activity {
 	app = ((CityParkApp) getApplication());
 	requestWindowFeature(Window.FEATURE_RIGHT_ICON);
 	setContentView(R.layout.feedback);
-	setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.ic_bar_bikeroute);
+	setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.logo);
 	
 	nameField = (TextView) findViewById(R.id.name_input);
 	emailField = (TextView) findViewById(R.id.email_input);
