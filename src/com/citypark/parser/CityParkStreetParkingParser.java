@@ -86,27 +86,27 @@ public class CityParkStreetParkingParser extends XMLParser {
 			}
 		});
 		
-		node2.getChild(XMLNS,"StartLongitude").setEndTextElementListener(new EndTextElementListener() {
-			public void end(String body) {	
-				p.setStart_longitude(Double.parseDouble(body));
-			}
-		});
-		
 		node2.getChild(XMLNS,"StartLatitude").setEndTextElementListener(new EndTextElementListener() {
 			public void end(String body) {				
 				p.setStart_latitude(Double.parseDouble(body));
 			}
 		});
 		
-		node2.getChild(XMLNS,"EndLongitude").setEndTextElementListener(new EndTextElementListener() {
+		node2.getChild(XMLNS,"StartLongitude").setEndTextElementListener(new EndTextElementListener() {
 			public void end(String body) {	
-				p.setEnd_longitude(Double.parseDouble(body));
+				p.setStart_longitude(Double.parseDouble(body));
 			}
 		});
 		
 		node2.getChild(XMLNS,"EndLatitude").setEndTextElementListener(new EndTextElementListener() {
 			public void end(String body) {				
 				p.setEnd_latitude(Double.parseDouble(body));
+			}
+		});
+		
+		node2.getChild(XMLNS,"EndLongitude").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {	
+				p.setEnd_longitude(Double.parseDouble(body));
 				p.setSearch_time(segmentWaitTime.waitTime);
 				marks.add(new StreetSegment(p));
 			}
