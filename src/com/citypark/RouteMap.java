@@ -101,8 +101,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 	protected LocationManager mLocationManager;
 	
 	/* Constants. */
-	/** Initial zoom level. */
-	private static final int ZOOM = 19;
 	protected boolean isSearching = false;
 
 	/** ParkingSessionPersist manager. */
@@ -176,14 +174,15 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
         		mPrefs.getInt(getString(R.string.prefs_scrolly), 0));
 		mOsmv.setBuiltInZoomControls(true);
 		
-		mOsmv.getController().setZoom(ZOOM);
-		
 		//Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
 		overlay.setVisibility(View.INVISIBLE);
 		
 		//Get application reference
 		app = (CityParkApp)getApplication();
+		
+		mOsmv.getController().setZoom(app.getZoom());
+
 
 		// Initialize parking manager
 		parking_manager = new ParkingSessionPersist(this);
@@ -270,6 +269,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		if (wl.isHeld()) {
 			wl.release();
 		}
+		app.setZoom(mOsmv.getZoomLevel());
 	}
 	
 	/**
@@ -630,7 +630,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		directionsVisible = true;
 		this.mOsmv.setBuiltInZoomControls(false);
         this.mOsmv.setMultiTouchControls(false);
-        mOsmv.getController().setZoom(ZOOM);
+        //mOsmv.getController().setZoom(ZOOM);
 		
 		final View overlay = findViewById(R.id.directions_overlay);
 		this.mOsmv.setClickable(false);

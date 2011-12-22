@@ -58,5 +58,8 @@ public final class CityParkConsts {
 	/** registration **/
 	public static final String USER_ALREADY_EXISTS = "USER ALREADY EXISTS";
 	
+	/** Initial zoom level. */
+	public static final int ZOOM = 17;
+	
 	private CityParkConsts() { }
 }

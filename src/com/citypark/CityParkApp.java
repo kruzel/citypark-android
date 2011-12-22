@@ -3,17 +3,17 @@
  */
 package com.citypark;
 
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import android.app.Application;
 
+import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.RouteDatabase;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
-import com.citypark.R;
-
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
 
 /**
  * This file is part of BikeRoute.
@@ -57,6 +57,18 @@ public class CityParkApp extends Application {
 	/** Favourite routes db. **/
 	private RouteDatabase routeDB;
 	
+	private String mSessionId = null;
+
+	private int zoom = CityParkConsts.ZOOM;
+	
+	public int getZoom() {
+		return zoom;
+	}
+
+	public void setZoom(int zoom) {
+		this.zoom = zoom;
+	}
+	
 	public String getSessionId() {
 		return mSessionId;
 	}
@@ -64,8 +76,6 @@ public class CityParkApp extends Application {
 	public void setSessionId(String mSessionId) {
 		this.mSessionId = mSessionId;
 	}
-
-	public String mSessionId = null;
 
 	public CityParkApp () {
 		super();
