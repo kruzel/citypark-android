@@ -47,7 +47,7 @@
 		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
 		<activity android:name="com.citypark.PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
 		<service android:name="com.citypark.service.NavigationService" android:enabled="true" android:label="Router" android:exported="false" />
-		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert">
+		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert" android:process=":remote">
 		    <intent-filter>
 		    </intent-filter>
 		</receiver>

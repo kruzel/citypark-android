@@ -61,60 +61,71 @@ public class CityParkStreetParkingParser extends XMLParser {
 	}
 
 	public List<StreetSegment> parse() {
-			final StreetSegment p = new StreetSegment();
-
-			final RootElement root = new RootElement(XMLNS,"ArrayOfSearchParkingSegment");
-			final List<StreetSegment> marks = new ArrayList<StreetSegment>();
-			final Element node = root.getChild(XMLNS,"SearchParkingSegment");
-			// Listen for start of tag, get attributes and set them
-			// on current marker.
-			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
-			node.getChild(XMLNS,"StartLongitude").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {	
-					p.setStart_longitude(Double.parseDouble(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"StartLatitude").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {				
-					p.setStart_latitude(Double.parseDouble(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"EndLongitude").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {	
-					p.setEnd_longitude(Double.parseDouble(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"EndLatitude").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {				
-					p.setEnd_latitude(Double.parseDouble(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"Id").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {				
-					p.setId(Integer.parseInt(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"SearchTime").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {	
-					p.setSearch_time(Double.parseDouble(body));
-					marks.add(new StreetSegment(p));
-				}
-			});
-			
-			try {
-				Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
-						.getContentHandler());
-			} catch (IOException e) {
-				Log.e(e.getMessage(), "CityParkStreetParkingParser - " + feedUrl);
-			} catch (SAXException e) {
-				Log.e(e.getMessage(), "CityParkStreetParkingParser - " + feedUrl);
+		// Listen for start of tag, get attributes and set them
+		// on current marker.
+		//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!	
+		final StreetSegment p = new StreetSegment();
+		final WaitTime segmentWaitTime = new WaitTime();
+		
+		final RootElement root = new RootElement(XMLNS,"ArrayOfStreetSegment");
+		final List<StreetSegment> marks = new ArrayList<StreetSegment>();
+		final Element node = root.getChild(XMLNS,"StreetSegment");
+		
+		node.getChild(XMLNS,"SWT").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {	
+				segmentWaitTime.waitTime = Double.parseDouble(body); 
 			}
-			return marks;
+		});
+		
+		final Element node1 = node.getChild(XMLNS,"SegmentLine");
+		final Element node2 = node1.getChild(XMLNS,"StreetSegmentLine");
+		
+		node2.getChild(XMLNS,"SegmentUnique").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {				
+				p.setId(body);
+			}
+		});
+		
+		node2.getChild(XMLNS,"StartLongitude").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {	
+				p.setStart_longitude(Double.parseDouble(body));
+			}
+		});
+		
+		node2.getChild(XMLNS,"StartLatitude").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {				
+				p.setStart_latitude(Double.parseDouble(body));
+			}
+		});
+		
+		node2.getChild(XMLNS,"EndLongitude").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {	
+				p.setEnd_longitude(Double.parseDouble(body));
+			}
+		});
+		
+		node2.getChild(XMLNS,"EndLatitude").setEndTextElementListener(new EndTextElementListener() {
+			public void end(String body) {				
+				p.setEnd_latitude(Double.parseDouble(body));
+				p.setSearch_time(segmentWaitTime.waitTime);
+				marks.add(new StreetSegment(p));
+			}
+		});
+		
+		try {
+			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
+					.getContentHandler());
+		} catch (IOException e) {
+			Log.e(e.getMessage(), "CityParkStreetParkingParser - " + feedUrl);
+		} catch (SAXException e) {
+			Log.e(e.getMessage(), "CityParkStreetParkingParser - " + feedUrl);
+		}
+		return marks;
 	}
 
+	private class WaitTime {
+		Double waitTime = -1.0;
+	}
 }
+
+

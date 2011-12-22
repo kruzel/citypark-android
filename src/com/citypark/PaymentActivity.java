@@ -87,13 +87,13 @@ public class PaymentActivity extends Activity implements PaymentListener {
 			//start reminder service
 			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlertListener.class);
             PendingIntent sender = PendingIntent.getBroadcast(PaymentActivity.this,
-                    0, intent, 0);
+                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.HOUR,timePicker.getCurrentHour());
+            calendar.set(Calendar.HOUR_OF_DAY,timePicker.getCurrentHour());
             calendar.set(Calendar.MINUTE,timePicker.getCurrentMinute());
-                        
+                                  
             // Schedule the alarm!
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), sender);

@@ -11,13 +11,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.citypark.PaymentActivity;
 import com.citypark.R;
 
 public class TimeLimitAlertListener extends BroadcastReceiver {
 	
    @Override
     public void onReceive(Context context, Intent intent)
-    {
+    {   
 	    Toast.makeText(context, R.string.time_limit_reached, Toast.LENGTH_SHORT).show();
 	    
 	    //send off alarm sound
@@ -55,6 +56,9 @@ public class TimeLimitAlertListener extends BroadcastReceiver {
 			e.printStackTrace();
 		}
 
+		   Intent newIntent = new Intent(context,PaymentActivity.class);
+		   newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+		   context.startActivity(newIntent);
     }
 }
  

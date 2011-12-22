@@ -6,7 +6,7 @@ public class StreetSegment{
 	double start_longitude;
 	double end_latitude;
 	double end_longitude;
-	Integer id;
+	String id;
 	double search_time;
 	
 	public StreetSegment() {
@@ -26,10 +26,10 @@ public class StreetSegment{
 	public void setSearch_time(double search_time) {
 		this.search_time = search_time;
 	}
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public double getStart_latitude() {
