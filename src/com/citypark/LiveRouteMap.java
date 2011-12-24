@@ -3,11 +3,8 @@
  */
 package com.citypark;
 
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
-
-import org.osmdroid.util.GeoPoint;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +22,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.speech.tts.TextToSpeech;
@@ -127,7 +125,10 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				new IntentFilter(getString(R.string.navigation_intent)));
 		
 		doBindService();
+
 	}
+	
+	
 	
 	@Override
 	public void onNewIntent(final Intent intent) {

@@ -122,7 +122,7 @@ public class RouteManager {
 	 */
 
 	private Route plan(final GeoPoint start, final GeoPoint dest) {
-		Parser parser;
+		Parser parser = null;
 		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctxt);
 		
@@ -139,34 +139,13 @@ public class RouteManager {
 			sBuf.append(Convert.asDegrees(dest.getLatitudeE6()));
 			sBuf.append(',');
 			sBuf.append(Convert.asDegrees(dest.getLongitudeE6()));
-			if ("US".equals(country)) {
-				sBuf.append("&sensor=true&mode=bicycling");
-			} else {
-				sBuf.append("&sensor=true&mode=driving");
-			}
+			sBuf.append("&sensor=true&mode=driving");
+			
 			parser = new GoogleDirectionsParser(sBuf.toString());
-		} else { //very inaccurate - don't use
-			final StringBuffer sBuf = new StringBuffer(ctxt.getString(R.string.mq_api));
-			sBuf.append(start.getLatitudeE6()/1E6);
-			sBuf.append(',');
-			sBuf.append(start.getLongitudeE6()/1E6);
-			sBuf.append("&to=");
-			sBuf.append(dest.getLatitudeE6()/1E6);
-			sBuf.append(',');
-			sBuf.append(dest.getLongitudeE6()/1E6);
-			sBuf.append("&generalize=0.1&shapeFormat=cmp");
-			parser = new MapQuestParser(sBuf.toString());
-		}
+		} 
+		
 		Route r =  parser.parse();
-		//Untidy.
-		//If not using cyclestreets, need to query elevations api for
-		//this route.
-//		if (!CityParkConsts.CS.equals(router)) {
-//			final StringBuffer elev = new StringBuffer(ctxt.getString(R.string.elev_api));
-//			elev.append(URLEncoder.encode(r.getPolyline()));
-//			parser = new GoogleElevationParser(elev.toString(), r);
-//			r = parser.parse();
-//		}
+
 		r.setCountry(country);
 		r.setRouteId(id);
 		return r;

@@ -129,8 +129,8 @@ public class LiveStreetParkingMarkers {
 	private final Handler messageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
-			clearSegments(mOldSegmentsOverlays);
 			setSegments(mSegmentsOverlays);
+			clearSegments(mOldSegmentsOverlays);
 			
 			mOldSegmentsOverlays.clear();
 			mOldSegmentsOverlays.addAll(mSegmentsOverlays);

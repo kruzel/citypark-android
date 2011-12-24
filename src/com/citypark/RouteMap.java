@@ -29,7 +29,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
@@ -133,6 +135,16 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 	/** user info**/
 	private String strEmail = null;
 	private String strPassword = null;
+	
+	//map overlays update handler
+	private Handler mHandler = new Handler();
+	
+	private Runnable mUpdateOverlaysTask = new Runnable() {
+		   public void run() {
+			   showAllParkings();
+		       mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+		   }
+		};
 
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -259,6 +271,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
         else {
 			showAllParkings();
         }
+        
+	      mHandler.removeCallbacks(mUpdateOverlaysTask);
+	      mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 	}
 	
 	@Override
@@ -270,6 +285,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			wl.release();
 		}
 		app.setZoom(mOsmv.getZoomLevel());
+		
+		mHandler.removeCallbacks(mUpdateOverlaysTask);
+
 	}
 	
 	/**
@@ -718,7 +736,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			// TODO Auto-generated method stub
 			
 		}
-		
 	}
 
 	@Override
@@ -734,8 +751,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 
 	public void showAllParkings(GeoPoint p) {
 		if(app.getSessionId() != null) {
-			garages.refresh(p);
 			streetSegments.refresh(p);
+			garages.refresh(p);
 			mOsmv.invalidate();
 		}
 	}
@@ -758,5 +775,4 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			}
 		}
 	}
-	
 }
