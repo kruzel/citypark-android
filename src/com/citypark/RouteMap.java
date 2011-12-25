@@ -89,7 +89,7 @@ import com.citypark.view.overlay.RouteOverlay;
  * 
  */
 
-public class RouteMap extends OpenStreetMapActivity implements LoginListener {
+public class RouteMap extends OpenStreetMapActivity {
 
 	/** GaragesOverlayHandler markers overlay. */
 	private LiveGarageMarkers garages;
@@ -112,7 +112,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 	private CarAlert carAlert;
 	
 	/** Dialog display. **/
-	private Dialog dialog;
+	protected Dialog dialog;
 	
 	/** Application reference. **/
 	protected CityParkApp app;
@@ -131,10 +131,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 	protected SharedPreferences mSettings;
 	/** Wakelock. **/
 	private PowerManager.WakeLock wl;
-	
-	/** user info**/
-	private String strEmail = null;
-	private String strPassword = null;
 	
 	//map overlays update handler
 	private Handler mHandler = new Handler();
@@ -186,6 +182,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
         		mPrefs.getInt(getString(R.string.prefs_scrolly), 0));
 		mOsmv.setBuiltInZoomControls(true);
 		
+		//center on my location
+		RouteMap.this.mLocationOverlay.followLocation(true);
+		
 		//Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
 		overlay.setVisibility(View.INVISIBLE);
@@ -217,6 +216,13 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		
+    	if(app.getSessionId() == null) {
+    		if ((app.getEmail() == null) || (app.getEmail().length() == 0) || (app.getPassword() == null) ||(app.getPassword().length() == 0)) {
+    			//register
+    			this.startActivity(new Intent(this, RegisterActivity.class));
+    		}
+        }
+		
 	}
 	
 	/**
@@ -245,6 +251,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
         this.mLocationOverlay.enableCompass();
         mOsmv.setTileSource(TileSourceFactory.getTileSource(mSettings.getString("tilePref", "Mapnik")));
         
+	      //center on my location
+	      RouteMap.this.mLocationOverlay.followLocation(true);
+        
         if(app.getRoute() != null) {
         	ErrorReporter.getInstance().putCustomData("Route", app.getRoute().getName());
         	ErrorReporter.getInstance().putCustomData("Router", app.getRoute().getRouter());
@@ -256,19 +265,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
     		}
         }
         
-        if(app.getSessionId() == null) {       	
-        	strEmail = mPrefs.getString("email", null);
-            strPassword = mPrefs.getString("password", null);
-            
-        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
-	        	this.startActivity(new Intent(this, RegisterActivity.class));
-	        }
-	        else {
-	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
-	          	loginTask.execute((Void[])null);
-	        }
-		}
-        else {
+        if(app.getSessionId() != null) {
 			showAllParkings();
         }
         
@@ -400,7 +397,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		final MenuItem share = menu.findItem(R.id.sharing);
 		final MenuItem csShare = menu.findItem(R.id.share);
 		final MenuItem save = menu.findItem(R.id.save);
-		if (parking_manager.isParked()) {
+		if (parking_manager.isParked() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 			park.setVisible(false);
 			unPark.setVisible(true);
 		} else {
@@ -453,8 +450,13 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 			break;
 		case R.id.unpark:
 			parking_manager.unPark();
-			intent = new Intent(this, PaymentActivity.class);
-			startActivity(intent);
+			//close session
+			app.setSessionId(null);
+			
+			if (parking_manager.isParked() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
+				intent = new Intent(this, PaymentActivity.class);
+				startActivity(intent);
+			}
 			break;
 		case R.id.center:
 			RouteMap.this.mLocationOverlay.followLocation(true);
@@ -738,22 +740,13 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener {
 		}
 	}
 
-	@Override
-	public void loginComplete(String sessionId) {
-		// Initialize garages and street parking segments overlay
-		if(sessionId == null) {
-			Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-		} else {
-			app.setSessionId(sessionId);
-			showAllParkings();
-		}
-	}
+
 
 	public void showAllParkings(GeoPoint p) {
 		if(app.getSessionId() != null) {
 			streetSegments.refresh(p);
 			garages.refresh(p);
-			mOsmv.invalidate();
+			//mOsmv.invalidate();
 		}
 	}
 	

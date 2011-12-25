@@ -28,8 +28,7 @@ import android.view.Menu;
  * @version Sep 27, 2010
  */
 public final class CityParkConsts {
-	
-	
+		
 	/** Osmdroid consts. **/
 	public static final int MENU_MY_LOCATION = Menu.FIRST;
     public static final int MENU_MAP_MODE = MENU_MY_LOCATION + 1;
@@ -62,6 +61,17 @@ public final class CityParkConsts {
 	public static final int ZOOM = 17;
 	
 	public static final Long OVERLAY_UPDATE_INTERVAL = 15000L;
+	
+	/** Preference name. **/
+	public static final String PREFS_NAME = "bikepark_location";
+	/** Preference key (latitude). **/
+	public static final String LAT = "lat";
+	/** Preference key (longitude) **/
+	public static final String LNG = "lng";
+	/** Preference key (payment start time) **/
+	public static final String PAYMENT_START_TIME = "paystarttime";
+	/** Preference key (alarm target time) **/
+	public static final String ALARM_TIME = "alarmtime";
 	
 	private CityParkConsts() { }
 }

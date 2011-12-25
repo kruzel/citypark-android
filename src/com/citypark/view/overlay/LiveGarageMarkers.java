@@ -99,7 +99,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
-			//mv.postInvalidate();
+			mv.postInvalidate();
 		}
 	};
 

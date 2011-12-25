@@ -39,7 +39,7 @@
 <string name="arrived">הגעת</string>
 <string name="point">נקודה</string>
 <string name="notify_title">CityPark</string>
-<string name="navigation_intent">com.citypark.service.NavigationService</string>
+<string name="navigation_intent">com.citypark.service.LocationService</string>
 <string name="replanning">...מתכן מחדש</string>
 <string name="stop_nav_title">יציאה</string>
 <string name="arrived_speech">.הגעת ליעד</string>

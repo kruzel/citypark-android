@@ -51,7 +51,7 @@ import java.util.List;
  * @author jono@nanosheep.net
  * @version Nov 4, 2010
  */
-public class NavigationService extends Service implements LocationListener {
+public class LocationService extends Service implements LocationListener {
 	/** Local binder. **/
     private final IBinder mBinder = new LocalBinder();
     /** Notification manager. **/
@@ -71,8 +71,8 @@ public class NavigationService extends Service implements LocationListener {
      * IPC.
      */
     public class LocalBinder extends Binder {
-        public NavigationService getService() {
-            return NavigationService.this;
+        public LocationService getService() {
+            return LocationService.this;
         }
     }
 
@@ -141,30 +141,32 @@ public class NavigationService extends Service implements LocationListener {
     	if (app.getRoute() != null) {
     		
     		List<PGeoPoint> near = app.getRoute().nearest(self, 2);
-    		double range = range(self, near.get(0), near.get(1)) - 50;
-    		double accuracy = location.getAccuracy();
-    		
-    		//Check we're still on the route.
-    		
-    		/*if (range > accuracy) {
-    			update.putExtra((String) getText(R.string.replan), true);
-    			String logMsg = "Range=" + range + ",Self="+self+",near points:" + near + ",near points dist=" + near.get(0).distanceTo(near.get(1)) + ",accuracy=" + accuracy;
-    			Log.e("Replanned", logMsg);
-    			notification.setLatestEventInfo(app, getText(R.string.notify_title), 
-    					getText(R.string.replanning), contentIntent);    	        
-    		} else*/ if (near.get(0).equals(app.getRoute().getEndPoint())) { //If we've arrived, shutdown and signal.
-    			update.putExtra((String) getText(R.string.arrived), true);
-    			notification.setLatestEventInfo(app, getText(R.string.notify_title), 
-    					getText(R.string.arrived), contentIntent);
-    		}	else {
-    			update.putExtra(getString(R.string.point), (Parcelable)near.get(0));
-    			app.setSegment(app.getRoute().getSegment(near.get(0)));
-    			notification.setLatestEventInfo(app, getText(R.string.notify_title),
-        				app.getSegment().getInstruction(), contentIntent);
+    		if(near.size() > 1) {
+	    		double range = range(self, near.get(0), near.get(1)) - 50;
+	    		double accuracy = location.getAccuracy();
+	    		
+	    		//Check we're still on the route.
+	    		
+	    		/*if (range > accuracy) {
+	    			update.putExtra((String) getText(R.string.replan), true);
+	    			String logMsg = "Range=" + range + ",Self="+self+",near points:" + near + ",near points dist=" + near.get(0).distanceTo(near.get(1)) + ",accuracy=" + accuracy;
+	    			Log.e("Replanned", logMsg);
+	    			notification.setLatestEventInfo(app, getText(R.string.notify_title), 
+	    					getText(R.string.replanning), contentIntent);    	        
+	    		} else*/ if (near.get(0).equals(app.getRoute().getEndPoint())) { //If we've arrived, shutdown and signal.
+	    			update.putExtra((String) getText(R.string.arrived), true);
+	    			notification.setLatestEventInfo(app, getText(R.string.notify_title), 
+	    					getText(R.string.arrived), contentIntent);
+	    		}	else {
+	    			update.putExtra(getString(R.string.point), (Parcelable)near.get(0));
+	    			app.setSegment(app.getRoute().getSegment(near.get(0)));
+	    			notification.setLatestEventInfo(app, getText(R.string.notify_title),
+	        				app.getSegment().getInstruction(), contentIntent);
+	    		}
+	    		sendBroadcast(update);
+	    		
+	    		mNM.notify(R.id.notifier, notification);
     		}
-    		sendBroadcast(update);
-    		
-    		mNM.notify(R.id.notifier, notification);
     	} else {
 //    		stopSelf();
 //    		shutdown();

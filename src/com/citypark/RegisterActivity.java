@@ -124,6 +124,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 		}
 		
 		if(mEditor.commit()){
+			this.startActivity(new Intent(this, LiveRouteMap.class));
         	finish();
         } else {
         	Log.e("onRegister", "registration failed");

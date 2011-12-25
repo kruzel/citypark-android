@@ -67,7 +67,7 @@ public class SpeechRouteMap extends RouteMap implements OnInitListener {
 	public void onResume() {
 		tts = mSettings.getBoolean("tts", false);
 		//Initialize tts if in use.
-        if (tts) {
+        if (tts && (directionsTts == null)) {
         	directionsTts = new TextToSpeech(this, this);
         }
         super.onResume();

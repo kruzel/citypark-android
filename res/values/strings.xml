@@ -41,9 +41,9 @@
 <string name="arrived">Arrived</string>
 <string name="point">point</string>
 <string name="notify_title">CityPark</string>
-<string name="navigation_intent">com.citypark.service.NavigationService</string>
+<string name="navigation_intent">com.citypark.service.LocationService</string>
 <string name="replanning">Replanning...</string>
-<string name="stop_nav_title">Stop Navigating</string>
+<string name="stop_nav_title">Exit</string>
 <string name="arrived_speech">You have reached your destination.</string>
 <string name="jump_intent">jump</string>
 <string name="share_chooser_title">Share Route Using</string>

@@ -10,20 +10,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
 import android.os.Parcelable;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -31,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.NavigationService;
-import com.citypark.service.ReportLocationTask;
 import com.citypark.service.RouteListener;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.dialog.DialogFactory;
@@ -83,25 +77,8 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	private boolean spoken;
 	/** Arrived at destination. **/
 	private boolean arrived;
-	/** Navigation service. **/
-	private NavigationService mBoundService;
 	/** Receiver for navigation updates. **/
-	private NavigationReceiver mBroadcastReceiver = new NavigationReceiver();
-	
-	/** Connection to navigation service. **/
-	private ServiceConnection mConnection = new ServiceConnection() {
-	    @Override
-		public void onServiceConnected(ComponentName className, IBinder service) {
-	        mBoundService = ((NavigationService.LocalBinder)service).getService();
-	    }
-
-	    @Override
-		public void onServiceDisconnected(ComponentName className) {
-	        mBoundService = null;
-	    }
-	};
-	/** Are we bound to navigation service? **/
-	private boolean mIsBound;
+	private NavigationReceiver mBroadcastReceiver = null;
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -121,11 +98,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			spoken = (Boolean) data[4];
 			arrived = (Boolean) data[1];
 		}
-		registerReceiver(mBroadcastReceiver, 
-				new IntentFilter(getString(R.string.navigation_intent)));
 		
-		doBindService();
-
 	}
 	
 	
@@ -175,12 +148,12 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		final MenuItem stopService = menu.findItem(R.id.stop_nav);
 		if (app.getRoute() != null) {
 			replan.setVisible(true);
-			//stopService.setVisible(true);
 		}
-//		if (mIsBound) {
-//			stopService.setVisible(true);
-//		}
+		else {
+			replan.setVisible(false);
+		}
 		stopService.setVisible(true);
+		
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -303,13 +276,42 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.replan:
-			if (!mIsBound && liveNavigation) {
-				doBindService();
+			if (!app.isBound() && liveNavigation) {
+				if (mBroadcastReceiver == null) {
+					mBroadcastReceiver = new NavigationReceiver();
+				}
+				registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
 			}
 			replan();
 			break;
 		case R.id.stop_nav:
-			//doUnbindService();
+			if(mBroadcastReceiver != null) {
+				unregisterReceiver(mBroadcastReceiver);
+				mBroadcastReceiver = null;
+			}
+			
+			showDialog(R.id.awaiting_fix);
+			LiveRouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
+				@Override
+				public void run() {
+					if (LiveRouteMap.this.dialog.isShowing()) {
+						LiveRouteMap.this.dismissDialog(R.id.awaiting_fix);
+							Location self = mLocationOverlay.getLastFix();
+							
+							if (self == null) {
+								self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							}
+							if (self == null) {
+								self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+							}
+							if (self != null) {
+								parking_manager.park(
+									new PGeoPoint(self.getLatitude(), self.getLongitude()));
+							}
+					}
+				}
+			});
+			
 			finishActivity(R.id.trace);
 			setResult(1);
 			this.finish();
@@ -324,36 +326,15 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	}
 
 	/**
-	 * Bind to navigation service.
-	 */
-	
-	private void doBindService() {
-		if (!mIsBound) {
-			bindService(new Intent(LiveRouteMap.this, NavigationService.class), mConnection, Context.BIND_AUTO_CREATE);
-			mIsBound = true;
-		}
-	}
-
-	/**
-	 * Unbind from navigation service.
-	 */
-	
-	private void doUnbindService() {
-	    if (mIsBound) {
-	        // Detach our existing connection.
-	        unbindService(mConnection);
-	        mIsBound = false;
-	    }
-	}
-
-	/**
 	 * Unregister navigation receiver and unbind from service.
 	 */
 	
 	@Override
 	public void onDestroy() {
-		//doUnbindService();
-	    unregisterReceiver(mBroadcastReceiver);
+		if(mBroadcastReceiver != null) {
+			unregisterReceiver(mBroadcastReceiver);
+			mBroadcastReceiver = null;
+		}
 	    super.onDestroy();
 	}
 	
@@ -387,18 +368,13 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				if(!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 					showDialog(R.id.gps);
 				}
-				doBindService();
+				if (mBroadcastReceiver == null) {
+					mBroadcastReceiver = new NavigationReceiver();
+				}
+				registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
 			}
 		}
 	}
-	
-	
-	@Override
-	public void loginComplete(String sessionId) {
-		super.loginComplete(sessionId);
-		mBroadcastReceiver.setSessionId(sessionId);
-	}
-
 
 	/**
 	 * Receiver for updates from the live navigation service.
@@ -407,18 +383,6 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	 */
 	
 	private class NavigationReceiver extends BroadcastReceiver {
-
-		PGeoPoint last = null;
-		private String sessionId = null;
-		
-		public String getSessionId() {
-			return sessionId;
-		}
-
-
-		public void setSessionId(String sessionId) {
-			this.sessionId = sessionId;
-		}
 		
 		/* (non-Javadoc)
 		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
@@ -458,19 +422,6 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				}
 			}
 			
-			//update citypark server on location
-			if(sessionId != null) {
-				ReportLocationTask locTask = null;
-				if (last == null) { // report first position
-					locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
-					locTask.execute();
-				} else if (last.distanceTo(current) > 20.0) {  //report progress, distance in meters
-						locTask = new ReportLocationTask(context, getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
-						locTask.execute();
-				}
-			}
-			
-			last = current;
 		}
 	}
 	
@@ -524,7 +475,10 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					}
 				}
 				if(liveNavigation) {
-					doBindService();
+					if (mBroadcastReceiver == null) {
+						mBroadcastReceiver = new NavigationReceiver();
+					}
+					registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
 				}
 			} else {
 				showDialog(msg);

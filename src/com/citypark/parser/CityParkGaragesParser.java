@@ -176,9 +176,13 @@ public class CityParkGaragesParser extends XMLParser {
 				Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 						.getContentHandler());
 			} catch (IOException e) {
-				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
+				Log.e(e.toString(), "CityParkGaragesParser - " + feedUrl);
+				e.printStackTrace();
 			} catch (SAXException e) {
 				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
+				e.printStackTrace();
+			}catch(Exception ex){
+				Log.e( "CityParkGaragesParser - " + feedUrl, ex.getMessage());
 			}
 			return marks;
 	}

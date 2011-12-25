@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.citypark" android:versionCode="8" android:versionName="Alpha 8">
+    package="com.citypark" android:versionCode="9" android:versionName="Alpha 9">
     
     <uses-sdk android:minSdkVersion="7" />
 
@@ -17,7 +17,7 @@
     <application android:label="@string/app_name" 
         android:icon="@drawable/logo" 
         android:name="CityParkApp" 
-        android:debuggable="false">
+        android:debuggable="true">
         <activity android:name="com.citypark.Navigate" android:label="CityPark" />
         <activity android:name="com.citypark.LiveRouteMap" android:label="Map" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
 	    	<intent-filter>
@@ -46,7 +46,7 @@
 		<activity android:name="com.citypark.RegisterActivity" android:label="Registration" android:theme="@android:style/Theme.Black.NoTitleBar" />
 		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
 		<activity android:name="com.citypark.PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
-		<service android:name="com.citypark.service.NavigationService" android:enabled="true" android:label="Router" android:exported="false" />
+		<service android:name="com.citypark.service.LocationService" android:enabled="true" android:label="Router" android:exported="false" />
 		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert" android:process=":remote">
 		    <intent-filter>
 		    </intent-filter>

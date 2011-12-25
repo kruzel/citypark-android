@@ -50,7 +50,7 @@ public class LiveStreetParkingMarkers {
 			for ( PathOverlay overlay : newSegmentsOverlays) {
 				mOsmv.getOverlays().add(overlay);
 			}
-			//mOsmv.postInvalidate();
+			
 		}
 	}
 	
@@ -134,6 +134,7 @@ public class LiveStreetParkingMarkers {
 			
 			mOldSegmentsOverlays.clear();
 			mOldSegmentsOverlays.addAll(mSegmentsOverlays);
+			//mOsmv.postInvalidate();
 		}
 	};
 	
