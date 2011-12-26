@@ -19,7 +19,7 @@
         android:name="CityParkApp" 
         android:debuggable="true">
         <activity android:name="com.citypark.Navigate" android:label="CityPark" />
-        <activity android:name="com.citypark.LiveRouteMap" android:label="Map" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
+        <activity android:name="com.citypark.LiveRouteMap" android:label="CityPark" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
 	    	<intent-filter>
 	        	<action android:name="android.intent.action.MAIN" />
 	        	<category android:name="android.intent.category.LAUNCHER" />

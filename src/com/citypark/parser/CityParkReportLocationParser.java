@@ -42,13 +42,13 @@ public class CityParkReportLocationParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkReportLocationParser(final Context context, final String sessionId, final double latitude, final double longitude) {
-		super(context.getString(R.string.citypark_report_location_api)  + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
+		super(context.getString(R.string.citypark_api) + "reportSearchLocation" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
 	}
 
 	public boolean parse() {
 		final Result res = new Result();
-		final RootElement root = new RootElement(XMLNS,"boolean ");
-		final Element node = root.getChild(XMLNS,"boolean ");
+		final RootElement root = new RootElement(XMLNS,"boolean");
+		final Element node = root.getChild(XMLNS,"boolean");
 		// Listen for start of tag, get attributes and set them
 		// on current marker.
 		//Please note that the order should stay as they appear in the XML!!!!
@@ -63,9 +63,9 @@ public class CityParkReportLocationParser extends XMLParser {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 					.getContentHandler());
 		} catch (IOException e) {
-			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkReportLocationParser - " + feedUrl);
 		} catch (SAXException e) {
-			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkReportLocationParser - " + feedUrl);
 		}
 		return res.res;
 	}

@@ -43,16 +43,16 @@ import com.citypark.view.overlay.StreetSegment;
  * @author jono@nanosheep.net
  * @version Jun 26, 2010
  */
-public class CityParkStreetParkingParser extends XMLParser {
+public class CityParkStreetLinesParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";
 	
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkStreetParkingParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
+	public CityParkStreetLinesParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
 		
 		try {
-			feedUrl = new URL(context.getString(R.string.citypark_street_parking_api) + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
+			feedUrl = new URL(context.getString(R.string.citypark_api) + "getStreetParkingPrediction" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
 			//feedUrl = new URL(context.getString(R.string.citypark_street_parking_api) + "?sessionId=" + sessionId + "&latitude="+ "32.0717" + "&longitude=" + "34.7792" + "&distance=" + "2000");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -116,10 +116,10 @@ public class CityParkStreetParkingParser extends XMLParser {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 					.getContentHandler());
 		} catch (IOException e) {
-			Log.e(e.getMessage()+e.toString(), "CityParkStreetParkingParser - " + feedUrl);			
+			Log.e(e.getMessage()+e.toString(), "CityParkStreetLinesParser - " + feedUrl);			
 			e.printStackTrace();
 		} catch (SAXException e) {
-			Log.e(e.getMessage()+e.toString(), "CityParkStreetParkingParser - " + feedUrl);
+			Log.e(e.getMessage()+e.toString(), "CityParkStreetLinesParser - " + feedUrl);
 			e.printStackTrace();
 		}
 		return marks;

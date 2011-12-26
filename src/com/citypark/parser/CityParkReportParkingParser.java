@@ -11,7 +11,6 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
-
 import com.citypark.R;
 
 /**
@@ -36,27 +35,27 @@ import com.citypark.R;
  * @author jono@nanosheep.net
  * @version Jun 26, 2010
  */
-public class CityParkLoginParser extends XMLParser {
+public class CityParkReportParkingParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";
 	
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkLoginParser(final Context context, String email, String password) {
-		super(context.getString(R.string.citypark_api) + "login" + "?username="+ email + "&password=" + password);
+	public CityParkReportParkingParser(final Context context, final String sessionId, final double latitude, final double longitude) {
+		super(context.getString(R.string.citypark_api) + "reportStreetParkingByLatitudeLongitude" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
 	}
 
-	public String parse() {
-		final SessionId sessionId = new SessionId();
-		final RootElement root = new RootElement(XMLNS,"SessionData");
-		final Element node = root.getChild(XMLNS,"SessionId");
+	public boolean parse() {
+		final Result res = new Result();
+		final RootElement root = new RootElement(XMLNS,"boolean");
+		final Element node = root.getChild(XMLNS,"boolean");
 		// Listen for start of tag, get attributes and set them
 		// on current marker.
 		//Please note that the order should stay as they appear in the XML!!!!
 		node.setEndTextElementListener(new EndTextElementListener() {
 			@Override
 			public void end(String body) {	
-				sessionId.mSessionId = body;
+				res.res = true; // body;
 			}
 		});
 		
@@ -64,15 +63,15 @@ public class CityParkLoginParser extends XMLParser {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 					.getContentHandler());
 		} catch (IOException e) {
-			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkReportParkingParser - " + feedUrl);
 		} catch (SAXException e) {
-			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkReportParkingParser - " + feedUrl);
 		}
-		return sessionId.mSessionId;
+		return res.res;
 	}
 	
-	private class SessionId {
-		public String mSessionId;
+	private class Result {
+		public boolean res;
 	}
 
 }

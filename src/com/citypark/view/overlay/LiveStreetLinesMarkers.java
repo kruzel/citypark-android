@@ -14,10 +14,10 @@ import android.os.Message;
 
 import com.citypark.CityParkApp;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.CityParkStreetParkingParser;
+import com.citypark.parser.CityParkStreetLinesParser;
 import com.citypark.utility.ParkingSessionPersist;
 
-public class LiveStreetParkingMarkers {
+public class LiveStreetLinesMarkers {
 	private final Context context;
 	/** Application reference. **/
 	protected static CityParkApp app;
@@ -31,7 +31,7 @@ public class LiveStreetParkingMarkers {
 	/** Radius to return markers within. **/
 	protected static final int RADIUS = 500;
 
-	public LiveStreetParkingMarkers(MapView osmv, final Context ctxt, CityParkApp app) {
+	public LiveStreetLinesMarkers(MapView osmv, final Context ctxt, CityParkApp app) {
 		this.mOsmv = osmv;
 		context = ctxt.getApplicationContext();	
 		this.app = app;
@@ -72,7 +72,7 @@ public class LiveStreetParkingMarkers {
 		PathOverlay overlay;
 		int color = Color.TRANSPARENT;
 		if (cpSessionId != null) {
-			final CityParkStreetParkingParser parser = new CityParkStreetParkingParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
+			final CityParkStreetLinesParser parser = new CityParkStreetLinesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
 			
 			// Parse XML to street segments
 			// and add each street segment as a separate overlay with color according to street segment wait time
@@ -114,7 +114,7 @@ public class LiveStreetParkingMarkers {
 			@Override
 			public void run() {
 				mSegmentsOverlays = getSegments(p, RADIUS, context);
-				LiveStreetParkingMarkers.this.messageHandler.sendEmptyMessage(MSG);
+				LiveStreetLinesMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
 		update.start();

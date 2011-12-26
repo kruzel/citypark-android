@@ -42,7 +42,7 @@ public class CityParkRegisterParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkRegisterParser(final Context context, final String email, final String password, final String firstName, final String familyName, final String phoneNumber, final String licensesPlate, final String paymentService) {
-		super(context.getString(R.string.citypark_register_api) + "?email=" + email + "&password=" + password + "&firstName=" + firstName + "&familyName=" + familyName + "&phoneNumber=" + phoneNumber + "&licensesPlate=" + licensesPlate + "&paymentService=" + paymentService);
+		super(context.getString(R.string.citypark_api) + "register" + "?email=" + email + "&password=" + password + "&firstName=" + firstName + "&familyName=" + familyName + "&phoneNumber=" + phoneNumber + "&licensesPlate=" + licensesPlate + "&paymentService=" + paymentService);
 	}
 
 	public String parse() {

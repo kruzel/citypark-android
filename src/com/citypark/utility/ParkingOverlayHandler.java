@@ -39,7 +39,7 @@ import com.citypark.parser.CityParkGaragesParser.GaragePoint;
  * @version Jun 21, 2010
  */
 
-public final class GaragesOverlayHandler {
+public final class ParkingOverlayHandler {
 		
 	/**
 	 * Find the nearest cycle stand to the point given, or

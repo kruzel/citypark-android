@@ -31,7 +31,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
@@ -48,8 +47,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.LoginListener;
-import com.citypark.service.LoginTask;
+import com.citypark.parser.CityParkReportParkingParser;
+import com.citypark.service.ReportParkingReleaseTask;
+import com.citypark.service.ReportParkingTask;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.CarAlert;
 import com.citypark.utility.Convert;
@@ -60,7 +60,8 @@ import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
 import com.citypark.view.overlay.LiveGarageMarkers;
-import com.citypark.view.overlay.LiveStreetParkingMarkers;
+import com.citypark.view.overlay.LiveStreetLinesMarkers;
+import com.citypark.view.overlay.LiveStreetReleasesMarkers;
 import com.citypark.view.overlay.RouteOverlay;
 
 /**
@@ -91,10 +92,12 @@ import com.citypark.view.overlay.RouteOverlay;
 
 public class RouteMap extends OpenStreetMapActivity {
 
-	/** GaragesOverlayHandler markers overlay. */
+	/** ParkingOverlayHandler markers overlay. */
 	private LiveGarageMarkers garages;
-	/** Street parking segments overlay **/
-	private LiveStreetParkingMarkers streetSegments;
+	/** Street segments lines overlay **/
+	private LiveStreetLinesMarkers streetSegments;
+	/** Street parking releases overlay **/
+	private LiveStreetReleasesMarkers streetParkingReleases;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;
 	/** Travelled route overlay. **/
@@ -131,6 +134,9 @@ public class RouteMap extends OpenStreetMapActivity {
 	protected SharedPreferences mSettings;
 	/** Wakelock. **/
 	private PowerManager.WakeLock wl;
+	
+	ReportParkingReleaseTask reportParkingReleaseTask;
+	ReportParkingTask reportParkingTask;
 	
 	//map overlays update handler
 	private Handler mHandler = new Handler();
@@ -203,7 +209,8 @@ public class RouteMap extends OpenStreetMapActivity {
 		
 		//init live marker updaters
 		garages = new LiveGarageMarkers(mOsmv, this, app);
-		streetSegments = new LiveStreetParkingMarkers(mOsmv, this, app);
+		streetSegments = new LiveStreetLinesMarkers(mOsmv, this, app);
+		streetParkingReleases = new LiveStreetReleasesMarkers(mOsmv, this, app);
 				
 		//Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -448,10 +455,32 @@ public class RouteMap extends OpenStreetMapActivity {
 			intent = new Intent(this, Preferences.class);
 			startActivityForResult(intent, R.id.trace);
 			break;
-		case R.id.unpark:
+		case R.id.unpark:	
+			if(app.getSessionId()!=null){
+				showDialog(R.id.awaiting_fix);
+				RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
+					@Override
+					public void run() {
+						if (RouteMap.this.dialog.isShowing()) {
+								RouteMap.this.dismissDialog(R.id.awaiting_fix);
+								Location self = mLocationOverlay.getLastFix();
+								
+								if (self == null) {
+									self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+								}
+								if (self == null) {
+									self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+								}
+								if (self != null) {
+									reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,app.getSessionId(),self.getLatitude(), self.getLongitude());
+									reportParkingReleaseTask.execute();
+								}
+						}
+					}
+				});
+			}
+			
 			parking_manager.unPark();
-			//close session
-			app.setSessionId(null);
 			
 			if (parking_manager.isParked() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 				intent = new Intent(this, PaymentActivity.class);
@@ -476,27 +505,30 @@ public class RouteMap extends OpenStreetMapActivity {
 			export(gpx, R.string.filename_gpx);
 			break;
 		case R.id.park:
-			showDialog(R.id.awaiting_fix);
-			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
-				@Override
-				public void run() {
-					if (RouteMap.this.dialog.isShowing()) {
-							RouteMap.this.dismissDialog(R.id.awaiting_fix);
-							Location self = mLocationOverlay.getLastFix();
-							
-							if (self == null) {
-								self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-							}
-							if (self == null) {
-								self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-							}
-							if (self != null) {
-								parking_manager.park(
-									new PGeoPoint(self.getLatitude(), self.getLongitude()));
-							}
+			if(app.getSessionId()!=null) {
+				showDialog(R.id.awaiting_fix);
+				RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
+					@Override
+					public void run() {
+						if (RouteMap.this.dialog.isShowing()) {
+								RouteMap.this.dismissDialog(R.id.awaiting_fix);
+								Location self = mLocationOverlay.getLastFix();
+								
+								if (self == null) {
+									self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+								}
+								if (self == null) {
+									self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+								}
+								if (self != null) {
+									parking_manager.park(new PGeoPoint(self.getLatitude(), self.getLongitude()));
+									reportParkingTask = new ReportParkingTask(RouteMap.this, app.getSessionId(), self.getLatitude(), self.getLongitude());
+									reportParkingTask.execute(null);
+								}
+						}
 					}
-				}
-			});
+				});
+			}
 			intent = new Intent(this, PaymentActivity.class);
 			startActivity(intent);
 			break;
@@ -740,12 +772,11 @@ public class RouteMap extends OpenStreetMapActivity {
 		}
 	}
 
-
-
 	public void showAllParkings(GeoPoint p) {
 		if(app.getSessionId() != null) {
 			streetSegments.refresh(p);
 			garages.refresh(p);
+			streetParkingReleases.refresh(p);
 			//mOsmv.invalidate();
 		}
 	}

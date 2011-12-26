@@ -5,18 +5,18 @@ import java.util.List;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
-import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 
 import com.citypark.CityParkApp;
 import com.citypark.R;
-import com.citypark.utility.ParkingOverlayHandler;
+import com.citypark.parser.CityParkParkingReleasesParser;
+import com.citypark.parser.CityParkParkingReleasesParser.StreetParkingPoint;
 
 /**
  * This file is part of BikeRoute.
@@ -42,7 +42,7 @@ import com.citypark.utility.ParkingOverlayHandler;
  * @version Jun 21, 2010
  */
 
-public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
+public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayItem> {
 	/** Reference to map view to draw markers over. **/
 	private final MapView mv;
 	/** Markers list for use by thread. **/
@@ -57,11 +57,11 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	/** Application reference. **/
 	protected CityParkApp app;
 
-	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt, CityParkApp app) {
+	public LiveStreetReleasesMarkers(final MapView mOsmv, final Context ctxt, CityParkApp app) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
-		iOverlay = new ItemizedParkingOverlay(ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
+		iOverlay = new ItemizedParkingOverlay(ctxt.getResources().getDrawable(R.drawable.green_dot), mv.getResourceProxy());
 		this.app = app;
 	}
 
@@ -75,8 +75,8 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				markers = ParkingOverlayHandler.getMarkers(p, RADIUS, context,app.getSessionId());
-				LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
+				markers = getMarkers(p, RADIUS, context,app.getSessionId());
+				LiveStreetReleasesMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
 		update.start();
@@ -96,7 +96,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			}
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
+			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.green_dot), mv.getResourceProxy());
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
 			mv.postInvalidate();
@@ -120,6 +120,39 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			OverlayItem item) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	/**
+	 * Get markers from the api.
+	 * 
+	 * @param p Center point
+	 * @param distance radius to collect markers within.
+	 * @return an arraylist of OverlayItems corresponding to markers in range.
+	 */
+
+	public static List<OverlayItem> getMarkers(final GeoPoint p,
+			final int distance, final Context mAct, final String cpSessionId) {
+		
+		final List<OverlayItem> markers = new ArrayList<OverlayItem>();
+		
+		//use CityPark to find garages
+		if (cpSessionId != null) {
+			Drawable markerIcon;
+			final CityParkParkingReleasesParser parser = new CityParkParkingReleasesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
+			
+
+			// Parse XML to overlayitems 
+			for (StreetParkingPoint parkingPoint : parser.parse()) {	
+				markerIcon = mAct.getResources().getDrawable(R.drawable.green_dot);
+				
+				OverlayItem marker = new OverlayItem(null, null, parkingPoint.getPGeoPoint());
+				marker.setMarker(markerIcon);
+				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
+				markers.add(marker);
+			}
+		}
+		
+		return markers;
 	}
 
 }

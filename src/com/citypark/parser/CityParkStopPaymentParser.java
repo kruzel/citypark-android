@@ -45,7 +45,7 @@ public class CityParkStopPaymentParser extends XMLParser {
 	 * @param operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED
 	 */
 	public CityParkStopPaymentParser(final Context context, final String sessionId, final String paymentProviderName, final double latitude, final double longitude, final String operationStatus) { 
-		super(context.getString(R.string.citypark_report_stop_payment_api) + "?sessionId=" + sessionId + "&paymentProviderName=" + paymentProviderName + "&latitude=" + Double.toString(latitude) + "&longitude=" + Double.toString(longitude) + "&operationStatus=" + operationStatus);
+		super(context.getString(R.string.citypark_api) + "reportStopPayment" + "?sessionId=" + sessionId + "&paymentProviderName=" + paymentProviderName + "&latitude=" + Double.toString(latitude) + "&longitude=" + Double.toString(longitude) + "&operationStatus=" + operationStatus);
 	}
 
 	public String parse() {

@@ -133,7 +133,7 @@ public class CityParkRouteParser extends XMLParser implements Parser {
 			Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root
 					.getContentHandler());
 		} catch (Exception e) {
-			Log.e(e.getMessage(), "BikeRoute parser - " + feedUrl);
+			Log.e(e.getMessage(), "CityParkRouteParser parser - " + feedUrl);
 			return null;
 		}
 		//route.buildTree();
