@@ -43,8 +43,8 @@ public final class CityParkConsts {
 	public static final double EARTH_RADIUS = 3960.0;
 	
 	/** parking consts **/
-	public static final double FAST_PARKING_LIMIT = 5;
-	public static final double MEDIUM_PARKING_LIMIT = 15;
+	public static final double FAST_PARKING_LIMIT = 5*60; //sec
+	public static final double MEDIUM_PARKING_LIMIT = 15*60; //sec
 	
 	/** Router Consts. **/
 	/** Google. **/
@@ -61,17 +61,6 @@ public final class CityParkConsts {
 	public static final int ZOOM = 17;
 	
 	public static final Long OVERLAY_UPDATE_INTERVAL = 15000L;
-	
-	/** Preference name. **/
-	public static final String PREFS_NAME = "bikepark_location";
-	/** Preference key (latitude). **/
-	public static final String LAT = "lat";
-	/** Preference key (longitude) **/
-	public static final String LNG = "lng";
-	/** Preference key (payment start time) **/
-	public static final String PAYMENT_START_TIME = "paystarttime";
-	/** Preference key (alarm target time) **/
-	public static final String ALARM_TIME = "alarmtime";
 	
 	private CityParkConsts() { }
 }

@@ -7,14 +7,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationManager;
 import android.text.format.Time;
 
 import com.citypark.CityParkApp;
+import com.citypark.PaymentActivity;
 import com.citypark.R;
-import com.citypark.RouteMap;
-import com.citypark.constants.CityParkConsts;
 import com.citypark.service.ReportLocationTask;
 import com.citypark.service.ReportParkingReleaseTask;
 import com.citypark.utility.route.PGeoPoint;
@@ -28,16 +25,18 @@ public class LocationReceiver extends BroadcastReceiver {
 	private CityParkApp app;
 	private PGeoPoint last = null;
 	private Time lastTime = null;
+	private ParkingSessionPersist parking_manager;
 	/** preferences file **/
 	protected SharedPreferences mPrefs = null;
 	/** Preferences mEditor. **/
 	private SharedPreferences.Editor editor = null;
 	/** street parking release task **/
-	ReportParkingReleaseTask releaseTask = null;
+	ReportParkingReleaseTask reportParkingReleaseTask;
 	
 	public LocationReceiver(CityParkApp app) {
 		super();		
 		this.app = app;
+		parking_manager = new ParkingSessionPersist(app.getApplicationContext());
 	}
 	
 	/* (non-Javadoc)
@@ -67,23 +66,27 @@ public class LocationReceiver extends BroadcastReceiver {
 					lastTime = curTime;
 			} 
 			
-			//if started driving with valid sessionId, close session, and free parking in parking_manager (app in background)
-			if (last!=null && lastTime!=null && timediff>0) {
+			//if parking and started driving, close session, and free parking in parking_manager (app in background)
+			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
 				float speed = distDiff / 1000 / timediff / 3600000; //kmph
 				if (speed > 20) { 
-					releaseTask = new ReportParkingReleaseTask(app,app.getSessionId(),current.getLatitudeE6(), current.getLongitudeE6());
-					releaseTask.execute();
-					
-					//free parking
-					if(mPrefs == null)
-						mPrefs = app.getSharedPreferences(app.getString(R.string.prefs_name), app.MODE_PRIVATE);
-					if(editor == null)
-						editor = mPrefs.edit();
-					editor.remove(CityParkConsts.LAT);
-					editor.remove(CityParkConsts.LNG);
-					editor.commit();
+					unpark(context, current);
 				}
 			}
+		}
+	}
+	
+	public void unpark(Context context,PGeoPoint current) {
+		
+		reportParkingReleaseTask = new ReportParkingReleaseTask(context,app.getSessionId(),current.getLatitudeE6(), current.getLongitudeE6());
+		reportParkingReleaseTask.execute();
+		
+		parking_manager.unPark();
+		app.setSessionId(null);
+		
+		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
+			Intent intent = new Intent(context, PaymentActivity.class);
+			context.startActivity(intent);
 		}
 	}
 

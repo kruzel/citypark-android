@@ -229,7 +229,6 @@ public class RouteMap extends OpenStreetMapActivity {
     			this.startActivity(new Intent(this, RegisterActivity.class));
     		}
         }
-		
 	}
 	
 	/**
@@ -278,6 +277,7 @@ public class RouteMap extends OpenStreetMapActivity {
         
 	      mHandler.removeCallbacks(mUpdateOverlaysTask);
 	      mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+	      
 	}
 	
 	@Override
@@ -404,7 +404,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		final MenuItem share = menu.findItem(R.id.sharing);
 		final MenuItem csShare = menu.findItem(R.id.share);
 		final MenuItem save = menu.findItem(R.id.save);
-		if (parking_manager.isParked() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
+		if (parking_manager.isParking() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 			park.setVisible(false);
 			unPark.setVisible(true);
 		} else {
@@ -416,18 +416,18 @@ public class RouteMap extends OpenStreetMapActivity {
 			//steps.setVisible(true);
 			//elev.setVisible(true);
 			//share.setVisible(true);
-			if (directionsVisible) {
-				turnByTurn.setVisible(false);
-				map.setVisible(true);
-			} else {
-				turnByTurn.setVisible(true);
-				map.setVisible(false);
-			}
+//			if (directionsVisible) {
+//				turnByTurn.setVisible(false);
+//				map.setVisible(true);
+//			} else {
+//				turnByTurn.setVisible(true);
+//				map.setVisible(false);
+//			}
 			
-			if (app.getRoute().getRouter().equals(CityParkConsts.CS)) {
-				//csShare.setVisible(true);
-				menu.setGroupVisible(R.id.cyclestreets, true);
-			}
+//			if (app.getRoute().getRouter().equals(CityParkConsts.CS)) {
+//				//csShare.setVisible(true);
+//				menu.setGroupVisible(R.id.cyclestreets, true);
+//			}
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -456,36 +456,7 @@ public class RouteMap extends OpenStreetMapActivity {
 			startActivityForResult(intent, R.id.trace);
 			break;
 		case R.id.unpark:	
-			if(app.getSessionId()!=null){
-				showDialog(R.id.awaiting_fix);
-				RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
-					@Override
-					public void run() {
-						if (RouteMap.this.dialog.isShowing()) {
-								RouteMap.this.dismissDialog(R.id.awaiting_fix);
-								Location self = mLocationOverlay.getLastFix();
-								
-								if (self == null) {
-									self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-								}
-								if (self == null) {
-									self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-								}
-								if (self != null) {
-									reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,app.getSessionId(),self.getLatitude(), self.getLongitude());
-									reportParkingReleaseTask.execute();
-								}
-						}
-					}
-				});
-			}
-			
-			parking_manager.unPark();
-			
-			if (parking_manager.isParked() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
-				intent = new Intent(this, PaymentActivity.class);
-				startActivity(intent);
-			}
+			unpark();
 			break;
 		case R.id.center:
 			RouteMap.this.mLocationOverlay.followLocation(true);
@@ -529,6 +500,9 @@ public class RouteMap extends OpenStreetMapActivity {
 					}
 				});
 			}
+			
+			stopNavigation();
+			
 			intent = new Intent(this, PaymentActivity.class);
 			startActivity(intent);
 			break;
@@ -797,6 +771,48 @@ public class RouteMap extends OpenStreetMapActivity {
 				GeoPoint p = pList.get(pList.size()-1);
 				showAllParkings(p);
 			}
+		}
+	}
+	
+	public void stopNavigation() {
+		//nothing to do in this class, only in LiveRouteMap class where nvigation is done
+		travelledRouteOverlay.clearPath();
+		routeOverlay.clearPath();
+		mOsmv.invalidate();
+		app.setRoute(null);
+	}
+	
+	public void unpark() {
+		if(app.getSessionId()!=null){
+			showDialog(R.id.awaiting_fix);
+			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
+				@Override
+				public void run() {
+					if (RouteMap.this.dialog.isShowing()) {
+							RouteMap.this.dismissDialog(R.id.awaiting_fix);
+							Location self = mLocationOverlay.getLastFix();
+							
+							if (self == null) {
+								self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+							}
+							if (self == null) {
+								self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+							}
+							if (self != null) {
+								reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,app.getSessionId(),self.getLatitude(), self.getLongitude());
+								reportParkingReleaseTask.execute();
+							}
+					}
+				}
+			});
+		}
+		
+		parking_manager.unPark();
+		app.setSessionId(null);
+		
+		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
+			Intent intent = new Intent(this, PaymentActivity.class);
+			startActivity(intent);
 		}
 	}
 }

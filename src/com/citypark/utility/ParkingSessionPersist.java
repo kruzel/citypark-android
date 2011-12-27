@@ -37,13 +37,24 @@ import com.citypark.constants.CityParkConsts;
 
 public class ParkingSessionPersist {
 		
+	/** Preference name. **/
+	public static final String PREFS_NAME = "bikepark_location";
+	/** Preference key (latitude). **/
+	public static final String LAT = "lat";
+	/** Preference key (longitude) **/
+	public static final String LNG = "lng";
+	/** Preference key (payment start time) **/
+	public static final String PAYMENT_START_TIME = "paystarttime";
+	/** Preference key (alarm target time) **/
+	public static final String ALARM_TIME = "alarmtime";
+	
 	/** Shared preferences object. **/
 	private final SharedPreferences settings;
 	/** Preferences mEditor. **/
 	private final SharedPreferences.Editor editor;
 
 	public ParkingSessionPersist(final Context context) {
-		settings = context.getSharedPreferences(CityParkConsts.PREFS_NAME, 0);
+		settings = context.getSharedPreferences(PREFS_NAME, 0);
 		editor = settings.edit();
 	}
 
@@ -59,8 +70,8 @@ public class ParkingSessionPersist {
 	 */
 
 	public final void park(final GeoPoint p) {
-		editor.putInt(CityParkConsts.LAT, p.getLatitudeE6());
-		editor.putInt(CityParkConsts.LNG, p.getLongitudeE6());
+		editor.putInt(LAT, p.getLatitudeE6());
+		editor.putInt(LNG, p.getLongitudeE6());
 		editor.commit();
 	}
 
@@ -69,8 +80,8 @@ public class ParkingSessionPersist {
 	 */
 
 	public final void unPark() {
-		editor.remove(CityParkConsts.LAT);
-		editor.remove(CityParkConsts.LNG);
+		editor.remove(LAT);
+		editor.remove(LNG);
 		editor.commit();
 	}
 
@@ -80,8 +91,8 @@ public class ParkingSessionPersist {
 	 * @return a boolean indicating if values are set for lat & lng
 	 */
 
-	public final boolean isParked() {
-		return settings.contains(CityParkConsts.LAT) && settings.contains(CityParkConsts.LNG);
+	public final boolean isParking() {
+		return settings.contains(LAT) && settings.contains(LNG);
 	}
 
 	/**
@@ -92,8 +103,8 @@ public class ParkingSessionPersist {
 	 */
 
 	public final GeoPoint getLocation() {
-		final int lat = settings.getInt(CityParkConsts.LAT, -1);
-		final int lng = settings.getInt(CityParkConsts.LNG, -1);
+		final int lat = settings.getInt(LAT, -1);
+		final int lng = settings.getInt(LNG, -1);
 		return new GeoPoint(lat, lng);
 	}
 	
@@ -103,7 +114,7 @@ public class ParkingSessionPersist {
 	public final void setPaymentStart() {
 		Time now = new Time();
 		now.setToNow();
-		editor.putString(CityParkConsts.PAYMENT_START_TIME, now.toString());
+		editor.putString(PAYMENT_START_TIME, now.toString());
 		editor.commit();
 	}
 
@@ -112,7 +123,7 @@ public class ParkingSessionPersist {
 	 */
 
 	public final void setPaymentEnd() {
-		editor.remove(CityParkConsts.PAYMENT_START_TIME);
+		editor.remove(PAYMENT_START_TIME);
 		editor.commit();
 	}
 
@@ -123,14 +134,14 @@ public class ParkingSessionPersist {
 	 */
 
 	public final boolean isPaymentActive() {
-		return settings.contains(CityParkConsts.PAYMENT_START_TIME);
+		return settings.contains(PAYMENT_START_TIME);
 	}
 	
 	/**
 	 * set payment start time.
 	 */
 	public final void setReminder(Time time) {
-		editor.putString(CityParkConsts.ALARM_TIME, time.toString());
+		editor.putString(ALARM_TIME, time.toString());
 		editor.commit();
 	}
 
@@ -139,7 +150,7 @@ public class ParkingSessionPersist {
 	 */
 
 	public final void stopReminder() {
-		editor.remove(CityParkConsts.ALARM_TIME);
+		editor.remove(ALARM_TIME);
 		editor.commit();
 	}
 
@@ -150,6 +161,6 @@ public class ParkingSessionPersist {
 	 */
 
 	public final boolean isReminderActive() {
-		return settings.contains(CityParkConsts.ALARM_TIME);
+		return settings.contains(ALARM_TIME);
 	}
 }

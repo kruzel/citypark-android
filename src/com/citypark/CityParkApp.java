@@ -83,7 +83,7 @@ public class CityParkApp extends Application implements LoginListener {
 	private LocationService mBoundService;
 	
 		/** Receiver for navigation updates. **/
-	private LocationReceiver mBroadcastReceiver = new LocationReceiver(this);
+	private LocationReceiver mBroadcastReceiver;
 	
 	/** Connection to location service. **/
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -119,6 +119,8 @@ public class CityParkApp extends Application implements LoginListener {
 		ACRA.init(this);
 		
 		getSessionId();
+		
+		mBroadcastReceiver = new LocationReceiver(this);
 		
 	}
 	

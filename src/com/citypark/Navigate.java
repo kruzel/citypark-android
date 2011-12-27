@@ -305,7 +305,7 @@ public class Navigate extends Activity implements RouteListener {
 		stand.setVisible(false);
 		if (startAddressField.getText().length() > 0) {
 			stand.setVisible(true);
-			if (prk.isParked()) {
+			if (prk.isParking()) {
 				back.setVisible(true);
 			}
 		}

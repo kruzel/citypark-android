@@ -285,11 +285,6 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			replan();
 			break;
 		case R.id.stop_nav:
-			if(mBroadcastReceiver != null) {
-				unregisterReceiver(mBroadcastReceiver);
-				mBroadcastReceiver = null;
-			}
-			
 			showDialog(R.id.awaiting_fix);
 			LiveRouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
 				@Override
@@ -305,17 +300,16 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 								self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 							}
 							if (self != null) {
-								parking_manager.park(
-									new PGeoPoint(self.getLatitude(), self.getLongitude()));
+								parking_manager.park(new PGeoPoint(self.getLatitude(), self.getLongitude()));
 							}
 					}
 				}
 			});
 			
-			finishActivity(R.id.trace);
+			stopNavigation();
+			//finishActivity(R.id.trace);
 			setResult(1);
 			this.finish();
-			app.setRoute(null);
 			break;
 		case R.id.turnbyturn:
 			spoken = true;
@@ -356,10 +350,14 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	
 	private void startNavigation() {
 		//doUnbindService();
+		
 		liveNavigation = mSettings.getBoolean("gps", false);
 		if (app.getRoute() != null) {
-			//Disable live navigation for Google routes to comply with Google tos
-			liveNavigation = app.getRoute().getRouter().equals(CityParkConsts.G) ? false : liveNavigation;
+			unpark();
+			
+			//TODO Disable live navigation for Google routes to comply with Google tos
+			//liveNavigation = app.getRoute().getRouter().equals(CityParkConsts.G) ? false : liveNavigation;
+			
 			if (tts && directionsVisible && !isSearching) {
 				speak(app.getSegment());
 				lastSegment = app.getSegment();
@@ -526,5 +524,17 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	private void showGpsOptions() { 
         startActivity(new Intent(  
                 android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)); 
+	}
+	
+	//overides RouteMap
+	public void stopNavigation() {
+		super.stopNavigation();
+		
+		if(mBroadcastReceiver != null) {
+			unregisterReceiver(mBroadcastReceiver);
+			mBroadcastReceiver = null;
+		}
+		
+		finishActivity(R.id.trace);
 	}
 }

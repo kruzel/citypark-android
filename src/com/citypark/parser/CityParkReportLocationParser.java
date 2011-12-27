@@ -42,7 +42,7 @@ public class CityParkReportLocationParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkReportLocationParser(final Context context, final String sessionId, final double latitude, final double longitude) {
-		super(context.getString(R.string.citypark_api) + "reportSearchLocation" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
+		super(context.getString(R.string.citypark_api) + "reportLocation" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
 	}
 
 	public boolean parse() {
