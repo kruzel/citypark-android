@@ -353,8 +353,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		
 		liveNavigation = mSettings.getBoolean("gps", false);
 		if (app.getRoute() != null) {
-			unpark();
-			
+						
 			//TODO Disable live navigation for Google routes to comply with Google tos
 			//liveNavigation = app.getRoute().getRouter().equals(CityParkConsts.G) ? false : liveNavigation;
 			
