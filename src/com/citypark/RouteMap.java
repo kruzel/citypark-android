@@ -217,9 +217,11 @@ public class RouteMap extends OpenStreetMapActivity {
 		if ((data != null) && ((Boolean) data[0])) {
 			mOsmv.getController().setZoom(16);
 			showStep();
+			//TODO keep location
 		}
 		
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
+			//TODO make it work again
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		

@@ -55,7 +55,7 @@ public class LocationService extends Service implements LocationListener {
 	/** Local binder. **/
     private final IBinder mBinder = new LocalBinder();
     /** Notification manager. **/
-	private NotificationManager mNM;
+	//private NotificationManager mNM;
 	/** Location manager. **/
 	private LocationManager mLocationManager;
 	/** Custom application reference. **/
@@ -86,7 +86,7 @@ public class LocationService extends Service implements LocationListener {
 	
 	@Override
     public void onCreate() {
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        //mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         /* Get location manager. */
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         app = (CityParkApp) getApplication();
@@ -101,14 +101,14 @@ public class LocationService extends Service implements LocationListener {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        if (app.getRoute() != null) {
-        	notification.setLatestEventInfo(app, getText(R.string.notify_title),
-				app.getSegment().getInstruction(), contentIntent);
-        	mNM.notify(R.id.notifier, notification);
-        } else {
+//        if (app.getRoute() != null) {
+//        	notification.setLatestEventInfo(app, getText(R.string.notify_title),
+//				app.getSegment().getInstruction(), contentIntent);
+//        	mNM.notify(R.id.notifier, notification);
+//        } else {
 //        	shutdown();
 //        	stopSelf();
-        }
+//        }
     }
 
     @Override
@@ -155,17 +155,17 @@ public class LocationService extends Service implements LocationListener {
 	    					getText(R.string.replanning), contentIntent);    	        
 	    		} else*/ if (near.get(0).equals(app.getRoute().getEndPoint())) { //If we've arrived, shutdown and signal.
 	    			update.putExtra((String) getText(R.string.arrived), true);
-	    			notification.setLatestEventInfo(app, getText(R.string.notify_title), 
-	    					getText(R.string.arrived), contentIntent);
+	    			//notification.setLatestEventInfo(app, getText(R.string.notify_title), 
+	    			//		getText(R.string.arrived), contentIntent);
 	    		}	else {
 	    			update.putExtra(getString(R.string.point), (Parcelable)near.get(0));
 	    			app.setSegment(app.getRoute().getSegment(near.get(0)));
-	    			notification.setLatestEventInfo(app, getText(R.string.notify_title),
-	        				app.getSegment().getInstruction(), contentIntent);
+	    			//notification.setLatestEventInfo(app, getText(R.string.notify_title),
+	        		//		app.getSegment().getInstruction(), contentIntent);
 	    		}
 	    		sendBroadcast(update);
 	    		
-	    		mNM.notify(R.id.notifier, notification);
+	    		//mNM.notify(R.id.notifier, notification);
     		}
     	} else {
 //    		stopSelf();
@@ -177,7 +177,7 @@ public class LocationService extends Service implements LocationListener {
     
     private void shutdown() {
     	mLocationManager.removeUpdates(this);
-    	mNM.cancelAll();
+    	//mNM.cancelAll();
     }
 
 	/* (non-Javadoc)
