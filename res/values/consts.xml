@@ -22,4 +22,5 @@
 <item type="id" name="save" />
 <item type="id" name="geocodeerror" />
 <item type="id" name="geocodeconnecterror" />
+<item type="id" name="payment" />
 </resources>

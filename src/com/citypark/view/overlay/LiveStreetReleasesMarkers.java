@@ -99,7 +99,7 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.green_dot), mv.getResourceProxy());
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
-			mv.postInvalidate();
+			//mv.postInvalidate();
 		}
 	};
 

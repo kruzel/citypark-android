@@ -785,6 +785,14 @@ public class RouteMap extends OpenStreetMapActivity {
 	}
 	
 	public void unpark() {
+		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
+			Intent intent = new Intent(this, PaymentActivity.class);
+			startActivityForResult(intent, R.id.payment);
+		} else
+			unparkCompletion();
+	}
+	
+	public void unparkCompletion() {
 		if(app.getSessionId()!=null){
 			showDialog(R.id.awaiting_fix);
 			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
@@ -811,10 +819,17 @@ public class RouteMap extends OpenStreetMapActivity {
 		
 		parking_manager.unPark();
 		app.setSessionId(null);
-		
-		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
-			Intent intent = new Intent(this, PaymentActivity.class);
-			startActivity(intent);
-		}
 	}
+	
+	/**
+   	 * Finish cascade passer.
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (requestCode == R.id.payment) {
+        	if (resultCode == CityParkConsts.STOP_PAYMENT_SUCCEEDED) {
+        		unparkCompletion();
+        	}
+        }
+    }
 }

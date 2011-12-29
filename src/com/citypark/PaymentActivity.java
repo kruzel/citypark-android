@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
+import com.citypark.constants.CityParkConsts;
 import com.citypark.service.PaymentListener;
 import com.citypark.service.StartPaymentTask;
 import com.citypark.service.StopPaymentTask;
@@ -29,12 +30,12 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	private StartPaymentTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
-	
 	/** Application reference. **/
 	private CityParkApp app;
-	
 	/** ParkingSessionPersist manager. */
 	private ParkingSessionPersist parking_manager = null;
+	/** operation result code **/
+	private int resultCode = -1;
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -125,21 +126,32 @@ public class PaymentActivity extends Activity implements PaymentListener {
 		
 		if(parking_manager.isPaymentActive()) {
 			 if(success){
+				 resultCode = CityParkConsts.STOP_PAYMENT_SUCCEEDED;
 				 parking_manager.setPaymentEnd();
 				 txtProgressMsg.setText(R.string.payment_succeeded);
 			 }
-	         else
+	         else {
+	        	 resultCode = CityParkConsts.STOP_PAYMENT_FAILED;
 	        	 txtProgressMsg.setText(R.string.payment_failes);
-			 
+	         }
 		} else {
 			 if(success) {
+				 resultCode = CityParkConsts.START_PAYMENT_SUCCEEDED;
 				 parking_manager.setPaymentStart();
 				 txtProgressMsg.setText(R.string.payment_succeeded);
 			 }
-	         else
+	         else {
+	        	 resultCode = CityParkConsts.START_PAYMENT_FAILED;
 	        	 txtProgressMsg.setText(R.string.payment_failes);
+	         }
 		}
-         
 	}
-	
+
+	@Override
+	public void onBackPressed() {
+		setResult(resultCode);
+		finish();
+		
+		super.onBackPressed();
+	}	
 }

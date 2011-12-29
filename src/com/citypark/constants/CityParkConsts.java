@@ -62,5 +62,10 @@ public final class CityParkConsts {
 	
 	public static final Long OVERLAY_UPDATE_INTERVAL = 15000L;
 	
+	public static final int START_PAYMENT_SUCCEEDED = 0;
+	public static final int START_PAYMENT_FAILED = 1;
+	public static final int STOP_PAYMENT_SUCCEEDED = 2;
+	public static final int STOP_PAYMENT_FAILED = 3;
+	
 	private CityParkConsts() { }
 }
