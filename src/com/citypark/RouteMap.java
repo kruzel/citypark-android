@@ -505,8 +505,19 @@ public class RouteMap extends OpenStreetMapActivity {
 			
 			stopNavigation();
 			
-			intent = new Intent(this, PaymentActivity.class);
-			startActivity(intent);
+			String payMethod = mPrefs.getString("payment_method", null);
+			if(payMethod == "Pango") {
+				intent = new Intent(this, PaymentPangoActivity.class);
+				startActivity(intent);
+			}
+			if(payMethod == "CelOpark") {
+				intent = new Intent(this, PaymentCelOParkActivity.class);
+				startActivity(intent);
+			} else {
+				Toast.makeText(this, "Undefined payment provider...",
+						Toast.LENGTH_LONG).show();
+			}
+			
 			break;
 		case R.id.directions:
 			intent = new Intent(this, DirectionsView.class);

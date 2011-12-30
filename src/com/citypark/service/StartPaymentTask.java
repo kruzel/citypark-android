@@ -1,15 +1,20 @@
 package com.citypark.service;
 
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.telephony.SmsManager;
 import android.text.format.Time;
+import android.widget.Toast;
 
 import com.citypark.parser.CityParkStartPaymentParser;
 
 public class StartPaymentTask extends AsyncTask<Void, Void, Boolean> {
-	
-	private PaymentListener payLitener = null;
 	private Context context;
 	private String sessionId;
 	private String paymentProviderName;
@@ -17,11 +22,10 @@ public class StartPaymentTask extends AsyncTask<Void, Void, Boolean> {
 	private double longitude;
 	private String operationStatus;	
 
-	public StartPaymentTask(PaymentListener payLitener, Context context,
+	public StartPaymentTask(Context context,
 			String sessionId, String paymentProviderName, double latitude,
 			double longitude, String operationStatus) {
 		super();
-		this.payLitener = payLitener;
 		this.context = context;
 		this.sessionId = sessionId;
 		this.paymentProviderName = paymentProviderName;
@@ -32,42 +36,11 @@ public class StartPaymentTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
-				
-		//TODO start payment request (SMS,..)
-		
-		Time timeStart = new Time();
-		Time timeNow = new Time();
-		timeStart.setToNow();
-		timeNow.setToNow();
-		
-        while ((timeNow.toMillis(false) - timeStart.toMillis(false)) < 10000) {
-        	try {
-				Thread.currentThread();
-				Thread.sleep(1000);
-				//TODO check payment confirmation
-				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	timeNow.setToNow();
-        }
-        
         //update citypark through API on success or failure
         CityParkStartPaymentParser parser = new CityParkStartPaymentParser(context, sessionId, paymentProviderName, latitude, longitude, operationStatus);
         parser.parse();
         
 		return true;
 	}
-	
-	protected void onPostExecute(Boolean success) {
-		
-		if(payLitener!=null)
-			payLitener.PaymentComplete(success);
-		
-		//TODO error handling
-		
-     }
-
 
 }

@@ -58,6 +58,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         txtFirstName.setText(mPrefs.getString("first_name", null));
         txtLastName.setText(mPrefs.getString("last_name", null));
         txtLicensePlate.setText(mPrefs.getString("license_plate", null));
+        txtPhoneNumber.setText(mPrefs.getString("phone_number", null));
         
         //get phone number, depends on operator support, may return null
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
@@ -78,6 +79,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         mEditor.putString("first_name", txtFirstName.getText().toString());
         mEditor.putString("last_name", txtLastName.getText().toString());
         mEditor.putString("license_plate", txtLicensePlate.getText().toString());
+        mEditor.putString("phone_number",txtPhoneNumber.getText().toString());
         mEditor.putString("payment_method", strPaymentMethod);
         
         //spawn registration task

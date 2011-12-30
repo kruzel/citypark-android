@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.View;
@@ -15,13 +16,12 @@ import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.PaymentListener;
 import com.citypark.service.StartPaymentTask;
 import com.citypark.service.StopPaymentTask;
 import com.citypark.service.TimeLimitAlertListener;
 import com.citypark.utility.ParkingSessionPersist;
 
-public class PaymentActivity extends Activity implements PaymentListener {
+public abstract class PaymentActivity extends Activity {
 	
 	private ToggleButton tgBtnPay = null;
 	private ToggleButton tgBtnRemind = null;
@@ -33,7 +33,11 @@ public class PaymentActivity extends Activity implements PaymentListener {
 	/** Application reference. **/
 	private CityParkApp app;
 	/** ParkingSessionPersist manager. */
-	private ParkingSessionPersist parking_manager = null;
+	protected ParkingSessionPersist parking_manager = null;
+	/** preferences file **/
+	protected SharedPreferences mPrefs;
+	protected String myPhoneNumber;
+	protected String myLicensePlate;
 	/** operation result code **/
 	private int resultCode = -1;
 	
@@ -58,28 +62,20 @@ public class PaymentActivity extends Activity implements PaymentListener {
 		tgBtnPay.setChecked(parking_manager.isPaymentActive());
 		tgBtnRemind.setChecked(parking_manager.isReminderActive());
 		
+		mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
+   	 	myLicensePlate = mPrefs.getString("license_plate", null);
+   	 	myPhoneNumber = mPrefs.getString("phone_number", null);
 	}
 	
-	public void OnPay(View view) {
-		
+	public void OnPay(View view) {   	
 		if(parking_manager.isPaymentActive()){
 			txtProgressMsg.setVisibility(View.VISIBLE);
 			txtProgressMsg.setText(R.string.payment_progress);
 			progBarPayment.setVisibility(View.VISIBLE);
-			
-			stopPayTask = new StopPaymentTask(this, this, app.getSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
-			stopPayTask.execute();
-			
 		} else {
 			txtProgressMsg.setVisibility(View.VISIBLE);
 			txtProgressMsg.setText(R.string.payment_progress);
 			progBarPayment.setVisibility(View.VISIBLE);
-			
-			//TODO add inheritance classes for the different payment methods (Pango, Celopark,..)
-			//TODO add payment verification logic and update operationStatus accordingly
-			//operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
-			payTask = new StartPaymentTask(this, this, app.getSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
-			payTask.execute();
 		}
 	}
 	
@@ -119,7 +115,6 @@ public class PaymentActivity extends Activity implements PaymentListener {
 		}
 	}
 
-	@Override
 	public void PaymentComplete(Boolean success) {
 		
 		progBarPayment.setVisibility(View.INVISIBLE);
@@ -129,6 +124,9 @@ public class PaymentActivity extends Activity implements PaymentListener {
 				 resultCode = CityParkConsts.STOP_PAYMENT_SUCCEEDED;
 				 parking_manager.setPaymentEnd();
 				 txtProgressMsg.setText(R.string.payment_succeeded);
+				 
+				 stopPayTask = new StopPaymentTask(this, app.getSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
+				 stopPayTask.execute();
 			 }
 	         else {
 	        	 resultCode = CityParkConsts.STOP_PAYMENT_FAILED;
@@ -139,6 +137,11 @@ public class PaymentActivity extends Activity implements PaymentListener {
 				 resultCode = CityParkConsts.START_PAYMENT_SUCCEEDED;
 				 parking_manager.setPaymentStart();
 				 txtProgressMsg.setText(R.string.payment_succeeded);
+				 
+				//TODO operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
+				payTask = new StartPaymentTask(this, app.getSessionId(), "Pango", parking_manager.getLocation().getLatitudeE6()/1E6, 
+						parking_manager.getLocation().getLongitudeE6()/1E6, "UNVERIFIED");
+				payTask.execute();
 			 }
 	         else {
 	        	 resultCode = CityParkConsts.START_PAYMENT_FAILED;
