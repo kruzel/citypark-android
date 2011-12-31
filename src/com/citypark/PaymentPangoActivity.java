@@ -13,14 +13,25 @@ public class PaymentPangoActivity extends PaymentSmsActivity {
 		String pangoSmsNumber = "4500";
 		
 		if(parking_manager.isPaymentActive()){
-			//TODO Start  city  Rehovot  zone 1 vehicle 4343422
-			msg = "Stop payment message " + myLicensePlate;
+			//TODO הפסק
+			msg = myLicensePlate.getText().toString() + " הפסק";
 		} else {
-			//TODO Stop vehicle car registration number
-			 msg = "Start  city  " + myLicensePlate;
+			//TODO התחל רחובות אזור 1 רכב 7107864
+			 msg = null;
+			 if(myLicensePlate.length()>0)
+					 msg += myLicensePlate.getText().toString() + " רכב ";
+			 if (parkingZone.length() > 0)
+				 msg += parkingZone.getText().toString() + " אזור ";
+			 msg = parkingCity.getText().toString() + "התחל ";
 		}
 		
 		sendSMS(pangoSmsNumber, msg);
+	}
+	
+	@Override
+	protected Boolean parseResponse(String msg) {
+		return (msg.contains(parkingCity.getText()));
+		//TODO set time limit according to response
 	}
 
 	@Override

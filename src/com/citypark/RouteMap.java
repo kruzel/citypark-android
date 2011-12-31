@@ -804,8 +804,7 @@ public class RouteMap extends OpenStreetMapActivity {
 			if(payMethod.contains("Pango")) {
 				intent = new Intent(this, PaymentPangoActivity.class);
 				startActivityForResult(intent, R.id.payment);
-			}
-			if(payMethod.contains("CelOpark")) {
+			} else if(payMethod.contains("CelOpark")) {
 				intent = new Intent(this, PaymentCelOParkActivity.class);
 				startActivityForResult(intent, R.id.payment);
 			} else {

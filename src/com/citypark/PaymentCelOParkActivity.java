@@ -28,4 +28,10 @@ public class PaymentCelOParkActivity extends PaymentSmsActivity {
 		return "CelOpark";
 	}
 
+	@Override
+	protected Boolean parseResponse(String msg) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

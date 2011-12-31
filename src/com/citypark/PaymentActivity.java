@@ -120,6 +120,12 @@ public abstract class PaymentActivity extends Activity {
 		tgBtnRemind.setChecked(parking_manager.isReminderActive());
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+
 	public void OnPay(View view) {   	
 		if(parking_manager.isPaymentActive()){
 			Toast.makeText(this, R.string.payment_progress , Toast.LENGTH_SHORT).show();
