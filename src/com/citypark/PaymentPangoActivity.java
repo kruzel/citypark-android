@@ -30,7 +30,7 @@ public class PaymentPangoActivity extends PaymentSmsActivity {
 	
 	@Override
 	protected Boolean parseResponse(String msg) {
-		return (msg.contains(parkingCity.getText()));
+		return (msg.contains(parkingCity.getText().toString()));
 		//TODO set time limit according to response
 	}
 
