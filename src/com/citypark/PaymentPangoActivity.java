@@ -13,14 +13,18 @@ public class PaymentPangoActivity extends PaymentSmsActivity {
 		String pangoSmsNumber = "4500";
 		
 		if(parking_manager.isPaymentActive()){
-			//TODO send stop payment SMS
-			msg = "stop payment message " + myLicensePlate;
+			//TODO Start  city  Rehovot  zone 1 vehicle 4343422
+			msg = "Stop payment message " + myLicensePlate;
 		} else {
-			//TODO send start payment SMS
-			 msg = "start payment message " + myLicensePlate;
+			//TODO Stop vehicle car registration number
+			 msg = "Start  city  " + myLicensePlate;
 		}
 		
 		sendSMS(pangoSmsNumber, msg);
 	}
 
+	@Override
+	public String getPaymentMethod() {
+		return "Pango";
+	}
 }

@@ -23,4 +23,9 @@ public class PaymentCelOParkActivity extends PaymentSmsActivity {
 		sendSMS(pangoSmsNumber, msg);
 	}
 
+	@Override
+	public String getPaymentMethod() {
+		return "CelOpark";
+	}
+
 }

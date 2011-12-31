@@ -129,6 +129,8 @@ public class RouteMap extends OpenStreetMapActivity {
 	
 	/** Units for directions. **/
 	protected String unit;
+	/** payment method **/
+	protected String payMethod;
 	
 	/** Preferences manager. **/
 	protected SharedPreferences mSettings;
@@ -156,6 +158,8 @@ public class RouteMap extends OpenStreetMapActivity {
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 		/* Get location manager. */
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
+		payMethod = mPrefs.getString("payment_method", null);
 		
 		//Set OSD invisible
 		directionsVisible = false;
@@ -505,12 +509,10 @@ public class RouteMap extends OpenStreetMapActivity {
 			
 			stopNavigation();
 			
-			String payMethod = mPrefs.getString("payment_method", null);
-			if(payMethod == "Pango") {
+			if(payMethod.contains("Pango")) {
 				intent = new Intent(this, PaymentPangoActivity.class);
 				startActivity(intent);
-			}
-			if(payMethod == "CelOpark") {
+			} else if(payMethod.contains("CelOpark")) {
 				intent = new Intent(this, PaymentCelOParkActivity.class);
 				startActivity(intent);
 			} else {
@@ -797,8 +799,19 @@ public class RouteMap extends OpenStreetMapActivity {
 	
 	public void unpark() {
 		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
-			Intent intent = new Intent(this, PaymentActivity.class);
-			startActivityForResult(intent, R.id.payment);
+			Intent intent;
+			
+			if(payMethod.contains("Pango")) {
+				intent = new Intent(this, PaymentPangoActivity.class);
+				startActivityForResult(intent, R.id.payment);
+			}
+			if(payMethod.contains("CelOpark")) {
+				intent = new Intent(this, PaymentCelOParkActivity.class);
+				startActivityForResult(intent, R.id.payment);
+			} else {
+				Toast.makeText(this, "Undefined payment provider...",
+						Toast.LENGTH_LONG).show();
+			}
 		} else
 			unparkCompletion();
 	}

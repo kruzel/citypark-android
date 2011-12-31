@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:hint="@string/license_plate" android:inputType="textCapCharacters" android:cursorVisible="false"/>
+            android:hint="@string/license_plate" android:cursorVisible="false" android:inputType="number"/>
 
         <EditText
             android:id="@+id/id_phone_number"

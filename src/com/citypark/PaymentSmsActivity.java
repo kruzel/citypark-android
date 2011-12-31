@@ -17,13 +17,12 @@ import android.widget.Toast;
  *
  */
 public abstract class PaymentSmsActivity extends PaymentActivity {
-		
+    final protected String SENT = "SMS_SENT";
+    final protected String DELIVERED = "SMS_DELIVERED";
+
     //---sends an SMS message to another device---
 	protected void sendSMS(String phoneNumber, String message)
     {        
-        String SENT = "SMS_SENT";
-        String DELIVERED = "SMS_DELIVERED";
- 
         PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
             new Intent(SENT), 0);
  

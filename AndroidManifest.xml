@@ -47,8 +47,8 @@
 		<activity android:name="com.citypark.Feedback" android:label="Feedback" />
 		<activity android:name="com.citypark.RegisterActivity" android:label="Registration" android:theme="@android:style/Theme.Black.NoTitleBar" />
 		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
-		<activity android:name=".PaymentPangoActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
-		<activity android:name=".PaymentCelOParkActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
+		<activity android:name="com.citypark.PaymentPangoActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
+		<activity android:name="com.citypark.PaymentCelOParkActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
 		<service android:name="com.citypark.service.LocationService" android:enabled="true" android:label="Router" android:exported="false" />
 		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert" android:process=":remote" />
 	</application>
