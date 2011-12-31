@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,21 +15,19 @@ import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.parser.CityParkParkingZoneParser;
+import com.citypark.parser.CityParkParkingZoneParser.LocationData;
 import com.citypark.service.StartPaymentTask;
 import com.citypark.service.StopPaymentTask;
 import com.citypark.service.TimeLimitAlertListener;
 import com.citypark.utility.ParkingSessionPersist;
-import com.citypark.utility.StringAddress;
 
 public abstract class PaymentActivity extends Activity {
 	
@@ -100,10 +97,12 @@ public abstract class PaymentActivity extends Activity {
 				
 				if (self != null) {
 					try {
-						final Address addresses = geocoder.getFromLocation(self.getLatitude(),
-								self.getLongitude(), 1).get(0);
-						String city = addresses.getLocality();
-						parkingCity.setText(city);
+						if(app!=null && app.getSessionId()!=null) {
+							CityParkParkingZoneParser zoneParser = new CityParkParkingZoneParser(PaymentActivity.this,app.getSessionId(),self.getLatitude(),self.getLongitude());
+							LocationData ld = zoneParser.parse();
+							parkingZone.setText(ld.getParkingZone());
+							parkingCity.setText(ld.getCity());
+						}
 					} catch (Exception e) {
 						Log.e(e.getMessage(), "FindPlace - location: " + self);
 					}
@@ -114,15 +113,6 @@ public abstract class PaymentActivity extends Activity {
 			}
 		};
 		tcity.run();
-   	 	
-   	 	//TODO initiate parking zone API call and filling (asyncTask)
-		Thread tzone = new Thread() {
-			@Override
-			public void run() {
-				parkingZone.setText("1");
-			};
-		};
-		tzone.run();
    	 	
 		progBarPayment.setVisibility(View.INVISIBLE);
 		timePicker.setIs24HourView(true);
