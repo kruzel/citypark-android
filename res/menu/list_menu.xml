@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+      <item android:id="@+id/park"
+          android:title="@string/park_title" 
+          android:icon="@drawable/ic_menu_park">
+    </item>
+    <item android:id="@+id/unpark"
+          android:title="@string/unpark_title" android:visible="false" 
+          android:icon="@drawable/ic_menu_unpark">
+    </item>
+    <item android:id="@+id/map"
+    android:title="@string/map_title"
+    android:icon="@drawable/ic_menu_map" android:visible="false"></item>
+    <item android:id="@+id/stop_nav"
+    android:title="@string/stop_nav_title"
+    android:icon="@drawable/ic_menu_close_clear_cancel" android:visible="false">
+    </item>
+    <item android:id="@+id/prefs"
+    android:title="@string/prefs_title"
+    android:icon="@drawable/ic_menu_preferences"></item><item android:id="@+id/about" android:icon="@drawable/ic_menu_info_details" android:title="@string/about_menu"></item>
+
+
+</menu>

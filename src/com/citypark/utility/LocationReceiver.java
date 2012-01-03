@@ -67,6 +67,7 @@ public class LocationReceiver extends BroadcastReceiver {
 			} 
 			
 			//if parking and started driving, close session, and free parking in parking_manager (app in background)
+			//TODO this code have a bug
 			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
 				float speed = distDiff / 1000 / timediff / 3600000; //kmph
 				if (speed > 20) { 

@@ -11,11 +11,14 @@ import org.osmdroid.views.overlay.ItemizedOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
 import com.citypark.CityParkApp;
+import com.citypark.GarageDetailsActivity;
 import com.citypark.R;
+import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.ParkingOverlayHandler;
 
 /**
@@ -119,6 +122,11 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	public boolean onItemSingleTapUp(int index,
 			OverlayItem item) {
 		// TODO Auto-generated method stub
+		int garageId = Integer.parseInt(item.mDescription);
+		Intent intent = new Intent(context,GarageDetailsActivity.class);
+		intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
+		context.startActivity(intent);
+		
 		return false;
 	}
 

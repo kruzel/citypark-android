@@ -77,10 +77,10 @@
 <string name="tts_msg_title">Text to Speech</string>
 
 <string name="email_hint">user@domain</string>
-<string name="password">password</string>
-<string name="last_name">last name</string>
-<string name="first_name">first name</string>
-<string name="license_plate">license plate</string>
+<string name="password">Password</string>
+<string name="last_name">Last name</string>
+<string name="first_name">First name</string>
+<string name="license_plate">License plate</string>
 <string name="register">Register</string>
 <string name="registration_succeeded">Registration Succeeded</string>
 <string name="registration_failed">Registration Failed</string>
@@ -97,8 +97,10 @@
 <string name="time_limit_reached">time limit reached</string>
 <string name="login_failed">Login Failed</string>
 
-
 <string name="phone_number">Phone number</string>
+<string name="city">City</string>
+<string name="parking_zone">Parking Zone</string>
 
-    
+<string name="currency">NIS</string>
+
 </resources>
