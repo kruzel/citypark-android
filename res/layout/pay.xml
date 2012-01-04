@@ -15,25 +15,24 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
+        android:layout_height="wrap_content" 
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:text="City"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/city"/>
 
         <EditText
             android:id="@+id/editTextCity"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp" >
-
+            android:layout_marginRight="10dp" >
         </EditText>
 
     </LinearLayout>
@@ -41,23 +40,24 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Parking Zone"
-            android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="10dp" android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/parking_zone"/>
 
         <EditText
             android:id="@+id/editTextParkingZone"
-            android:layout_width="100dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" android:layout_marginRight="10dp" android:layout_weight="1">
-
-            <requestFocus />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:inputType="number" >
         </EditText>
 
     </LinearLayout>
@@ -72,8 +72,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="License Plate"
-            android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="10dp"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="10dp" android:text="@string/license_plate"/>
 
         <EditText
             android:id="@+id/editTextLicnsePlate"

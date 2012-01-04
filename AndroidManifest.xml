@@ -50,6 +50,7 @@
 		<activity android:name="com.citypark.PaymentPangoActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
 		<activity android:name="com.citypark.PaymentCelOParkActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" />
 		<activity android:name=".GarageListActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Garage List" />
+		<activity android:name="com.citypark.GarageDetailsActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="GarageDetails" />
 		<service android:name="com.citypark.service.LocationService" android:enabled="true" android:label="Router" android:exported="false" />
 		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert" android:process=":remote" />
 	</application>

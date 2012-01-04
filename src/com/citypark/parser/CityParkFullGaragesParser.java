@@ -44,13 +44,13 @@ import com.citypark.utility.route.PGeoPoint;
  * @author jono@nanosheep.net
  * @version Jun 26, 2010
  */
-public class CityParkGaragesParser extends XMLParser {
+public class CityParkFullGaragesParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";
 	
 	/**
 	 * @param feedUrl
 	 */
-	public CityParkGaragesParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
+	public CityParkFullGaragesParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
 		
 		try {
 			feedUrl = new URL(context.getString(R.string.citypark_api) + "findGarageParkingByLatitudeLongitude" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
@@ -62,45 +62,59 @@ public class CityParkGaragesParser extends XMLParser {
 	}
 
 	//TODO:make it nicer
-	public class GaragePoint{
-		int id;
+	public class GarageDetailes{
+		String name;
 		double latitude;
 		double longitude;
-		double price;
-		String name;
+		double firstHourPrice;
+		double extraQuarterPrice;
+		double allDayPrice;
 		GarageAvailability availability;
 		
-		public GaragePoint() {
+		public GarageDetailes() {
 			// TODO Auto-generated constructor stub
 		}
-		
-		public int getId() {
-			return id;
-		}
-		
-		public String getIdString() {
-			return Integer.toString(id);
+
+		public GarageDetailes(GarageDetailes p) {
+			super();
+			this.name = p.name;
+			this.latitude = p.latitude;
+			this.longitude = p.longitude;
+			this.firstHourPrice = p.firstHourPrice;
+			this.extraQuarterPrice = p.extraQuarterPrice;
+			this.allDayPrice = p.allDayPrice;
+			this.availability = p.availability;
 		}
 
-		public void setId(int id) {
-			this.id = id;
+		public double getFirstHourPrice() {
+			return firstHourPrice;
+		}
+		
+		public void setFirstHourPrice(double firstHourPrice) {
+			this.firstHourPrice = firstHourPrice;
+		}
+
+		public double getExtraQuarterPrice() {
+			return extraQuarterPrice;
+		}
+
+		public void setExtraQuarterPrice(double extraQuarterPrice) {
+			this.extraQuarterPrice = extraQuarterPrice;
+		}
+
+		public double getAllDayPrice() {
+			return allDayPrice;
+		}
+
+		public void setAllDayPrice(double allDayPrice) {
+			this.allDayPrice = allDayPrice;
 		}
 
 		public GarageAvailability getAvailability() {
 			return availability;
 		}
-
 		public void setAvailability(GarageAvailability availability) {
 			this.availability = availability;
-		}
-
-		public GaragePoint(GaragePoint p) {
-			this.id = p.id;
-			this.latitude = p.latitude;
-			this.longitude = p.longitude;
-			this.price = p.price;
-			this.name = p.name;
-			this.availability = p.availability;
 		}
 		public double getLatitude() {
 			return latitude;
@@ -117,12 +131,6 @@ public class CityParkGaragesParser extends XMLParser {
 		public PGeoPoint getPGeoPoint(){
 			return new PGeoPoint(latitude,longitude);
 		}
-		public void setPrice(double price) {
-			this.price = price;
-		}
-		public double getPrice(){
-			return price;
-		}
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -131,21 +139,15 @@ public class CityParkGaragesParser extends XMLParser {
 		}
 	}
 
-	public List<GaragePoint> parse() {
-			final GaragePoint p = new GaragePoint();
+	public List<GarageDetailes> parse() {
+			final GarageDetailes p = new GarageDetailes();
 
 			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
-			final List<GaragePoint> marks = new ArrayList<GaragePoint>();
+			final List<GarageDetailes> marks = new ArrayList<GarageDetailes>();
 			final Element node = root.getChild(XMLNS,"Parking");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
 			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
-			node.getChild(XMLNS,"ParkingId").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {				
-					p.setLongitude(Integer.parseInt(body));
-				}
-			});
-			
 			node.getChild(XMLNS,"Name").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setName(body);
@@ -181,14 +183,14 @@ public class CityParkGaragesParser extends XMLParser {
 					
 					try  
 					{  
-						p.setPrice(Double.parseDouble(body));  
+						p.setFirstHourPrice(Double.parseDouble(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	p.setPrice(0);
+				    	p.setFirstHourPrice(0);
 				    } 
 						
-					marks.add(new GaragePoint(p));
+					marks.add(new GarageDetailes(p));
 				}
 			});
 			

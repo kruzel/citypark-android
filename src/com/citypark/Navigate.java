@@ -91,54 +91,54 @@ public class Navigate extends Activity implements RouteListener {
 	
 	@Override
 	public final void onCreate(final Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	random = new Random();
-	app = ((CityParkApp) getApplication());
-	mContactAccessor = AbstractContactAccessor.getInstance();
-	requestWindowFeature(Window.FEATURE_RIGHT_ICON);
-	setContentView(R.layout.findplace);
-	setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.logo);
-	
-	searchIntent = new Intent();
-	
-	isSearching = false;
-	mShownDialog = false;
-	
-	//DB
-	db = app.getDb();
-	
-	//ParkingSessionPersist manager
-	prk = new ParkingSessionPersist(this);
-	
-	//Initialise fields
-	startAddressField = (AutoCompleteTextView) findViewById(R.id.start_address_input);
-	endAddressField = (AutoCompleteTextView) findViewById(R.id.end_address_input);		
-	final Button searchButton = (Button) findViewById(R.id.search_button);
-	
-	//Initialise adapter
-	FindPlaceAdapter adapter = new FindPlaceAdapter(this,
-			android.R.layout.simple_dropdown_item_1line);
-	startAddressField.setAdapter(adapter);
-	endAddressField.setAdapter(adapter);
-	
-	//Initialise search button
-	searchButton.setOnClickListener(new SearchClickListener());
-	
-	/* Autofill starting location by reverse geocoding current
-	 * lat & lng
-	 */
-	
-	//Handle rotations
-	final Object[] data = (Object[]) getLastNonConfigurationInstance();
-	if (data != null) {
-		isSearching = (Boolean) data[2];
-		startAddressField.setText((String) data[3]);
-		endAddressField.setText((String) data[4]);
-		search = (RoutePlannerTask) data[5];
-		if(search != null) {
-			search.setListener(this);
+		super.onCreate(savedInstanceState);
+		random = new Random();
+		app = ((CityParkApp) getApplication());
+		mContactAccessor = AbstractContactAccessor.getInstance();
+		requestWindowFeature(Window.FEATURE_RIGHT_ICON);
+		setContentView(R.layout.findplace);
+		setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.logo);
+		
+		searchIntent = new Intent();
+		
+		isSearching = false;
+		mShownDialog = false;
+		
+		//DB
+		db = app.getDb();
+		
+		//ParkingSessionPersist manager
+		prk = new ParkingSessionPersist(this);
+		
+		//Initialise fields
+		startAddressField = (AutoCompleteTextView) findViewById(R.id.start_address_input);
+		endAddressField = (AutoCompleteTextView) findViewById(R.id.end_address_input);		
+		final Button searchButton = (Button) findViewById(R.id.search_button);
+		
+		//Initialise adapter
+		FindPlaceAdapter adapter = new FindPlaceAdapter(this,
+				android.R.layout.simple_dropdown_item_1line);
+		startAddressField.setAdapter(adapter);
+		endAddressField.setAdapter(adapter);
+		
+		//Initialise search button
+		searchButton.setOnClickListener(new SearchClickListener());
+		
+		/* Autofill starting location by reverse geocoding current
+		 * lat & lng
+		 */
+		
+		//Handle rotations
+		final Object[] data = (Object[]) getLastNonConfigurationInstance();
+		if (data != null) {
+			isSearching = (Boolean) data[2];
+			startAddressField.setText((String) data[3]);
+			endAddressField.setText((String) data[4]);
+			search = (RoutePlannerTask) data[5];
+			if(search != null) {
+				search.setListener(this);
+			}
 		}
-	}
 	}
 	
 	@Override

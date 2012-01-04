@@ -67,5 +67,7 @@ public final class CityParkConsts {
 	public static final int STOP_PAYMENT_SUCCEEDED = 2;
 	public static final int STOP_PAYMENT_FAILED = 3;
 	
+	public static final String GARAGE_ID = "garageId";
+	
 	private CityParkConsts() { }
 }

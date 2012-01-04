@@ -46,7 +46,7 @@ public class ItemizedParkingOverlay extends ItemizedOverlay<OverlayItem> {
 		// go through all OverlayItems and draw title for each of them
         for (OverlayItem item:mOverlays)
         {
-        	if(item.getTitle()!= null && Integer.parseInt(item.getTitle()) > 0 ) {
+        	if(item.getTitle()!= null && item.getTitle().length() > 0 ) {
 	            /* Converts latitude & longitude of this overlay item to coordinates on screen.
 	             * As we have called boundCenterBottom() in constructor, so these coordinates
 	             * will be of the bottom center position of the displayed marker.

@@ -74,6 +74,9 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     		return;
     	}
     	
+    	if(strPaymentMethod.contains("Payment Method"))
+    		strPaymentMethod = "None";
+    		
         mEditor.putString("email", txtEmail.getText().toString());
         mEditor.putString("password", txtPassword.getText().toString());
         mEditor.putString("first_name", txtFirstName.getText().toString());

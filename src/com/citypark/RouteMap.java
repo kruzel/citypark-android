@@ -187,7 +187,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		mOsmv.getOverlays().add(travelledRouteOverlay);
         
 
-        mOsmv.getController().setZoom(mPrefs.getInt(getString(R.string.prefs_zoomlevel), 1));
+        mOsmv.getController().setZoom(mPrefs.getInt(getString(R.string.prefs_zoomlevel), 16));
         mOsmv.scrollTo(mPrefs.getInt(getString(R.string.prefs_scrollx), 0), 
         		mPrefs.getInt(getString(R.string.prefs_scrolly), 0));
 		mOsmv.setBuiltInZoomControls(true);
@@ -219,7 +219,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		//Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
 		if ((data != null) && ((Boolean) data[0])) {
-			mOsmv.getController().setZoom(16);
+			mOsmv.getController().setZoom(mPrefs.getInt(getString(R.string.prefs_zoomlevel), 16));
 			showStep();
 			//TODO keep location
 		}

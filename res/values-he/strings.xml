@@ -93,6 +93,8 @@
 <string name="time_limit_reached">מגבלת זמן הגיעה</string>
 <string name="login_failed">כניסה נכשלה</string>
 <string name="phone_number">מספר טלפון</string>
-
+<string name="city">עיר</string>
+<string name="parking_zone">אזור חניה</string>
     
+<string name="currency">שקל</string>
 </resources>
