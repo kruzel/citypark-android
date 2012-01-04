@@ -2,6 +2,7 @@
 <resources>
 <string name="park_title">חנה</string>
 <string name="unpark_title">פנה חניה</string>
+<string name="garagelist_title">רשימת חניונים</string>
 <string name="center_title">מיקום שלי</string>
 <string name="navigate_title">נווט</string>
 <string name="back_title">חזרה לרכב</string>

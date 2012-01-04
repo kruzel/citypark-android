@@ -409,6 +409,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		final MenuItem park = menu.findItem(R.id.park);
 		final MenuItem unPark = menu.findItem(R.id.unpark);
 		final MenuItem steps = menu.findItem(R.id.directions);
+		final MenuItem garageList = menu.findItem(R.id.garagelist);
 		final MenuItem turnByTurn = menu.findItem(R.id.turnbyturn);
 		final MenuItem map = menu.findItem(R.id.map);
 		final MenuItem elev = menu.findItem(R.id.elevation);
@@ -422,6 +423,7 @@ public class RouteMap extends OpenStreetMapActivity {
 			park.setVisible(true);
 			unPark.setVisible(false);
 		}
+		garageList.setVisible(true);//Ran
 		if (app.getRoute() != null) {
 			save.setVisible(true);
 			//steps.setVisible(true);
@@ -478,6 +480,10 @@ public class RouteMap extends OpenStreetMapActivity {
 					Toast.LENGTH_LONG).show();
 			showAllParkings();
 			return true;
+		case R.id.garagelist:
+			intent = new Intent(this, GarageListActivity.class);
+			startActivity(intent);
+			break;
 		case R.id.export:
 			String xml = app.getRoute().toXml();
 			export(xml, R.string.filename);
