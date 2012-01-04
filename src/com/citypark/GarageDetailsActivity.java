@@ -35,6 +35,8 @@ public class GarageDetailsActivity extends Activity {
 	/** Application reference. **/
 	protected CityParkApp app;
 	
+	Thread t;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -74,10 +76,19 @@ public class GarageDetailsActivity extends Activity {
 		//coupon
 		couponText = (TextView)findViewById(R.id.textViewCouponText);
 		
-		Thread t = new Thread() {
+		fetchData();
+	}
+
+	@Override
+	protected void onResume() {
+		fetchData();
+		super.onResume();
+	}
+	
+	private void fetchData(){
+		t = new Thread() {
 			@Override
 			public void run() {
-				super.run();
 				CityParkGaragesByIdParser parser = new CityParkGaragesByIdParser(GarageDetailsActivity.this, app.getSessionId(), garageId);
 				GarageDetailes garageDetails = parser.parse();
 				
@@ -128,9 +139,11 @@ public class GarageDetailsActivity extends Activity {
 			
 				//coupon
 				couponText.setText(garageDetails.getCouponText());
+				
+				super.run();
 			}
-			
 		};
+	
 	}
 
 }

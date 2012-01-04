@@ -9,7 +9,7 @@ import java.util.List;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedOverlay;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import android.graphics.Paint;
@@ -24,15 +24,15 @@ import android.text.TextPaint;
  * @author TQJ764
  *
  */
-public class ItemizedParkingOverlay extends ItemizedOverlay<OverlayItem> {
+public class ItemizedParkingOverlay extends ItemizedIconOverlay<OverlayItem> {
 	private static final int FONT_SIZE = 14;
     private static final int TITLE_MARGIN = 3;
     private int markerHeight;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	
-	public ItemizedParkingOverlay(Drawable pDefaultMarker,
-			ResourceProxy pResourceProxy) {
-		super(pDefaultMarker, pResourceProxy);
+	public ItemizedParkingOverlay(List<OverlayItem> pList, Drawable pDefaultMarker,
+			OnItemGestureListener mOnItemGestureListener, ResourceProxy pResourceProxy) {
+		super(pList, pDefaultMarker, mOnItemGestureListener, pResourceProxy);
 		
 		markerHeight = ((BitmapDrawable) pDefaultMarker).getBitmap().getHeight();
 	}
@@ -101,7 +101,10 @@ public class ItemizedParkingOverlay extends ItemizedOverlay<OverlayItem> {
 
 	@Override
 	public int size() {
-		return mOverlays.size();
+		if(mOverlays==null)
+			return 0;
+		else
+			return mOverlays.size();
 	}
 
 }

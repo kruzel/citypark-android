@@ -61,7 +61,7 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
-		iOverlay = new ItemizedParkingOverlay(ctxt.getResources().getDrawable(R.drawable.green_dot), mv.getResourceProxy());
+		iOverlay = new ItemizedParkingOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), null, mv.getResourceProxy());;
 		this.app = app;
 	}
 
@@ -96,7 +96,7 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			}
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.green_dot), mv.getResourceProxy());
+			iOverlay = new ItemizedParkingOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveStreetReleasesMarkers.this, mv.getResourceProxy());;
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
 			//mv.postInvalidate();

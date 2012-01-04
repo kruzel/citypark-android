@@ -35,6 +35,7 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -126,6 +127,10 @@ public class RouteMap extends OpenStreetMapActivity {
 	/** Gesture detection for the onscreen directions. **/
     private GestureDetector gestureDetector;
 	private OnTouchListener gestureListener;
+	
+	/** garage tap detections. **/
+    private GestureDetector garageGestureDetector;
+	private OnTouchListener garageGestureListener;
 	
 	/** Units for directions. **/
 	protected String unit;
@@ -264,7 +269,7 @@ public class RouteMap extends OpenStreetMapActivity {
         mOsmv.setTileSource(TileSourceFactory.getTileSource(mSettings.getString("tilePref", "Mapnik")));
         
 	      //center on my location
-	      RouteMap.this.mLocationOverlay.followLocation(true);
+	     // RouteMap.this.mLocationOverlay.followLocation(true);
         
         if(app.getRoute() != null) {
         	ErrorReporter.getInstance().putCustomData("Route", app.getRoute().getName());

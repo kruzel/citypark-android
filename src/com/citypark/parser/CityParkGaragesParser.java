@@ -142,7 +142,7 @@ public class CityParkGaragesParser extends XMLParser {
 			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
 			node.getChild(XMLNS,"ParkingId").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {				
-					p.setLongitude(Integer.parseInt(body));
+					p.setId(Integer.parseInt(body));
 				}
 			});
 			

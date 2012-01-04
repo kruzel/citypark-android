@@ -64,7 +64,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
-		iOverlay = new ItemizedParkingOverlay(ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
+		iOverlay = new ItemizedParkingOverlay(mOverlays,ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), this, mv.getResourceProxy());
 		this.app = app;
 	}
 
@@ -99,7 +99,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			}
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedParkingOverlay(context.getResources().getDrawable(R.drawable.ic_marker_garage), mv.getResourceProxy());
+			iOverlay = new ItemizedParkingOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveGarageMarkers.this, mv.getResourceProxy());
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
 			mv.postInvalidate();
@@ -124,6 +124,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 		// TODO Auto-generated method stub
 		int garageId = Integer.parseInt(item.mDescription);
 		Intent intent = new Intent(context,GarageDetailsActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
 		intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
 		context.startActivity(intent);
 		
