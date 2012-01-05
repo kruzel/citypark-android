@@ -2,20 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-	<LinearLayout
-        android:id="@+id/linearLayout0"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" android:layout_gravity="center_horizontal">
-        
-	    <ImageView
-                    android:id="@+id/imageViewLogo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/logo" android:layout_gravity="center_horizontal"/>
-	    
-        </LinearLayout>
+    android:orientation="vertical" android:background="@drawable/background">
+
+		    <ImageView
+	        android:id="@+id/imageViewLogo"
+	        android:layout_width="fill_parent"
+	        android:layout_height="40dp"
+	        android:layout_gravity="center_horizontal"
+	        android:src="@drawable/logo" />
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
