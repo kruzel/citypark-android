@@ -119,7 +119,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	@Override
 	public boolean onItemSingleTapUp(int index,
 			OverlayItem item) {
-		// TODO Auto-generated method stub
+		
 		int garageId = Integer.parseInt(item.mDescription);
 		Intent intent = new Intent(context,GarageDetailsActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  

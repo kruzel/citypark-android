@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,8 +58,10 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 		{//TODO: goto garage detailed activity 
 			super.onListItemClick(l, v, position, id);
 			GarageData garageData = (GarageData)l.getItemAtPosition(position);
-			String strTextToDisplay = "Selected item is :"  +garageData.getName();
-			Toast.makeText(this, strTextToDisplay, Toast.LENGTH_LONG).show();
+			Intent intent = new Intent(this,GarageDetailsActivity.class);
+			//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			intent.putExtra(CityParkConsts.GARAGE_ID, garageData.getParkingId());
+			this.startActivity(intent);
 		}
 		catch(Exception ex)
 		{
@@ -121,6 +124,7 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 			GarageData gd = new GarageData();
 			gd.setName(gp.getName());
 			gd.setFirstHourPrice((int)gp.getPrice());
+			gd.setParkingId(gp.getId());
 			m_garage.add(gd);
 			
 		}
