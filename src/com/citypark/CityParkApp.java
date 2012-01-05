@@ -18,11 +18,11 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LocationReceiver;
 import com.citypark.service.LocationService;
 import com.citypark.service.LoginListener;
 import com.citypark.service.LoginTask;
 import com.citypark.utility.AddressDatabase;
-import com.citypark.utility.LocationReceiver;
 import com.citypark.utility.RouteDatabase;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;

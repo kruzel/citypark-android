@@ -8,4 +8,5 @@
 <string name="feedback_api">https://www.cyclestreets.net/api/feedback.xml?key=&amp;</string>
 <string name="mq_api">http://open.mapquestapi.com/directions/v0/route?outFormat=json&amp;routeType=fastest&amp;from=</string>
 <string name="citypark_api">http://api.cityparkmobile.com/CityParkWS/CityParkService.asmx/</string>
+<string name="citypark_images_root">http://api.cityparkmobile.com/</string>
 </resources>

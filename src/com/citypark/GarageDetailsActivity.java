@@ -137,6 +137,8 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		//TODO via URL
 		//garageImage 
 		
+		//citypark_images_root + garageDetails.getImageURL();
+		
 		//prices table
 		fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
 		firstHourWeekend.setText("0");

@@ -76,7 +76,7 @@ public class CityParkGaragesByIdParser extends XMLParser {
 		//<Onlymail>string</Onlymail>
 		//<Comment>string</Comment>
 		//<Payment>string</Payment>
-		//<Image>string</Image>
+		private String imageURL;//<Image>string</Image>
 		//<Image2>string</Image2>
 		//<StartDate>string</StartDate>
 		//<EndDate>string</EndDate>
@@ -142,6 +142,16 @@ public class CityParkGaragesByIdParser extends XMLParser {
 			this.allDayPrice = g.allDayPrice;
 			this.extraQuarterPrice = g.extraQuarterPrice;
 			this.firstHourPrice = g.firstHourPrice;
+			this.imageURL = g.imageURL;
+		}
+
+		
+		public String getImageURL() {
+			return imageURL;
+		}
+
+		public void setImageURL(String imageURL) {
+			this.imageURL = imageURL;
 		}
 
 		public int getId() {
@@ -338,6 +348,12 @@ public class CityParkGaragesByIdParser extends XMLParser {
 			root.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setLatitude(Double.parseDouble(body));
+				}
+			});
+			root.getChild(XMLNS,"Image").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {	
+					if(body!=null)
+						p.setImageURL(body);
 				}
 			});
 			root.getChild(XMLNS,"Jenion").setEndTextElementListener(new EndTextElementListener() {

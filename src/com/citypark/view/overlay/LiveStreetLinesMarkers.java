@@ -134,7 +134,7 @@ public class LiveStreetLinesMarkers {
 			
 			mOldSegmentsOverlays.clear();
 			mOldSegmentsOverlays.addAll(mSegmentsOverlays);
-			//mOsmv.postInvalidate();
+			mOsmv.postInvalidate();
 		}
 	};
 	

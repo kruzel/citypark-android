@@ -123,8 +123,9 @@ public class CityParkParkingReleasesParser extends XMLParser {
 			} catch (SAXException e) {
 				Log.e(e.getMessage(), "CityParkParkingReleasesParser - " + feedUrl);
 				e.printStackTrace();
-			}catch(Exception ex){
-				Log.e( "CityParkParkingReleasesParser - " + feedUrl, ex.getMessage());
+			}catch(Exception e){
+				Log.e(e.getMessage(), "CityParkParkingReleasesParser - " + feedUrl);
+				e.printStackTrace();
 			}
 			return marks;
 	}
