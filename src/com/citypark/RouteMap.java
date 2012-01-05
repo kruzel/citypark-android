@@ -343,21 +343,7 @@ public class RouteMap extends OpenStreetMapActivity {
 								public void onClick(
 										final DialogInterface dialog,
 										final int id) {
-									//TODO make it work (we got here in parking state and speed > 12 km/hr
-//									reportParkingReleaseTask = new ReportParkingReleaseTask(context,app.getSessionId(),current.getLatitudeE6(), current.getLongitudeE6());
-//									reportParkingReleaseTask.execute();
-//									
-//									parking_manager.unPark();
-//									app.setSessionId(null);
-//									
-//									if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
-//										Intent intent = new Intent(context, PaymentActivity.class);
-//										context.startActivity(intent);
-//									}
-									
-									parking_manager.unPark();
-									RouteMap.this.hideStep();
-									carAlert.unsetAlert();
+									unpark();			
 									dialog.dismiss();
 								}
 							})
@@ -861,12 +847,12 @@ public class RouteMap extends OpenStreetMapActivity {
     
 	public void checkParkAndFinish(final Boolean finish, final int result) {	
 		//open dialog and ask user if he really un-parked
-		if(!parking_manager.isParking()) {
-			finishOnPark = finish;
-			showDialog(R.id.park);
-		} else {
+		if(parking_manager.isParking() || parking_manager.isPaymentActive()) {
 			setResult(1);
 			finish();
+		} else {
+			finishOnPark = finish;
+			showDialog(R.id.park);
 		}
 	}
 	
@@ -929,9 +915,12 @@ public class RouteMap extends OpenStreetMapActivity {
 				}
 			});
 		}
-		
+			
 		parking_manager.unPark();
 		app.setSessionId(null);
+		RouteMap.this.hideStep();
+		carAlert.unsetAlert();
+		
 	}
 	
 }
