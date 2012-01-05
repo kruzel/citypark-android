@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.citypark.adapter.GarageDataAdapter;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GarageData;
+import com.citypark.dto.GaragePoint;
 import com.citypark.parser.CityParkGaragesParser;
-import com.citypark.parser.CityParkGaragesParser.GaragePoint;
 import com.citypark.service.GarageDetailsListFetchTask;
 import com.citypark.service.GarageDetailsListListener;
 
@@ -55,7 +55,7 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		try
-		{//TODO: goto garage detailed activity 
+		{ 
 			super.onListItemClick(l, v, position, id);
 			GarageData garageData = (GarageData)l.getItemAtPosition(position);
 			Intent intent = new Intent(this,GarageDetailsActivity.class);

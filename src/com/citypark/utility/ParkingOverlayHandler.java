@@ -12,8 +12,8 @@ import android.location.Address;
 
 import com.citypark.R;
 import com.citypark.constants.CityParkConsts;
+import com.citypark.dto.GaragePoint;
 import com.citypark.parser.CityParkGaragesParser;
-import com.citypark.parser.CityParkGaragesParser.GaragePoint;
 
 /**
  * Utility class for querying garages api based on gis data.

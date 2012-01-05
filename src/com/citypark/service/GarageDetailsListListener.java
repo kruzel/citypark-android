@@ -2,7 +2,7 @@ package com.citypark.service;
 
 import java.util.List;
 
-import com.citypark.parser.CityParkGaragesParser.GaragePoint;
+import com.citypark.dto.GaragePoint;
 
 public interface GarageDetailsListListener {
 

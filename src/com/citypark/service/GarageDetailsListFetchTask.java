@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.CityParkGaragesParser.GaragePoint;
+import com.citypark.dto.GaragePoint;
 import com.citypark.parser.CityParkGaragesParser;
 
 public class GarageDetailsListFetchTask extends AsyncTask<Void, Void, Void> {

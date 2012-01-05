@@ -13,7 +13,7 @@ public class PaymentPangoActivity extends PaymentSmsActivity {
 		String pangoSmsNumber = "4500";
 		
 		if(parking_manager.isPaymentActive()){
-			//TODO הפסק
+			//הפסק
 			msg = myLicensePlate.getText().toString() + " הפסק";
 		} else {
 			//TODO התחל רחובות אזור 1 רכב 7107864

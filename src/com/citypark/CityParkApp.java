@@ -99,8 +99,6 @@ public class CityParkApp extends Application implements LoginListener {
 	};
 	/** Are we bound to location service? **/
 	private boolean mIsBound;
-	
-	//TODO move login to here
 
 	public CityParkApp () {
 		super();
@@ -142,8 +140,6 @@ public class CityParkApp extends Application implements LoginListener {
 	}
 	
 	public String getSessionId() {
-		
-		//TODO prevent init twice
 		if(mSessionId == null && !isLoginInProgress) {       	
 			mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
         	strEmail = mPrefs.getString("email", null);

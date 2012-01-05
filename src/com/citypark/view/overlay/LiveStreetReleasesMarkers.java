@@ -15,8 +15,8 @@ import android.os.Message;
 
 import com.citypark.CityParkApp;
 import com.citypark.R;
+import com.citypark.dto.StreetParkingPoint;
 import com.citypark.parser.CityParkParkingReleasesParser;
-import com.citypark.parser.CityParkParkingReleasesParser.StreetParkingPoint;
 
 /**
  * This file is part of BikeRoute.

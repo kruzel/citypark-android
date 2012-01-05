@@ -1,8 +1,8 @@
 package com.citypark.service;
 
 import com.citypark.parser.CityParkGaragesByIdParser;
-import com.citypark.parser.CityParkGaragesByIdParser.GarageDetailes;
 import com.citypark.parser.CityParkReportLocationParser;
+import com.citypark.parser.GarageDetailes;
 
 import android.content.Context;
 import android.os.AsyncTask;

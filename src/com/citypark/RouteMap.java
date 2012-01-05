@@ -222,7 +222,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		if ((data != null) && ((Boolean) data[0])) {
 			mOsmv.getController().setZoom(mPrefs.getInt(getString(R.string.prefs_zoomlevel), 16));
 			showStep();
-			//TODO keep location
+			//TODO open in last location
 		}
 		
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {

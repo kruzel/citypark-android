@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkGaragesByIdParser;
-import com.citypark.parser.CityParkGaragesByIdParser.GarageDetailes;
+import com.citypark.parser.GarageDetailes;
 import com.citypark.service.GarageDetailsFetchTask;
 import com.citypark.service.GarageDetailsListener;
 

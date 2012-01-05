@@ -1,6 +1,6 @@
 package com.citypark.service;
 
-import com.citypark.parser.CityParkGaragesByIdParser.GarageDetailes;
+import com.citypark.parser.GarageDetailes;
 
 public interface GarageDetailsListener {
 
