@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.citypark.adapter.GarageDataAdapter;
 import com.citypark.dto.GarageData;
+import com.citypark.parser.CityParkGaragesParser;
+import com.citypark.parser.CityParkGaragesParser.GaragePoint;
 
 public class GarageListActivity extends ListActivity {
 
@@ -32,7 +34,7 @@ public class GarageListActivity extends ListActivity {
 		viewGarages = new Runnable() {
 			@Override
 			public void run() {
-				getOrders();
+				getGarageList();
 			}
 		};
 		Thread thread = new Thread(null, viewGarages, "MagentoBackground");
@@ -62,6 +64,20 @@ public class GarageListActivity extends ListActivity {
 
 		@Override
 		public void run() {
+		//	p, RADIUS, context,app.getSessionId()
+			final CityParkGaragesParser parser = new CityParkGaragesParser(getApplication(),
+					"2270T387",
+					32.089859d,
+					34.771961d,
+					5000);
+			m_garage = new ArrayList<GarageData>();
+			for (GaragePoint gp : parser.parse()) {
+				GarageData gd = new GarageData();
+				gd.setName(gp.getName());
+				gd.setFirstHourPrice((int)gp.getPrice());
+				m_garage.add(gd);
+				
+			}
 			if (m_garage != null && m_garage.size() > 0) {
 				m_adapter.notifyDataSetChanged();
 				for (int i = 0; i < m_garage.size(); i++)
@@ -72,7 +88,7 @@ public class GarageListActivity extends ListActivity {
 		}
 	};
 
-	private void getOrders() {
+	private void getGarageList() {
 		try {
 			m_garage = new ArrayList<GarageData>();
 			GarageData o1 = new GarageData();
