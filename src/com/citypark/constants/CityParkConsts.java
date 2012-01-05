@@ -68,6 +68,10 @@ public final class CityParkConsts {
 	public static final int STOP_PAYMENT_FAILED = 3;
 	
 	public static final String GARAGE_ID = "garageId";
-	
+	/** Radius to return markers within. **/
+	public static final int RADIUS = 500;
+	public static final String LATITUDE = "LATITUDE";
+	public static final String LONGITUDE = "LONGITUDE";
+
 	private CityParkConsts() { }
 }

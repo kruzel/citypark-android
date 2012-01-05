@@ -51,8 +51,6 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	/** Markers list for use by thread. **/
 	private List<OverlayItem> markers;
 	private final Context context;
-	/** Radius to return markers within. **/
-	protected static final int RADIUS = 500;
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
@@ -78,7 +76,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				markers = ParkingOverlayHandler.getMarkers(p, RADIUS, context,app.getSessionId());
+				markers = ParkingOverlayHandler.getMarkers(p, CityParkConsts.RADIUS, context,app.getSessionId());
 				LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};

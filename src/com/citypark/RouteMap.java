@@ -478,6 +478,9 @@ public class RouteMap extends OpenStreetMapActivity {
 			return true;
 		case R.id.garagelist:
 			intent = new Intent(this, GarageListActivity.class);
+			GeoPoint gp = mOsmv.getMapCenter();
+			intent.putExtra(CityParkConsts.LATITUDE, (double)gp.getLatitudeE6());
+			intent.putExtra(CityParkConsts.LONGITUDE, (double)gp.getLongitudeE6());
 			startActivity(intent);
 			break;
 		case R.id.export:

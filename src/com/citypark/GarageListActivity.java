@@ -1,6 +1,7 @@
 package com.citypark;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -11,16 +12,20 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.citypark.adapter.GarageDataAdapter;
+import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GarageData;
 import com.citypark.parser.CityParkGaragesParser;
 import com.citypark.parser.CityParkGaragesParser.GaragePoint;
+import com.citypark.service.GarageDetailsListFetchTask;
+import com.citypark.service.GarageDetailsListListener;
 
-public class GarageListActivity extends ListActivity {
+public class GarageListActivity extends ListActivity implements GarageDetailsListListener {
 
 	private ProgressDialog m_ProgressDialog = null;
 	private ArrayList<GarageData> m_garage = null;
 	private GarageDataAdapter m_adapter;
-	private Runnable viewGarages;
+	private GarageDetailsListFetchTask task;
+	private double lat,lng;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -30,17 +35,19 @@ public class GarageListActivity extends ListActivity {
 		this.m_adapter = new GarageDataAdapter(this, R.layout.garage_item,
 				m_garage);
 		setListAdapter(this.m_adapter);
+		
+		lat = getIntent().getDoubleExtra(CityParkConsts.LATITUDE,0.0d);
+		lng = getIntent().getDoubleExtra(CityParkConsts.LONGITUDE,0.0d);
+		if(lat==0||lng==0) {			
+			return;
+		}
 
-		viewGarages = new Runnable() {
-			@Override
-			public void run() {
-				getGarageList();
-			}
-		};
-		Thread thread = new Thread(null, viewGarages, "MagentoBackground");
-		thread.start();
-		m_ProgressDialog = ProgressDialog.show(GarageListActivity.this,
-				"Please wait...", "Retrieving data ...", true);
+		String sessionId = ((CityParkApp)getApplicationContext()).getSessionId();
+		if(sessionId == null) return;
+		task = new GarageDetailsListFetchTask(this, this, sessionId, lat, lng);
+		task.execute();
+		/*m_ProgressDialog = ProgressDialog.show(GarageListActivity.this,
+				"Please wait...", "Retrieving data ...", true);*/
 	}
 
 	@Override
@@ -60,7 +67,7 @@ public class GarageListActivity extends ListActivity {
 
 	}
 
-	private Runnable returnRes = new Runnable() {
+	/*private Runnable returnRes = new Runnable() {
 
 		@Override
 		public void run() {
@@ -86,9 +93,9 @@ public class GarageListActivity extends ListActivity {
 			m_ProgressDialog.dismiss();
 			m_adapter.notifyDataSetChanged();
 		}
-	};
+	};*/
 
-	private void getGarageList() {
+	/*private void getGarageList() {
 		try {
 			m_garage = new ArrayList<GarageData>();
 			GarageData o1 = new GarageData();
@@ -105,5 +112,19 @@ public class GarageListActivity extends ListActivity {
 			Log.e("BACKGROUND_PROC", e.getMessage());
 		}
 		runOnUiThread(returnRes);
+	}*/
+
+	@Override
+	public void GarageDetailsFetchComplete(List<GaragePoint> gpList) {
+		//TODO: work with GarageDetails class
+		for (GaragePoint gp : gpList) {
+			GarageData gd = new GarageData();
+			gd.setName(gp.getName());
+			gd.setFirstHourPrice((int)gp.getPrice());
+			m_garage.add(gd);
+			
+		}
+		m_adapter.notifyDataSetChanged();
+		
 	}
 }
