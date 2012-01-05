@@ -103,7 +103,11 @@ public final class ParkingOverlayHandler {
 					break;
 				}
 				
-				OverlayItem marker = new OverlayItem(mAct.getResources().getString(R.string.currency) + Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString(), garagePoint.getPGeoPoint());
+				OverlayItem marker;
+				if (garagePoint.getPrice()>0)
+					marker = new OverlayItem(mAct.getResources().getString(R.string.currency) + Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString(), garagePoint.getPGeoPoint());
+				else
+					marker = new OverlayItem("", garagePoint.getIdString(), garagePoint.getPGeoPoint());
 				marker.setMarker(markerIcon);
 				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
 				markers.add(marker);
