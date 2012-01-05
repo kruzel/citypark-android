@@ -99,17 +99,17 @@ public class CityParkGaragesByIdParser extends XMLParser {
 		//<Lelohagbalatheshbon>string</Lelohagbalatheshbon>
 		//<Majsom>string</Majsom>
 		//<Tatkarkait>string</Tatkarkait>
-		private Boolean garage; //<Jenion>string</Jenion>
-		private Boolean criple; //<Criple>string</Criple>
-		private Boolean noLimit; //<Nolimit>string</Nolimit>
+		private Boolean garage = false; //<Jenion>string</Jenion>
+		private Boolean criple = false; //<Criple>string</Criple>
+		private Boolean noLimit = false; //<Nolimit>string</Nolimit>
 		//<Henion>string</Henion>
-		private Boolean withLock; //<Withlock>string</Withlock>
-		private Boolean underground; //<Underground>string</Underground>
-		private Boolean roof; //<Roof>string</Roof>
+		private Boolean withLock = false; //<Withlock>string</Withlock>
+		private Boolean underground = false; //<Underground>string</Underground>
+		private Boolean roof = false; //<Roof>string</Roof>
 		//<Vip>string</Vip>
-		private Boolean toshav; //<Toshav>string</Toshav>
+		private Boolean toshav = false; //<Toshav>string</Toshav>
 		//<Coupon>string</Coupon>
-		private String couponText;//<Coupon_text>string</Coupon_text>
+		private String couponText = "N/A";//<Coupon_text>string</Coupon_text>
 		private GarageAvailability availability; //<Current_Pnuyot>string</Current_Pnuyot>
 		//<SiteID>string</SiteID>
 		//<Heniontype>string</Heniontype>
@@ -299,89 +299,95 @@ public class CityParkGaragesByIdParser extends XMLParser {
 
 	public GarageDetailes parse() {
 			final GarageDetailes p = new GarageDetailes();
-			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
-			final Element node = root.getChild(XMLNS,"Parking");
+			final RootElement root = new RootElement(XMLNS,"Parking");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
 			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
-			node.getChild(XMLNS,"ParkingId").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"ParkingId").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setId(Integer.parseInt(body));
 				}
 			});
-			node.getChild(XMLNS,"Name").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Name").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setName(body);
 				}
 			});
-			node.getChild(XMLNS,"City").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"City").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setCity(body);
 				}
 			});
-			node.getChild(XMLNS,"StreetName").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"StreetName").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setStreetName(body);
 				}
 			});
-			node.getChild(XMLNS,"HouseNumber").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"HouseNumber").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setHouseNumber(Integer.parseInt(body));
 				}
 			});
 			
-			node.getChild(XMLNS,"Longitude").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Longitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {				
 					p.setLongitude(Double.parseDouble(body));
 				}
 			});
 			
-			node.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setLatitude(Double.parseDouble(body));
 				}
 			});
-			node.getChild(XMLNS,"Jenion").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Jenion").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
-					p.setGarage(Boolean.parseBoolean(body));
+					if(body!=null)
+						p.setGarage((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Criple").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Criple").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
-					p.setCriple(Boolean.parseBoolean(body));
+					if(body!=null)
+						p.setCriple((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Nolimit").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Nolimit").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
-					p.setNoLimit(Boolean.parseBoolean(body));
+					if(body!=null)
+						p.setNoLimit((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Withlock").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Withlock").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
-					p.setWithLock(Boolean.parseBoolean(body));
+					if(body!=null)
+						p.setWithLock((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Underground").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Underground").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
-					p.setUnderground(Boolean.parseBoolean(body));
+					if(body!=null)
+						p.setUnderground((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Roof").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Roof").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
-					p.setRoof(Boolean.parseBoolean(body));
+					if(body!=null)
+						p.setRoof((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Toshav").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {	
-					p.setToshav(Boolean.parseBoolean(body));
+			root.getChild(XMLNS,"Toshav").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {
+					if(body!=null)
+						p.setToshav((body.equals("1")) ? true : false );
 				}
 			});
-			node.getChild(XMLNS,"Coupon_text").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Coupon_text").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setCouponText(body);
 				}
 			});		
-			node.getChild(XMLNS,"Current_Pnuyot").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"Current_Pnuyot").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					try{
 						int currentFree = Integer.parseInt(body);
@@ -392,7 +398,7 @@ public class CityParkGaragesByIdParser extends XMLParser {
 				}
 			});
 
-			node.getChild(XMLNS,"AllDayPrice").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"AllDayPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
 					
 					try  
@@ -405,7 +411,7 @@ public class CityParkGaragesByIdParser extends XMLParser {
 				    } 
 				}
 			});
-			node.getChild(XMLNS,"ExtraQuarterPrice").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"ExtraQuarterPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
 					
 					try  
@@ -418,7 +424,7 @@ public class CityParkGaragesByIdParser extends XMLParser {
 				    } 
 				}
 			});
-			node.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
+			root.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
 					try  
 					{  

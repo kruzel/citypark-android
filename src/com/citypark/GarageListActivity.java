@@ -32,7 +32,7 @@ public class GarageListActivity extends ListActivity {
 		viewGarages = new Runnable() {
 			@Override
 			public void run() {
-				getOrders();
+				getGarageList();
 			}
 		};
 		Thread thread = new Thread(null, viewGarages, "MagentoBackground");
@@ -72,7 +72,7 @@ public class GarageListActivity extends ListActivity {
 		}
 	};
 
-	private void getOrders() {
+	private void getGarageList() {
 		try {
 			m_garage = new ArrayList<GarageData>();
 			GarageData o1 = new GarageData();

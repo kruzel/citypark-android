@@ -8,8 +8,13 @@ import android.widget.TextView;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkGaragesByIdParser;
 import com.citypark.parser.CityParkGaragesByIdParser.GarageDetailes;
+import com.citypark.service.GarageDetailsFetchTask;
+import com.citypark.service.GarageDetailsListener;
 
-public class GarageDetailsActivity extends Activity {
+public class GarageDetailsActivity extends Activity implements GarageDetailsListener {
+	
+	private GarageDetailsFetchTask task;
+	
 	private int garageId;
 	private TextView garageName;
 	private TextView garageAddress;
@@ -76,74 +81,72 @@ public class GarageDetailsActivity extends Activity {
 		//coupon
 		couponText = (TextView)findViewById(R.id.textViewCouponText);
 		
-		fetchData();
+		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, app.getSessionId(), garageId);
+		task.execute(null);
 	}
 
 	@Override
 	protected void onResume() {
-		fetchData();
+		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, app.getSessionId(), garageId);
+		task.execute(null);
 		super.onResume();
 	}
 	
-	private void fetchData(){
-		t = new Thread() {
-			@Override
-			public void run() {
-				CityParkGaragesByIdParser parser = new CityParkGaragesByIdParser(GarageDetailsActivity.this, app.getSessionId(), garageId);
-				GarageDetailes garageDetails = parser.parse();
-				
-				garageName.setText(garageDetails.getName());
-				garageAddress.setText(garageDetails.getStreetName() + " " + garageDetails.getHouseNumber() + ", " + garageDetails.getCity());
-				garagePaymentMthod.setText("On Exit, Visa, Cash");
-				//images
-				if(garageDetails.getCriple())
-					criple.setImageDrawable(getResources().getDrawable(R.drawable.criple));
-				else
-					criple.setImageDrawable(getResources().getDrawable(R.drawable.criple_g));
-				
-				if(garageDetails.getGarage())
-					garage.setImageDrawable(getResources().getDrawable(R.drawable.garage));
-				else
-					garage.setImageDrawable(getResources().getDrawable(R.drawable.garage_g));
-				
-				if(garageDetails.getNoLimit())
-					noLimit.setImageDrawable(getResources().getDrawable(R.drawable.nolimit));
-				else
-					noLimit.setImageDrawable(getResources().getDrawable(R.drawable.nolimit_g));
-				
-				if(garageDetails.getRoof())
-					roof.setImageDrawable(getResources().getDrawable(R.drawable.roof));
-				else
-					roof.setImageDrawable(getResources().getDrawable(R.drawable.roof_g));
 
-				if(garageDetails.getUnderground())
-					underground.setImageDrawable(getResources().getDrawable(R.drawable.underground));
-				else
-					underground.setImageDrawable(getResources().getDrawable(R.drawable.underground_g));
+	@Override
+	public void GarageDetailsFetchComplete(GarageDetailes garageDetails) {
+		if(garageDetails==null) {
+			finish();
+			return;
+		}
+		
+		garageName.setText(garageDetails.getName());
+		garageAddress.setText(garageDetails.getStreetName() + " " + garageDetails.getHouseNumber() + ", " + garageDetails.getCity());
+		garagePaymentMthod.setText("On Exit, Visa, Cash");
+		//images
+		if(garageDetails.getCriple())
+			criple.setImageDrawable(getResources().getDrawable(R.drawable.criple));
+		else
+			criple.setImageDrawable(getResources().getDrawable(R.drawable.criple_g));
+		
+		if(garageDetails.getGarage())
+			garage.setImageDrawable(getResources().getDrawable(R.drawable.garage));
+		else
+			garage.setImageDrawable(getResources().getDrawable(R.drawable.garage_g));
+		
+		if(garageDetails.getNoLimit())
+			noLimit.setImageDrawable(getResources().getDrawable(R.drawable.nolimit));
+		else
+			noLimit.setImageDrawable(getResources().getDrawable(R.drawable.nolimit_g));
+		
+		if(garageDetails.getRoof())
+			roof.setImageDrawable(getResources().getDrawable(R.drawable.roof));
+		else
+			roof.setImageDrawable(getResources().getDrawable(R.drawable.roof_g));
 
-				if(garageDetails.getWithLock())
-					withLock.setImageDrawable(getResources().getDrawable(R.drawable.withlock));
-				else
-					withLock.setImageDrawable(getResources().getDrawable(R.drawable.withlock_g));
+		if(garageDetails.getUnderground())
+			underground.setImageDrawable(getResources().getDrawable(R.drawable.underground));
+		else
+			underground.setImageDrawable(getResources().getDrawable(R.drawable.underground_g));
 
-				//TODO via URL
-				//garageImage 
-				
-				//prices table
-				fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
-				firstHourWeekend.setText("0");
-				extraQuaterMidWeek.setText(Double.toString(garageDetails.getExtraQuarterPrice()));
-				extraQuaterWeekend.setText("0");
-				allDayMidWeek.setText(Double.toString(garageDetails.getAllDayPrice()));
-				allDayWeekend.setText("0");
-			
-				//coupon
-				couponText.setText(garageDetails.getCouponText());
-				
-				super.run();
-			}
-		};
+		if(garageDetails.getWithLock())
+			withLock.setImageDrawable(getResources().getDrawable(R.drawable.withlock));
+		else
+			withLock.setImageDrawable(getResources().getDrawable(R.drawable.withlock_g));
+
+		//TODO via URL
+		//garageImage 
+		
+		//prices table
+		fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
+		firstHourWeekend.setText("0");
+		extraQuaterMidWeek.setText(Double.toString(garageDetails.getExtraQuarterPrice()));
+		extraQuaterWeekend.setText("0");
+		allDayMidWeek.setText(Double.toString(garageDetails.getAllDayPrice()));
+		allDayWeekend.setText("0");
 	
+		//coupon
+		couponText.setText(garageDetails.getCouponText());
 	}
 
 }

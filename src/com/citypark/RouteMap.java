@@ -128,10 +128,6 @@ public class RouteMap extends OpenStreetMapActivity {
     private GestureDetector gestureDetector;
 	private OnTouchListener gestureListener;
 	
-	/** garage tap detections. **/
-    private GestureDetector garageGestureDetector;
-	private OnTouchListener garageGestureListener;
-	
 	/** Units for directions. **/
 	protected String unit;
 	/** payment method **/
