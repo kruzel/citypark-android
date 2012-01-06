@@ -80,9 +80,6 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		allDayWeekend = (TextView)findViewById(R.id.textViewAllDayWeekend);
 		//coupon
 		couponText = (TextView)findViewById(R.id.textViewCouponText);
-		
-		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, app.getSessionId(), garageId);
-		task.execute(null);
 	}
 
 	@Override

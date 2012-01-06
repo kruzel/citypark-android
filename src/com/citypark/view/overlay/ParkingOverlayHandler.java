@@ -1,4 +1,4 @@
-package com.citypark.utility;
+package com.citypark.view.overlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,7 @@ import com.citypark.R;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GaragePoint;
 import com.citypark.parser.CityParkGaragesParser;
+import com.citypark.utility.Convert;
 
 /**
  * Utility class for querying garages api based on gis data.
@@ -86,11 +87,12 @@ public final class ParkingOverlayHandler {
 		if (cpSessionId != null) {
 			Drawable markerIcon;
 			final CityParkGaragesParser parser = new CityParkGaragesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
-			
-			//final HotspotPlace hotspot = new HotspotPlace(0, 10);	
+			 List<GaragePoint> garageList = parser.parse();
+			 if(garageList==null)
+				 return null;	
 
 			// Parse XML to overlayitems (cycle stands)
-			for (GaragePoint garagePoint : parser.parse()) {
+			for (GaragePoint garagePoint : garageList) {
 				switch (garagePoint.getAvailability()) {
 				case UNKNOWN:
 					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage);

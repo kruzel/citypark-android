@@ -127,12 +127,15 @@ public class CityParkGaragesParser extends XMLParser {
 			} catch (IOException e) {
 				Log.e(e.toString(), "CityParkGaragesParser - " + feedUrl);
 				e.printStackTrace();
+				return null;
 			} catch (SAXException e) {
 				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
 				e.printStackTrace();
+				return null;
 			}catch(Exception e){
 				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
 				e.printStackTrace();
+				return null;
 			}
 			return marks;
 	}

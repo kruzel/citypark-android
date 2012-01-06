@@ -19,7 +19,6 @@ import com.citypark.CityParkApp;
 import com.citypark.GarageDetailsActivity;
 import com.citypark.R;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.ParkingOverlayHandler;
 
 /**
  * This file is part of BikeRoute.
@@ -76,8 +75,10 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
+				//TODO exception handling: don't update map
 				markers = ParkingOverlayHandler.getMarkers(p, CityParkConsts.RADIUS, context,app.getSessionId());
-				LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
+				if(markers != null)
+					LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
 		update.start();

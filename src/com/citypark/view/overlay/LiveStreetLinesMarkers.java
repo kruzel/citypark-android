@@ -73,10 +73,13 @@ public class LiveStreetLinesMarkers {
 		int color = Color.TRANSPARENT;
 		if (cpSessionId != null) {
 			final CityParkStreetLinesParser parser = new CityParkStreetLinesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
+			List<StreetSegment> linesList = parser.parse();
+			if (linesList == null)
+				return null;
 			
 			// Parse XML to street segments
 			// and add each street segment as a separate overlay with color according to street segment wait time
-			for (StreetSegment streetSegment : parser.parse()) {
+			for (StreetSegment streetSegment : linesList) {
 				if(streetSegment.getSearch_time() == -1 )
 					color = Color.TRANSPARENT;
 				else if(streetSegment.getSearch_time() < CityParkConsts.FAST_PARKING_LIMIT) //sec
@@ -114,7 +117,8 @@ public class LiveStreetLinesMarkers {
 			@Override
 			public void run() {
 				mSegmentsOverlays = getSegments(p, RADIUS, context);
-				LiveStreetLinesMarkers.this.messageHandler.sendEmptyMessage(MSG);
+				if (mSegmentsOverlays != null)
+					LiveStreetLinesMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
 		update.start();

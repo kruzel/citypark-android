@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.AsyncTask;
 
-import com.citypark.utility.ParkingOverlayHandler;
 import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.RouteManager;
 import com.citypark.utility.route.RouteManager.GeocodeConnectException;
 import com.citypark.utility.route.RouteManager.GeocodeException;
+import com.citypark.view.overlay.ParkingOverlayHandler;
 import com.citypark.CityParkApp;
 import com.citypark.R;
 
