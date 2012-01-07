@@ -6,15 +6,14 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.dto.GaragePoint;
-import com.citypark.parser.CityParkGaragesParser;
-
+import com.citypark.dto.GarageData;
+import com.citypark.parser.CityParkGarageDetailsListParser;
 public class GarageDetailsListFetchTask extends AsyncTask<Void, Void, Void> {
 	
 	private Context context;
 	private String sessionId;
 	private double lat,lng;
-	private List<GaragePoint> details;
+	private List<GarageData> details;
 	private GarageDetailsListListener listener;
 	
 
@@ -29,7 +28,7 @@ public class GarageDetailsListFetchTask extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		CityParkGaragesParser parser = new CityParkGaragesParser(context, sessionId, lat,lng,CityParkConsts.RADIUS);
+		CityParkGarageDetailsListParser parser = new CityParkGarageDetailsListParser(context, sessionId, lat,lng,CityParkConsts.RADIUS);
 		details = parser.parse();
 
 		return null;

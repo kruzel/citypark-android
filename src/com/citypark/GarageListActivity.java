@@ -15,8 +15,6 @@ import android.widget.Toast;
 import com.citypark.adapter.GarageDataAdapter;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GarageData;
-import com.citypark.dto.GaragePoint;
-import com.citypark.parser.CityParkGaragesParser;
 import com.citypark.service.GarageDetailsListFetchTask;
 import com.citypark.service.GarageDetailsListListener;
 
@@ -118,16 +116,8 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	}*/
 
 	@Override
-	public void GarageDetailsFetchComplete(List<GaragePoint> gpList) {
-		//TODO: work with GarageDetails class
-		for (GaragePoint gp : gpList) {
-			GarageData gd = new GarageData();
-			gd.setName(gp.getName());
-			gd.setFirstHourPrice((int)gp.getPrice());
-			gd.setParkingId(gp.getId());
-			m_garage.add(gd);
-			
-		}
+	public void GarageDetailsFetchComplete(List<GarageData> gdList) {
+		m_garage.addAll(gdList);
 		m_adapter.notifyDataSetChanged();
 		
 	}
