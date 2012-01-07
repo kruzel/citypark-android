@@ -15,8 +15,8 @@ import android.os.Message;
 
 import com.citypark.CityParkApp;
 import com.citypark.R;
+import com.citypark.dto.StreetParkingPoint;
 import com.citypark.parser.CityParkParkingReleasesParser;
-import com.citypark.parser.CityParkParkingReleasesParser.StreetParkingPoint;
 
 /**
  * This file is part of BikeRoute.
@@ -76,7 +76,8 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			@Override
 			public void run() {
 				markers = getMarkers(p, RADIUS, context,app.getSessionId());
-				LiveStreetReleasesMarkers.this.messageHandler.sendEmptyMessage(MSG);
+				if(markers!=null)
+					LiveStreetReleasesMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}
 		};
 		update.start();
@@ -139,10 +140,12 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 		if (cpSessionId != null) {
 			Drawable markerIcon;
 			final CityParkParkingReleasesParser parser = new CityParkParkingReleasesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
-			
+			 List<StreetParkingPoint> releasesList = parser.parse();
+			 if(releasesList==null)
+				 return null;
 
 			// Parse XML to overlayitems 
-			for (StreetParkingPoint parkingPoint : parser.parse()) {	
+			for (StreetParkingPoint parkingPoint : releasesList) {	
 				markerIcon = mAct.getResources().getDrawable(R.drawable.green_dot);
 				
 				OverlayItem marker = new OverlayItem(null, null, parkingPoint.getPGeoPoint());

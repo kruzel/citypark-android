@@ -1,10 +1,12 @@
 /**
  * 
  */
-package com.citypark.utility;
+package com.citypark.service;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.format.Time;
@@ -12,8 +14,8 @@ import android.text.format.Time;
 import com.citypark.CityParkApp;
 import com.citypark.PaymentActivity;
 import com.citypark.R;
-import com.citypark.service.ReportLocationTask;
-import com.citypark.service.ReportParkingReleaseTask;
+import com.citypark.RouteMap;
+import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.route.PGeoPoint;
 
 /**
@@ -66,29 +68,24 @@ public class LocationReceiver extends BroadcastReceiver {
 					lastTime = curTime;
 			} 
 			
+			//TODO if not parking and speed is < 10 for 5 min, ask user if he is parking
+			
 			//if parking and started driving, close session, and free parking in parking_manager (app in background)
 			//TODO this code have a bug
 			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
-				float speed = distDiff / 1000 / timediff / 3600000; //kmph
+				float speed = distDiff / 1000f / timediff / 3600000f; //kmph
 				if (speed > 20) { 
-					unpark(context, current);
+					unpark(context);
 				}
 			}
 		}
 	}
 	
-	public void unpark(Context context,PGeoPoint current) {
+	public void unpark(Context context) {
+		Intent intent = new Intent(context,RouteMap.class);
+		intent.putExtra(context.getString(R.string.unpark), true);
+		context.startActivity(intent);
 		
-		reportParkingReleaseTask = new ReportParkingReleaseTask(context,app.getSessionId(),current.getLatitudeE6(), current.getLongitudeE6());
-		reportParkingReleaseTask.execute();
-		
-		parking_manager.unPark();
-		app.setSessionId(null);
-		
-		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
-			Intent intent = new Intent(context, PaymentActivity.class);
-			context.startActivity(intent);
-		}
 	}
 
 }

@@ -18,11 +18,11 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LocationReceiver;
 import com.citypark.service.LocationService;
 import com.citypark.service.LoginListener;
 import com.citypark.service.LoginTask;
 import com.citypark.utility.AddressDatabase;
-import com.citypark.utility.LocationReceiver;
 import com.citypark.utility.RouteDatabase;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
@@ -99,8 +99,6 @@ public class CityParkApp extends Application implements LoginListener {
 	};
 	/** Are we bound to location service? **/
 	private boolean mIsBound;
-	
-	//TODO move login to here
 
 	public CityParkApp () {
 		super();
@@ -142,8 +140,6 @@ public class CityParkApp extends Application implements LoginListener {
 	}
 	
 	public String getSessionId() {
-		
-		//TODO prevent init twice
 		if(mSessionId == null && !isLoginInProgress) {       	
 			mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
         	strEmail = mPrefs.getString("email", null);

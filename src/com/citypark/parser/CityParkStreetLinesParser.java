@@ -118,9 +118,15 @@ public class CityParkStreetLinesParser extends XMLParser {
 		} catch (IOException e) {
 			Log.e(e.getMessage()+e.toString(), "CityParkStreetLinesParser - " + feedUrl);			
 			e.printStackTrace();
+			return null;
 		} catch (SAXException e) {
 			Log.e(e.getMessage()+e.toString(), "CityParkStreetLinesParser - " + feedUrl);
 			e.printStackTrace();
+			return null;
+		} catch(Exception e){
+			Log.e(e.getMessage(), "CityParkStreetLinesParser - " + feedUrl);
+			e.printStackTrace();
+			return null;
 		}
 		return marks;
 	}

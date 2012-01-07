@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkGaragesByIdParser;
-import com.citypark.parser.CityParkGaragesByIdParser.GarageDetailes;
+import com.citypark.parser.GarageDetailes;
 import com.citypark.service.GarageDetailsFetchTask;
 import com.citypark.service.GarageDetailsListener;
 
@@ -80,9 +80,6 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		allDayWeekend = (TextView)findViewById(R.id.textViewAllDayWeekend);
 		//coupon
 		couponText = (TextView)findViewById(R.id.textViewCouponText);
-		
-		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, app.getSessionId(), garageId);
-		task.execute(null);
 	}
 
 	@Override
@@ -136,6 +133,8 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 
 		//TODO via URL
 		//garageImage 
+		
+		//citypark_images_root + garageDetails.getImageURL();
 		
 		//prices table
 		fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));

@@ -53,7 +53,7 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		try
-		{//TODO: goto garage detailed activity 
+		{ 
 			super.onListItemClick(l, v, position, id);
 			GarageData garageData = (GarageData)l.getItemAtPosition(position);
 			Intent intent = new Intent(this,GarageDetailsActivity.class);

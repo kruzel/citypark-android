@@ -20,7 +20,7 @@ import android.util.Xml;
 
 import com.citypark.R;
 import com.citypark.constants.GarageAvailability;
-import com.citypark.utility.route.PGeoPoint;
+import com.citypark.dto.StreetParkingPoint;
 
 /**
  * This file is part of BikeRoute.
@@ -61,37 +61,6 @@ public class CityParkParkingReleasesParser extends XMLParser {
 		}
 	}
 
-	//TODO:make it nicer
-	public class StreetParkingPoint{
-		double latitude;
-		double longitude;
-		
-		public StreetParkingPoint() {
-			// TODO Auto-generated constructor stub
-		}
-
-		public StreetParkingPoint(StreetParkingPoint p) {
-			this.latitude = p.latitude;
-			this.longitude = p.longitude;
-		}
-		public double getLatitude() {
-			return latitude;
-		}
-		public void setLatitude(double latitude) {
-			this.latitude = latitude;
-		}
-		public double getLongitude() {
-			return longitude;
-		}
-		public void setLongitude(double longitude) {
-			this.longitude = longitude;
-		}
-		public PGeoPoint getPGeoPoint(){
-			return new PGeoPoint(latitude,longitude);
-		}
-
-	}
-
 	public List<StreetParkingPoint> parse() {
 			final StreetParkingPoint p = new StreetParkingPoint();
 
@@ -120,11 +89,15 @@ public class CityParkParkingReleasesParser extends XMLParser {
 			} catch (IOException e) {
 				Log.e(e.toString(), "CityParkParkingReleasesParser - " + feedUrl);
 				e.printStackTrace();
+				return null;
 			} catch (SAXException e) {
 				Log.e(e.getMessage(), "CityParkParkingReleasesParser - " + feedUrl);
 				e.printStackTrace();
-			}catch(Exception ex){
-				Log.e( "CityParkParkingReleasesParser - " + feedUrl, ex.getMessage());
+				return null;
+			}catch(Exception e){
+				Log.e(e.getMessage(), "CityParkParkingReleasesParser - " + feedUrl);
+				e.printStackTrace();
+				return null;
 			}
 			return marks;
 	}

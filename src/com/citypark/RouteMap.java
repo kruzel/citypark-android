@@ -35,7 +35,6 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,7 +47,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.CityParkReportParkingParser;
 import com.citypark.service.ReportParkingReleaseTask;
 import com.citypark.service.ReportParkingTask;
 import com.citypark.service.RoutePlannerTask;
@@ -138,6 +136,8 @@ public class RouteMap extends OpenStreetMapActivity {
 	/** Wakelock. **/
 	private PowerManager.WakeLock wl;
 	
+	Boolean finishOnPark = false;
+	
 	ReportParkingReleaseTask reportParkingReleaseTask;
 	ReportParkingTask reportParkingTask;
 	
@@ -222,7 +222,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		if ((data != null) && ((Boolean) data[0])) {
 			mOsmv.getController().setZoom(mPrefs.getInt(getString(R.string.prefs_zoomlevel), 16));
 			showStep();
-			//TODO keep location
+			//TODO open in last location
 		}
 		
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
@@ -251,6 +251,9 @@ public class RouteMap extends OpenStreetMapActivity {
 		}
 		if (intent.getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
 			carAlert.setCarAlert(parking_manager.getLocation());
+		}
+		if (intent.getBooleanExtra(getString(R.string.unpark), false)) {
+			showDialog(R.id.unpark);
 		}
 	}
 	
@@ -332,7 +335,7 @@ public class RouteMap extends OpenStreetMapActivity {
 		switch(id) {
 		case R.id.unpark:
 			builder = new AlertDialog.Builder(this);
-			builder.setMessage("Reached bike. Unpark?")
+			builder.setMessage("Unpark?")
 					.setCancelable(false)
 					.setPositiveButton("Yes",
 							new DialogInterface.OnClickListener() {
@@ -340,9 +343,7 @@ public class RouteMap extends OpenStreetMapActivity {
 								public void onClick(
 										final DialogInterface dialog,
 										final int id) {
-									parking_manager.unPark();
-									RouteMap.this.hideStep();
-									carAlert.unsetAlert();
+									unpark();			
 									dialog.dismiss();
 								}
 							})
@@ -355,6 +356,31 @@ public class RouteMap extends OpenStreetMapActivity {
 									dialog.cancel();
 								}
 							});
+			dialog = builder.create();
+			break;
+		case R.id.park:
+			builder = new AlertDialog.Builder(this);
+			builder.setMessage("Have you parked?")
+			       .setCancelable(false)
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   park();
+			        	   dialog.cancel();
+			        	   if(finishOnPark) {
+			        		   setResult(1);
+			       				finish();
+			        	   }
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			                if(finishOnPark) {
+			        		   setResult(1);
+			       				finish();
+			        	   }
+			           }
+			       });
 			dialog = builder.create();
 			break;
 		case R.id.awaiting_fix:
@@ -807,6 +833,46 @@ public class RouteMap extends OpenStreetMapActivity {
 		app.setRoute(null);
 	}
 	
+	/**
+   	 * Finish cascade passer.
+     */
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (requestCode == R.id.payment) {
+        	if (resultCode == CityParkConsts.STOP_PAYMENT_SUCCEEDED) {
+        		unparkCompletion();
+        	}
+        }
+    }
+    
+	public void checkParkAndFinish(final Boolean finish, final int result) {	
+		//open dialog and ask user if he really un-parked
+		if(parking_manager.isParking() || parking_manager.isPaymentActive()) {
+			setResult(1);
+			finish();
+		} else {
+			finishOnPark = finish;
+			showDialog(R.id.park);
+		}
+	}
+	
+	public void park() {
+		showDialog(R.id.awaiting_fix);
+		
+		Location self = mLocationOverlay.getLastFix();
+		
+		if (self == null) {
+			self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		}
+		if (self == null) {
+			self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		}
+		if (self != null) {
+			parking_manager.park(new PGeoPoint(self.getLatitude(), self.getLongitude()));
+		}
+		dismissDialog(R.id.awaiting_fix);
+	}
+	
 	public void unpark() {
 		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 			Intent intent;
@@ -849,20 +915,12 @@ public class RouteMap extends OpenStreetMapActivity {
 				}
 			});
 		}
-		
+			
 		parking_manager.unPark();
 		app.setSessionId(null);
+		RouteMap.this.hideStep();
+		carAlert.unsetAlert();
+		
 	}
 	
-	/**
-   	 * Finish cascade passer.
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == R.id.payment) {
-        	if (resultCode == CityParkConsts.STOP_PAYMENT_SUCCEEDED) {
-        		unparkCompletion();
-        	}
-        }
-    }
 }

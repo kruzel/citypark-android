@@ -35,26 +35,26 @@ import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
 
 /**
- * Extends RouteMap providing live/satnav features - turn guidance advancing with location,
- * route replanning.
+ * Extends RouteMap providing live/satnav features - turn guidance advancing
+ * with location, route replanning.
  * 
  * This file is part of BikeRoute.
  * 
- * Copyright (C) 2011  Jonathan Gray
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2011 Jonathan Gray
+ * 
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  * @author jono@nanosheep.net
  * @version Oct 4, 2010
@@ -64,13 +64,13 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	protected Intent searchIntent;
 	/** Planning dialog tracker. **/
 	protected boolean mShownDialog;
-	
+
 	/** Search task for replanning. **/
 	private RoutePlannerTask search;
-	
+
 	/** Live navigation toggle. **/
 	private boolean liveNavigation;
-	
+
 	/** Last segment visited. **/
 	private Segment lastSegment;
 	/** Spoken for this segment. **/
@@ -79,58 +79,60 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	private boolean arrived;
 	/** Receiver for navigation updates. **/
 	private NavigationReceiver mBroadcastReceiver = null;
-	
+
 	@Override
 	public void onCreate(final Bundle savedState) {
 		super.onCreate(savedState);
-		
+
 		loadRouteFile();
-		
-		//Handle rotations
+
+		// Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
 		arrived = false;
 		if (data != null) {
 			isSearching = (Boolean) data[2];
 			search = (RoutePlannerTask) data[3];
-			if(search != null) {
+			if (search != null) {
 				search.setListener(this);
 			}
 			spoken = (Boolean) data[4];
 			arrived = (Boolean) data[1];
 		}
-		
+
 	}
-	
-	
-	
+
 	@Override
 	public void onNewIntent(final Intent intent) {
 		super.onNewIntent(intent);
 		loadRouteFile();
 	}
-	
+
 	/**
 	 * Load a route from a file if given one in launching intent.
 	 */
-	
+
 	private void loadRouteFile() {
 		Uri uri = getIntent().getData();
 		if (uri != null) {
 			searchIntent = new Intent();
-			searchIntent.putExtra(RoutePlannerTask.ROUTE_ID, (new Random()).nextInt(2147483647));
-			searchIntent.putExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.FILE_PLAN);
+			searchIntent.putExtra(RoutePlannerTask.ROUTE_ID,
+					(new Random()).nextInt(2147483647));
+			searchIntent.putExtra(RoutePlannerTask.PLAN_TYPE,
+					RoutePlannerTask.FILE_PLAN);
 			searchIntent.putExtra(RoutePlannerTask.FILE, uri.getPath());
-			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this, searchIntent, app);
+			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this,
+					searchIntent, app);
 			LiveRouteMap.this.search.execute();
-			//Set the launching intent to one without file data now route is loaded.
+			// Set the launching intent to one without file data now route is
+			// loaded.
 			setIntent(getIntent().setData(null));
 		}
 	}
-	
+
 	/**
 	 * Retain any state if the screen is rotated.
 	 */
-	
+
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		Object[] objs = new Object[5];
@@ -139,45 +141,44 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		objs[2] = isSearching;
 		objs[3] = search;
 		objs[4] = spoken;
-	    return objs;
+		return objs;
 	}
-	
+
 	@Override
 	public final boolean onPrepareOptionsMenu(final Menu menu) {
 		final MenuItem replan = menu.findItem(R.id.replan);
 		final MenuItem stopService = menu.findItem(R.id.stop_nav);
 		if (app.getRoute() != null) {
 			replan.setVisible(true);
-		}
-		else {
+		} else {
 			replan.setVisible(false);
 		}
 		stopService.setVisible(true);
-		
+
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public void showStep() {
 		super.showStep();
-		if(mSettings.getBoolean("gps", false)) {
+		if (mSettings.getBoolean("gps", false)) {
 			mLocationOverlay.enableFollowLocation();
 		} else {
 			mLocationOverlay.disableFollowLocation();
 		}
 	}
-	
+
 	@Override
 	public void hideStep() {
 		super.hideStep();
 		mLocationOverlay.disableFollowLocation();
 	}
-	
+
 	/**
-	 * Fire a replanning request (current location -> last point of route.)
-	 * to the routing service, display a dialog while in progress.
+	 * Fire a replanning request (current location -> last point of route.) to
+	 * the routing service, display a dialog while in progress.
 	 */
-	
+
 	private void replan() {
 		isSearching = true;
 		try {
@@ -187,48 +188,54 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		}
 		showDialog(R.id.plan);
 
-		Location self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		
+		Location self = mLocationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
 		if (self == null) {
 			self = mLocationOverlay.getLastFix();
 		}
 		if (self == null) {
-			self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			self = mLocationManager
+					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		}
 		if (self != null) {
 			searchIntent = new Intent();
-			searchIntent.putExtra(RoutePlannerTask.ROUTE_ID, app.getRoute().getRouteId());
-			searchIntent.putExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.REPLAN_PLAN);
+			searchIntent.putExtra(RoutePlannerTask.ROUTE_ID, app.getRoute()
+					.getRouteId());
+			searchIntent.putExtra(RoutePlannerTask.PLAN_TYPE,
+					RoutePlannerTask.REPLAN_PLAN);
 			searchIntent.putExtra(RoutePlannerTask.START_LOCATION, self);
-			searchIntent.putExtra(RoutePlannerTask.END_POINT,
-					(Parcelable) app.getRoute().getPoints().get(app.getRoute().getPoints().size() - 1));
-			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this, searchIntent, app);
+			searchIntent.putExtra(
+					RoutePlannerTask.END_POINT,
+					(Parcelable) app.getRoute().getPoints()
+							.get(app.getRoute().getPoints().size() - 1));
+			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this,
+					searchIntent, app);
 			LiveRouteMap.this.search.execute();
 		} else {
 			dismissDialog(R.id.plan);
 			showDialog(R.id.plan_fail);
-		}	
-			
+		}
+
 	}
-	
 
 	@Override
 	public Dialog onCreateDialog(final int id) {
 		Dialog dialog;
 		AlertDialog.Builder builder;
-		switch(id) {
+		switch (id) {
 		case R.id.gps:
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.gps_msg);
 			builder.setCancelable(false);
 			builder.setPositiveButton(getString(R.string.ok),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(final DialogInterface dialog,
-							final int id) {
-						showGpsOptions();
-					}
-				});
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(final DialogInterface dialog,
+								final int id) {
+							showGpsOptions();
+						}
+					});
 			builder.setTitle(R.string.gps_msg_title);
 			dialog = builder.create();
 			break;
@@ -242,7 +249,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				public void onDismiss(final DialogInterface arg0) {
 					removeDialog(R.id.plan);
 				}
-				});
+			});
 			pDialog.setOnCancelListener(new OnCancelListener() {
 
 				@Override
@@ -252,7 +259,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					}
 					isSearching = false;
 				}
-			
+
 			});
 			dialog = pDialog;
 			break;
@@ -267,9 +274,10 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		}
 		return dialog;
 	}
-	
+
 	/**
 	 * Handle option selection.
+	 * 
 	 * @return true if option selected.
 	 */
 	@Override
@@ -280,36 +288,17 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				if (mBroadcastReceiver == null) {
 					mBroadcastReceiver = new NavigationReceiver();
 				}
-				registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
+				registerReceiver(mBroadcastReceiver, new IntentFilter(
+						getString(R.string.navigation_intent)));
 			}
 			replan();
 			break;
 		case R.id.stop_nav:
-			showDialog(R.id.awaiting_fix);
-			LiveRouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
-				@Override
-				public void run() {
-					if (LiveRouteMap.this.dialog.isShowing()) {
-						LiveRouteMap.this.dismissDialog(R.id.awaiting_fix);
-							Location self = mLocationOverlay.getLastFix();
-							
-							if (self == null) {
-								self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-							}
-							if (self == null) {
-								self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-							}
-							if (self != null) {
-								parking_manager.park(new PGeoPoint(self.getLatitude(), self.getLongitude()));
-							}
-					}
-				}
-			});
-			
 			stopNavigation();
-			//finishActivity(R.id.trace);
-			setResult(1);
-			this.finish();
+			checkParkAndFinish(true,1);
+			// finishActivity(R.id.trace);
+			// setResult(1);
+			// this.finish();
 			break;
 		case R.id.turnbyturn:
 			spoken = true;
@@ -322,147 +311,168 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 	/**
 	 * Unregister navigation receiver and unbind from service.
 	 */
-	
+
 	@Override
 	public void onDestroy() {
-		if(mBroadcastReceiver != null) {
+
+		if (mBroadcastReceiver != null) {
 			unregisterReceiver(mBroadcastReceiver);
 			mBroadcastReceiver = null;
 		}
-	    super.onDestroy();
+		super.onDestroy();
 	}
-	
+
 	/**
-	 * Update settings for gps, bind nav service if appropriate
-	 * and speak segment if osd enabled.
+	 * Update settings for gps, bind nav service if appropriate and speak
+	 * segment if osd enabled.
 	 */
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		startNavigation();
 	}
-	
+
 	/**
-	 * Unbind & rebind nav service if needed, start up navigation if we have
-	 * a route.
+	 * Unbind & rebind nav service if needed, start up navigation if we have a
+	 * route.
 	 */
-	
+
 	private void startNavigation() {
-		//doUnbindService();
-		
+		// doUnbindService();
+
 		liveNavigation = mSettings.getBoolean("gps", false);
 		if (app.getRoute() != null) {
-						
-			//TODO Disable live navigation for Google routes to comply with Google tos
-			//liveNavigation = app.getRoute().getRouter().equals(CityParkConsts.G) ? false : liveNavigation;
-			
+
+			// TODO Disable live navigation for Google routes to comply with
+			// Google tos
+			// liveNavigation =
+			// app.getRoute().getRouter().equals(CityParkConsts.G) ? false :
+			// liveNavigation;
+
 			if (tts && directionsVisible && !isSearching) {
 				speak(app.getSegment());
 				lastSegment = app.getSegment();
 			}
 			if (liveNavigation) {
-				if(!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				if (!mLocationManager
+						.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 					showDialog(R.id.gps);
 				}
 				if (mBroadcastReceiver == null) {
 					mBroadcastReceiver = new NavigationReceiver();
 				}
-				registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
+				registerReceiver(mBroadcastReceiver, new IntentFilter(
+						getString(R.string.navigation_intent)));
 			}
 		}
 	}
 
 	/**
 	 * Receiver for updates from the live navigation service.
+	 * 
 	 * @author jono@nanosheep.net
 	 * @version Nov 4, 2010
 	 */
-	
+
 	private class NavigationReceiver extends BroadcastReceiver {
-		
-		/* (non-Javadoc)
-		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * android.content.BroadcastReceiver#onReceive(android.content.Context,
+		 * android.content.Intent)
 		 */
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			PGeoPoint current = (PGeoPoint) intent.getExtras().get(getString(R.string.point));
-			
+			PGeoPoint current = (PGeoPoint) intent.getExtras().get(
+					getString(R.string.point));
+
 			if (liveNavigation && directionsVisible && !arrived && !isSearching) {
 				if (intent.getBooleanExtra(getString(R.string.replan), false)) {
 					isSearching = true;
 					replan();
-				} else if (intent.getBooleanExtra(getString(R.string.arrived), false)) {
+				} else if (intent.getBooleanExtra(getString(R.string.arrived),
+						false)) {
 					arrive();
 					spoken = true;
 				} else if (app.getRoute() != null) {
-					
+
 					if (!app.getSegment().equals(lastSegment)) {
 						lastSegment = app.getSegment();
 						spoken = false;
 					}
-					
-					//Get next point
-					ListIterator<PGeoPoint> it = app.getRoute().getPoints().listIterator(
-							app.getRoute().getPoints().indexOf(current) + 1);
+
+					// Get next point
+					ListIterator<PGeoPoint> it = app
+							.getRoute()
+							.getPoints()
+							.listIterator(
+									app.getRoute().getPoints().indexOf(current) + 1);
 					PGeoPoint next = it.hasNext() ? it.next() : current;
-					
-					//Speak directions if the next point is a new segment
-					//and have not spoken already
-					if (!spoken && !app.getSegment().equals(app.getRoute().getSegment(next)) && tts) {
-							speak(app.getRoute().getSegment(next));
-							spoken = true;
+
+					// Speak directions if the next point is a new segment
+					// and have not spoken already
+					if (!spoken
+							&& !app.getSegment().equals(
+									app.getRoute().getSegment(next)) && tts) {
+						speak(app.getRoute().getSegment(next));
+						spoken = true;
 					}
 					showStep();
 					traverse(current);
-					
+
 				}
 			}
-			
+
 		}
 	}
-	
-	/**
-   	 * Finish cascade passer.
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == R.id.trace) {
-        	if (resultCode == 1) {
-	        	setResult(1);
-	        	finish();
-	        }
-        	else {
-        		showAllParkings();
-        	}
-        }
-    }
 
-	/* (non-Javadoc)
-	 * @see com.citypark.service.RouteListener#searchComplete(java.lang.Integer, com.citypark.utility.Route)
+	/**
+	 * Finish cascade passer.
+	 */
+	@Override
+	protected void onActivityResult(final int requestCode,
+			final int resultCode, final Intent data) {
+		if (requestCode == R.id.trace) {
+			if (resultCode == 1) {
+				setResult(1);
+				finish();
+			} else {
+				showAllParkings();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.citypark.service.RouteListener#searchComplete(java.lang.Integer,
+	 * com.citypark.utility.Route)
 	 */
 	@Override
 	public void searchComplete(Integer msg, Route route) {
 		try {
 			dismissDialog(R.id.plan);
-		} catch (Exception e)  {
-			
+		} catch (Exception e) {
+
 		}
-		
+
 		isSearching = false;
 		if (msg != null) {
-			
+
 			if (msg == R.id.result_ok) {
-				//doUnbindService();
+				// doUnbindService();
 				app.setRoute(route);
 				app.setSegment(app.getRoute().getSegments().get(0));
-				//viewRoute();
+				// viewRoute();
 				mOsmv.getController().setCenter(app.getSegment().startPoint());
 				traverse(app.getSegment().startPoint());
-				
-				//show parking around destination
+
+				// show parking around destination
 				showAllParkings();
-				
+
 				arrived = false;
 				if (directionsVisible) {
 					showStep();
@@ -471,11 +481,12 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 						spoken = true;
 					}
 				}
-				if(liveNavigation) {
+				if (liveNavigation) {
 					if (mBroadcastReceiver == null) {
 						mBroadcastReceiver = new NavigationReceiver();
 					}
-					registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
+					registerReceiver(mBroadcastReceiver, new IntentFilter(
+							getString(R.string.navigation_intent)));
 				}
 			} else {
 				showDialog(msg);
@@ -483,7 +494,9 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.citypark.service.RouteListener#searchCancelled()
 	 */
 	@Override
@@ -492,48 +505,52 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		search = null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.citypark.service.RouteListener#getContext()
 	 */
 	@Override
 	public Context getContext() {
 		return this;
 	}
-	
+
 	/**
 	 * Arrive at a destination.
 	 */
-	
+
 	private void arrive() {
-		//doUnbindService();
+		// doUnbindService();
 		arrived = true;
 		app.setSegment(app.getRoute().getSegment(app.getRoute().getEndPoint()));
 		traverse(app.getRoute().getEndPoint());
 		showStep();
 		if (tts) {
-			directionsTts.speak(getString(R.string.arrived_speech), TextToSpeech.QUEUE_ADD, null);
+			directionsTts.speak(getString(R.string.arrived_speech),
+					TextToSpeech.QUEUE_ADD, null);
 		}
 	}
-	
-	
-	/** Show GPS options if GPS provider is disabled.
+
+	/**
+	 * Show GPS options if GPS provider is disabled.
 	 * 
 	 */
-	
-	private void showGpsOptions() { 
-        startActivity(new Intent(  
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)); 
+
+	private void showGpsOptions() {
+		startActivity(new Intent(
+				android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 	}
-	
-	//overides RouteMap
+
+	// overides RouteMap
 	public void stopNavigation() {
 		super.stopNavigation();
-		
-		if(mBroadcastReceiver != null) {
+
+		if (mBroadcastReceiver != null) {
 			unregisterReceiver(mBroadcastReceiver);
 			mBroadcastReceiver = null;
 		}
-		
+
 		finishActivity(R.id.trace);
 	}
+
 }

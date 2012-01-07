@@ -1,5 +1,6 @@
 package com.citypark.dto;
 
+//TODO can we unify with garageDetails?
 public class GarageData {
 	private int parkingId;    
     private String name;
