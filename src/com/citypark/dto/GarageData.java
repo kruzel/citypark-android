@@ -37,7 +37,34 @@ public class GarageData {
 		
 	}
 	
-	
+	public GarageData(GarageData gd) {
+		super();
+		this.parkingId = gd.parkingId;
+		this.name = gd.name;
+		this.city = gd.city;
+		this.streetName = gd.streetName;
+		this.houseNumber = gd.houseNumber;
+		this.latitude = gd.latitude;
+		this.longitude = gd.longitude;
+		this.firstHourPrice = gd.firstHourPrice;
+		this.extraQuarterPrice = gd.extraQuarterPrice;
+		this.allDayPrice = gd.allDayPrice;
+		this.spacesForDisabled = gd.spacesForDisabled;
+		this.nolimit = gd.nolimit;
+		this.henion = gd.henion;
+		this.withlock = gd.withlock;
+		this.underground = gd.underground;
+		this.roof = gd.roof;
+		this.vip = gd.vip;
+		this.resident = gd.resident;
+		this.coupon = gd.coupon;
+		this.coupon_text = gd.coupon_text;
+		this.freeSpot = gd.freeSpot;
+		this.image1 = gd.image1;
+		this.image2 = gd.image2;
+	}
+
+
 
 	public GarageData(int parkingId, String name, String city,
 			String streetName, int houseNumber, double latitude,
