@@ -4,8 +4,6 @@
 package com.citypark;
 
 import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.ComponentName;
@@ -15,13 +13,10 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.LocationReceiver;
 import com.citypark.service.LocationService;
-import com.citypark.service.LoginListener;
-import com.citypark.service.LoginTask;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.RouteDatabase;
 import com.citypark.utility.route.Route;
@@ -59,7 +54,7 @@ import com.citypark.utility.route.Segment;
 //    resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. when defined, adds a user text field input with this text resource as a label
 //    resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
 //    )
-public class CityParkApp extends Application implements LoginListener {
+public class CityParkApp extends Application {
 	/** Route object. **/
 	private Route route;
 	/** The current segment. **/
@@ -77,13 +72,11 @@ public class CityParkApp extends Application implements LoginListener {
 	private String mSessionId = null;
 	private int zoom = CityParkConsts.ZOOM;
 	
-	private boolean isLoginInProgress = false;
-	
 	/** Navigation service. **/
 	private LocationService mBoundService;
 	
-		/** Receiver for navigation updates. **/
-	private LocationReceiver mBroadcastReceiver;
+	/** Receiver for navigation updates. **/
+	private LocationReceiver mLocationReceiver;
 	
 	/** Connection to location service. **/
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -115,19 +108,14 @@ public class CityParkApp extends Application implements LoginListener {
 		};
 		t.start();
 		ACRA.init(this);
-		
-		getSessionId();
-		
-		mBroadcastReceiver = new LocationReceiver(this);
-		
+				
+		super.onCreate();
 	}
 	
 	@Override
 	public void onTerminate() {
-		
 		doUnbindService();
-	    unregisterReceiver(mBroadcastReceiver);
-	    
+	    unregisterReceiver(mLocationReceiver);
 		super.onTerminate();
 	}
 	
@@ -140,21 +128,6 @@ public class CityParkApp extends Application implements LoginListener {
 	}
 	
 	public String getSessionId() {
-		if(mSessionId == null && !isLoginInProgress) {       	
-			mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
-        	strEmail = mPrefs.getString("email", null);
-            strPassword = mPrefs.getString("password", null);
-            
-        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
-        		super.onCreate();
-	        }
-	        else {
-	        	isLoginInProgress = true;
-	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
-	          	loginTask.execute((Void[])null);
-	        }
-		}
-		
 		return mSessionId;
 	}
 
@@ -162,26 +135,18 @@ public class CityParkApp extends Application implements LoginListener {
 		this.mSessionId = mSessionId;
 	}
 	
-	@Override
-	public void loginComplete(String sessionId) {
-		// if login ok, initialize LiveRouteMap
-		if(sessionId == null) {
-			Toast.makeText(this, getString(R.string.login_failed), Toast.LENGTH_SHORT).show();
-		} else {
-			setSessionId(sessionId);
-			registerReceiver(mBroadcastReceiver, new IntentFilter(getString(R.string.navigation_intent)));
-			doBindService();
-			
-			super.onCreate();
-		}
-		isLoginInProgress = false;
-	}
-	
 	/**
 	 * Bind to navigation service.
+	 * called by RouteMap after login or with valid session id
 	 */
 	
-	private void doBindService() {
+	public void doBindService() {
+		if (mLocationReceiver == null) {
+			mLocationReceiver = new LocationReceiver(this);
+			registerReceiver(mLocationReceiver, new IntentFilter(
+					getString(R.string.navigation_intent)));
+		}
+		
 		if (!mIsBound) {
 			bindService(new Intent(CityParkApp.this, LocationService.class), mConnection, Context.BIND_AUTO_CREATE);
 			mIsBound = true;
@@ -192,7 +157,7 @@ public class CityParkApp extends Application implements LoginListener {
 	 * Unbind from navigation service.
 	 */
 	
-	private void doUnbindService() {
+	public void doUnbindService() {
 	    if (mIsBound) {
 	        // Detach our existing connection.
 	        unbindService(mConnection);

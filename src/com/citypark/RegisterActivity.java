@@ -3,10 +3,12 @@ package com.citypark;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -33,7 +35,8 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 	private Button btnPaymentMethod = null;
 	private EditText txtPhoneNumber = null;
 	
-	static final int DIALOG_PAYMENT_METHOD_ID = 0;
+	/** Dialog display. **/
+	protected Dialog dialog;
 	
     /** Called when the activity is first created. */
     @Override
@@ -69,6 +72,8 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     } 
    
     public void onRegister(View view) {
+    	showDialog(R.id.awaiting_register);
+    	
     	if(txtEmail.getText().length() == 0 || txtPassword.getText().length() == 0) {
     		Toast.makeText(this, R.string.registration_missing_fields, Toast.LENGTH_LONG).show();
     		return;
@@ -94,34 +99,14 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     }
     
     public void OnPaymenMethodClick(View view) {
-    	showDialog(DIALOG_PAYMENT_METHOD_ID);
-    }
-    
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
-        switch(id) {
-        case DIALOG_PAYMENT_METHOD_ID:
-        	final CharSequence[] items = {"None", "Pango", "CelOpark"};
-        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        	builder.setTitle("Select Payment Method");
-        	builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-        	    public void onClick(DialogInterface dialog, int item) {
-        	        //Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
-        	    	strPaymentMethod = items[item].toString();
-        	    	dialog.dismiss();
-        	    	btnPaymentMethod.setText(strPaymentMethod);
-        	    }
-        	});
-        	dialog = builder.create();
-            break;
-        default:
-            dialog = null;
-        }
-        return dialog;
+    	showDialog(R.id.select_payment_provider);
     }
 
 	@Override
 	public void RegistrationComplete(final String successCode) {
+		if(dialog!=null && dialog.isShowing())
+			dialog.dismiss();
+		
 		if(CityParkConsts.USER_ALREADY_EXISTS.equalsIgnoreCase(successCode)){
 			Log.e(CityParkConsts.USER_ALREADY_EXISTS,"User already exists in the system!");
 			
@@ -142,5 +127,41 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 
 	   return;
 	}
-
+	
+    protected Dialog onCreateDialog(int id) {
+    	AlertDialog.Builder builder;
+    	ProgressDialog pDialog;
+        switch(id) {
+        case R.id.select_payment_provider:
+        	final CharSequence[] items = {"None", "Pango", "CelOpark"};
+        	builder = new AlertDialog.Builder(this);
+        	builder.setTitle("Select Payment Method");
+        	builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        	    public void onClick(DialogInterface dialog, int item) {
+        	        //Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
+        	    	strPaymentMethod = items[item].toString();
+        	    	dialog.dismiss();
+        	    	btnPaymentMethod.setText(strPaymentMethod);
+        	    }
+        	});
+        	dialog = builder.create();
+            break;
+        case R.id.awaiting_register:
+			pDialog = new ProgressDialog(this);
+			pDialog.setCancelable(true);
+			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pDialog.setMessage(getText(R.string.register));
+			pDialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					dialog.dismiss();
+				}
+			});
+			dialog = pDialog;
+			break;
+		default:
+            dialog = null;
+        }
+        return dialog;
+    }
 }  

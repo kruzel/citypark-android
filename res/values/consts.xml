@@ -25,5 +25,6 @@
 <item type="id" name="geocodeerror" />
 <item type="id" name="geocodeconnecterror" />
 <item type="id" name="payment" />
-
+<item type="id" name="awaiting_register" />
+<item type="id" name="select_payment_provider" />
 </resources>

@@ -47,6 +47,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LoginListener;
+import com.citypark.service.LoginTask;
 import com.citypark.service.ReportParkingReleaseTask;
 import com.citypark.service.ReportParkingTask;
 import com.citypark.service.RoutePlannerTask;
@@ -89,7 +91,7 @@ import com.citypark.view.overlay.RouteOverlay;
  * 
  */
 
-public class RouteMap extends OpenStreetMapActivity {
+public class RouteMap extends OpenStreetMapActivity implements LoginListener, OnTouchListener {
 
 	/** ParkingOverlayHandler markers overlay. */
 	private LiveGarageMarkers garages;
@@ -138,15 +140,24 @@ public class RouteMap extends OpenStreetMapActivity {
 	
 	Boolean finishOnPark = false;
 	
+	/** user info**/
+	private String strEmail = null;
+	private String strPassword = null;
+	//login info
+	Boolean isLoginInProgress = false;
+	
 	ReportParkingReleaseTask reportParkingReleaseTask;
 	ReportParkingTask reportParkingTask;
 	
 	//map overlays update handler
 	private Handler mHandler = new Handler();
+	private Boolean mFirstTimeOverlayUpdaye = true; //work around to MapView OnTouch event received only once
 	
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		   public void run() {
 			   showAllParkings();
+			   //refresh ony releases points
+			   //streetParkingReleases.refresh(mOsmv.getMapCenter());
 		       mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		   }
 		};
@@ -205,7 +216,6 @@ public class RouteMap extends OpenStreetMapActivity {
 		
 		mOsmv.getController().setZoom(app.getZoom());
 
-
 		// Initialize parking manager
 		parking_manager = new ParkingSessionPersist(this);
 
@@ -229,15 +239,8 @@ public class RouteMap extends OpenStreetMapActivity {
 			//TODO make it work again
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
-		
-    	if(app.getSessionId() == null) {
-    		if ((app.getEmail() == null) || (app.getEmail().length() == 0) || (app.getPassword() == null) ||(app.getPassword().length() == 0)) {
-    			//register
-    			this.startActivity(new Intent(this, RegisterActivity.class));
-    		}
-        }
 	}
-	
+
 	/**
 	 * Handle jump intents from directionsview.
 	 */
@@ -281,13 +284,15 @@ public class RouteMap extends OpenStreetMapActivity {
     		}
         }
         
-        if(app.getSessionId() != null) {
-			showAllParkings();
-        }
+        if(app.getSessionId() != null) 
+        	loginComplete(app.getSessionId());
+        else
+        	login();
         
-	      mHandler.removeCallbacks(mUpdateOverlaysTask);
-	      mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+	    mHandler.removeCallbacks(mUpdateOverlaysTask);
+	    mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 	      
+        mOsmv.setOnTouchListener(this);
 	}
 	
 	@Override
@@ -302,6 +307,33 @@ public class RouteMap extends OpenStreetMapActivity {
 		
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
 
+	}
+	
+	public void login() {
+		if(app.getSessionId() == null && !isLoginInProgress) {       	
+        	strEmail = mPrefs.getString("email", null);
+            strPassword = mPrefs.getString("password", null);
+            
+        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
+        		//user is not registered, register now
+        		this.startActivity(new Intent(this, RegisterActivity.class));
+	        }
+	        else {
+	        	isLoginInProgress = true;
+	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
+	          	loginTask.execute((Void[])null);
+	        }
+		}
+		
+		return;
+	}
+	
+	@Override
+	public void loginComplete(String sessionId) {
+		app.setSessionId(sessionId);
+		showAllParkings();
+		isLoginInProgress = false;
+		app.doBindService();
 	}
 	
 	/**
@@ -802,7 +834,6 @@ public class RouteMap extends OpenStreetMapActivity {
 			streetSegments.refresh(p);
 			garages.refresh(p);
 			streetParkingReleases.refresh(p);
-			//mOsmv.invalidate();
 		}
 	}
 	
@@ -921,6 +952,15 @@ public class RouteMap extends OpenStreetMapActivity {
 		RouteMap.this.hideStep();
 		carAlert.unsetAlert();
 		
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		//TODO this code is called only once - MapView bug?
+		if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			showAllParkings();
+       }
+		return false;
 	}
 	
 }
