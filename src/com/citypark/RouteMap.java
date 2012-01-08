@@ -271,7 +271,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         mOsmv.setTileSource(TileSourceFactory.getTileSource(mSettings.getString("tilePref", "Mapnik")));
         
 	      //center on my location
-	     // RouteMap.this.mLocationOverlay.followLocation(true);
+	    RouteMap.this.mLocationOverlay.followLocation(true);
         
         if(app.getRoute() != null) {
         	ErrorReporter.getInstance().putCustomData("Route", app.getRoute().getName());
