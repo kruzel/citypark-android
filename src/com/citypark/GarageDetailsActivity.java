@@ -1,12 +1,21 @@
 package com.citypark;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.CityParkGaragesByIdParser;
 import com.citypark.parser.GarageDetailes;
 import com.citypark.service.GarageDetailsFetchTask;
 import com.citypark.service.GarageDetailsListener;
@@ -131,10 +140,25 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		else
 			withLock.setImageDrawable(getResources().getDrawable(R.drawable.withlock_g));
 
-		//TODO via URL
-		//garageImage 
-		
-		//citypark_images_root + garageDetails.getImageURL();
+		if(garageDetails.getImageURL()!=null&& !"null".equalsIgnoreCase(garageDetails.getImageURL())&&!"".equals(garageDetails.getImageURL())){
+			try {
+				URI uri = new URI(
+					    "http", 
+					    "api.cityparkmobile.com", 
+					    garageDetails.getImageURL(),
+					    null);
+				String request = uri.toASCIIString();
+			//	Drawable image = ImageOperations(getContext(),"http://api.cityparkmobile.com"+URLEncoder.encode(garageData.getImage1(),"UTF-8"),"image.jpg");
+				Drawable image = ImageOperations(this,request,"image.jpg");
+				garageImage.setImageDrawable(image);
+			} catch (URISyntaxException e) {
+				Log.e("Garage data adapter error on garage parking id="+garageDetails.getId(),e.getMessage());
+				e.printStackTrace();
+			}
+		}else{
+			ImageView imag = (ImageView)findViewById(R.drawable.icon);
+			garageImage=imag;
+		}
 		
 		//prices table
 		fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
@@ -146,6 +170,26 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	
 		//coupon
 		couponText.setText(garageDetails.getCouponText());
+	}
+
+	private Drawable ImageOperations(Context ctx, String url, String saveFilename) {
+		try {
+			InputStream is = (InputStream) this.fetch(url);
+			Drawable d = Drawable.createFromStream(is, "src");
+			return d;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Object fetch(String address) throws MalformedURLException,IOException {
+		URL url = new URL(address);
+		Object content = url.getContent();
+		return content;
 	}
 
 }

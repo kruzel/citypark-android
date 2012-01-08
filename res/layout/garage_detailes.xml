@@ -28,7 +28,6 @@
                 android:id="@+id/textViewName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
@@ -36,7 +35,6 @@
                 android:id="@+id/textViewAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall" 
                 android:textColor="#000000" />
 
@@ -44,7 +42,6 @@
                 android:id="@+id/textViewPaymentMethod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall" 
                 android:textColor="#000000" />
 
@@ -164,7 +161,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
@@ -173,7 +169,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
@@ -197,7 +192,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
@@ -206,7 +200,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
@@ -237,7 +230,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
@@ -246,7 +238,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#000000" />
 
