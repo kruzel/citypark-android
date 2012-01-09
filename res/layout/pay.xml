@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" android:background="@drawable/background">
     
     <ImageView
 	    android:id="@+id/imageViewLogo"
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
+            android:textColor="#000000"
             android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/city"/>
 
         <EditText
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
+            android:textColor="#000000"
             android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/parking_zone"/>
 
         <EditText
@@ -72,6 +74,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#000000"
             android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="10dp" android:text="@string/license_plate"/>
 
         <EditText

@@ -33,6 +33,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -150,15 +151,26 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	ReportParkingTask reportParkingTask;
 	
 	//map overlays update handler
+	GeoPoint LastMapCenter = null;
+	Time lastMapUpdateTime = new Time();
+	
 	private Handler mHandler = new Handler();
 	private Boolean mFirstTimeOverlayUpdaye = true; //work around to MapView OnTouch event received only once
 	
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		   public void run() {
-			   showAllParkings();
-			   //refresh ony releases points
-			   //streetParkingReleases.refresh(mOsmv.getMapCenter());
-		       mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+			   if(LastMapCenter!=null && LastMapCenter.distanceTo(mOsmv.getMapCenter()) > 100)
+			   		showAllParkings();
+			   else {
+				   Time curTime = new Time();
+				   curTime.setToNow();
+				   if(curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 3) //refresh ony releases points
+					   streetParkingReleases.refresh(mOsmv.getMapCenter());
+			   }
+			   
+			   lastMapUpdateTime.setToNow();
+			   LastMapCenter = mOsmv.getMapCenter();
+			   mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		   }
 		};
 
@@ -271,7 +283,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         mOsmv.setTileSource(TileSourceFactory.getTileSource(mSettings.getString("tilePref", "Mapnik")));
         
 	      //center on my location
-	    RouteMap.this.mLocationOverlay.followLocation(true);
+	    //RouteMap.this.mLocationOverlay.followLocation(true);
         
         if(app.getRoute() != null) {
         	ErrorReporter.getInstance().putCustomData("Route", app.getRoute().getName());
@@ -351,6 +363,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			mOsmv.getOverlays().add(travelledRouteOverlay);
 		}
 		mOsmv.invalidate();
+		
+		lastMapUpdateTime.setToNow();
 	}
 	
 	/**

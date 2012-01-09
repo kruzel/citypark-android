@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/background">
         <PreferenceCategory
-        	android:title="Navigation Options">
+        	android:title="אפשריות ניווט">
         	<CheckBoxPreference
-        		android:title="Speak directions"
+        		android:title="ניווט קולי"
         		android:defaultValue="false"
         		android:key="tts"
         		/>
         	<CheckBoxPreference
-        	android:title="Keep screen awake while navigating"
+        	android:title="מסך פתוח בניווט"
         	android:defaultValue="true"
         		android:key="keepAwake" />
         </PreferenceCategory>
         	<PreferenceCategory
-                android:title="Distance Units">
+                android:title="יחידות מרחק">
                 <ListPreference
-                        android:title="Units"
-                        android:summary="Select unit of distance"
+                        android:title="יחידות"
+                        android:summary="בחר יחידות מרחק"
                         android:key="unitsPref"
                         android:defaultValue="km"
                         android:entries="@array/unitsArray"

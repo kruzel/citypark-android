@@ -4,18 +4,17 @@ android:focusableInTouchMode="true"
 android:focusable="true"
 android:orientation="vertical"
 android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:gravity="center"
+android:layout_height="fill_parent"
 android:paddingLeft="5px"
 android:paddingTop="5px"
-android:paddingRight="5px">
+android:paddingRight="5px"
+android:background="@drawable/background">
 <com.citypark.view.StepView
 android:layout_width="fill_parent"
 android:id="@+id/search"
 android:layout_height="wrap_content"
 android:orientation="vertical"
-android:layout_alignParentTop="true"
-android:padding="10px" android:gravity="center">
+android:padding="10px" android:layout_gravity="top" android:gravity="top">
 <TextView
 android:id="@+id/start_address_view"
 android:layout_width="wrap_content"
