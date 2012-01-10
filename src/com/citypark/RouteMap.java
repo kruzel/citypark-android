@@ -962,7 +962,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		}
 			
 		parking_manager.unPark();
-		app.setSessionId(null);
+		
+		//renew session
+		login();
+		
 		RouteMap.this.hideStep();
 		carAlert.unsetAlert();
 		
