@@ -3,9 +3,13 @@ package com.citypark;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,9 +30,14 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	private GarageDetailsListFetchTask task;
 	private double lat,lng;
 
+	/** Dialog display. **/
+	protected Dialog dialog;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		showDialog(R.id.awaiting_fix);
 		setContentView(R.layout.garage_item_list_view);
 		m_garage = new ArrayList<GarageData>();
 		this.m_adapter = new GarageDataAdapter(this, R.layout.garage_item,
@@ -72,6 +81,28 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	public void GarageDetailsFetchComplete(List<GarageData> gdList) {
 		m_garage.addAll(gdList);
 		m_adapter.notifyDataSetChanged();
-		
+		dismissDialog(R.id.awaiting_fix);
 	}
+	
+    protected Dialog onCreateDialog(int id) {
+    	ProgressDialog pDialog;
+        switch(id) {
+        case R.id.awaiting_fix:
+			pDialog = new ProgressDialog(this);
+			pDialog.setCancelable(true);
+			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pDialog.setMessage(getText(R.string.fix_msg));
+			pDialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					dialog.dismiss();
+				}
+			});
+			dialog = pDialog;
+			break;
+		default:
+            dialog = null;
+        }
+        return dialog;
+    }
 }
