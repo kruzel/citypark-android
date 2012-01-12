@@ -68,53 +68,6 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 
 	}
 
-	/*private Runnable returnRes = new Runnable() {
-
-		@Override
-		public void run() {
-		//	p, RADIUS, context,app.getSessionId()
-			final CityParkGaragesParser parser = new CityParkGaragesParser(getApplication(),
-					"2270T387",
-					32.089859d,
-					34.771961d,
-					5000);
-			m_garage = new ArrayList<GarageData>();
-			for (GaragePoint gp : parser.parse()) {
-				GarageData gd = new GarageData();
-				gd.setName(gp.getName());
-				gd.setFirstHourPrice((int)gp.getPrice());
-				m_garage.add(gd);
-				
-			}
-			if (m_garage != null && m_garage.size() > 0) {
-				m_adapter.notifyDataSetChanged();
-				for (int i = 0; i < m_garage.size(); i++)
-					m_adapter.add(m_garage.get(i));
-			}
-			m_ProgressDialog.dismiss();
-			m_adapter.notifyDataSetChanged();
-		}
-	};*/
-
-	/*private void getGarageList() {
-		try {
-			m_garage = new ArrayList<GarageData>();
-			GarageData o1 = new GarageData();
-			o1.setName("SF services");
-			o1.setFirstHourPrice(7);
-			GarageData o2 = new GarageData();
-			o2.setName("SF Advertisement");
-			o2.setFirstHourPrice(4);
-			m_garage.add(o1);
-			m_garage.add(o2);
-			Thread.sleep(5000);
-			Log.i("ARRAY", "" + m_garage.size());
-		} catch (Exception e) {
-			Log.e("BACKGROUND_PROC", e.getMessage());
-		}
-		runOnUiThread(returnRes);
-	}*/
-
 	@Override
 	public void GarageDetailsFetchComplete(List<GarageData> gdList) {
 		m_garage.addAll(gdList);

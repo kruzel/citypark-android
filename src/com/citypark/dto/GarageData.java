@@ -1,5 +1,8 @@
 package com.citypark.dto;
 
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+
 //TODO can we unify with garageDetails?
 public class GarageData {
 	private int parkingId;    
@@ -34,6 +37,8 @@ public class GarageData {
 	private String image1;
 	private String image2;
 	
+	Drawable imageDrawable;
+	
 	public GarageData() {
 		
 	}
@@ -63,6 +68,7 @@ public class GarageData {
 		this.freeSpot = gd.freeSpot;
 		this.image1 = gd.image1;
 		this.image2 = gd.image2;
+		this.imageDrawable = gd.imageDrawable;
 	}
 
 
@@ -73,7 +79,7 @@ public class GarageData {
 			int allDayPrice, String spacesForDisabled, String nolimit,
 			String henion, String withlock, String underground, String roof,
 			String vip, String resident, String coupon, String coupon_text,
-			int freeSpot, String image1, String image2) {
+			int freeSpot, String image1, String image2, Drawable image) {
 		super();
 		this.parkingId = parkingId;
 		this.name = name;
@@ -98,8 +104,8 @@ public class GarageData {
 		this.freeSpot = freeSpot;
 		this.image1 = image1;
 		this.image2 = image2;
+		this.imageDrawable = image;
 	}
-
 
 
 	public int getParkingId() {
@@ -286,6 +292,12 @@ public class GarageData {
 		this.image2 = image2;
 	}
 	
-	
+	public Drawable getImageDrawable() {
+		return imageDrawable;
+	}
+
+	public void setImageDrawable(Drawable image) {
+		this.imageDrawable = image;
+	}
 	
 }

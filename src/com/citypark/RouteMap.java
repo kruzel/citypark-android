@@ -216,9 +216,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         		mPrefs.getInt(getString(R.string.prefs_scrolly), 0));
 		mOsmv.setBuiltInZoomControls(true);
 		
-		//center on my location
-		RouteMap.this.mLocationOverlay.followLocation(true);
-		
 		//Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
 		overlay.setVisibility(View.INVISIBLE);
@@ -247,6 +244,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			//TODO open in last location
 		}
 		
+		if(app.getSessionId()==null) {
+			//center on my location
+			RouteMap.this.mLocationOverlay.followLocation(true);
+		}
+				
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
 			//TODO make it work again
 			carAlert.setCarAlert(parking_manager.getLocation());
@@ -336,6 +338,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	          	loginTask.execute((Void[])null);
 	        }
 		}
+		else 
+			showAllParkings();
 		
 		return;
 	}

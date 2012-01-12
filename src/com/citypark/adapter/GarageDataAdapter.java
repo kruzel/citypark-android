@@ -48,52 +48,20 @@ public class GarageDataAdapter extends ArrayAdapter<GarageData> {
 				bt.setText("First hour price: "+ garageData.getFirstHourPrice());
 			}
 
-			if(garageData.getImage1()!=null&& !"null".equalsIgnoreCase(garageData.getImage1())&&!"".equals(garageData.getImage1())){
-				try {
-					URI uri = new URI(
-						    "http", 
-						    "api.cityparkmobile.com", 
-						    garageData.getImage1(),
-						    null);
-					String request = uri.toASCIIString();
-				//	Drawable image = ImageOperations(getContext(),"http://api.cityparkmobile.com"+URLEncoder.encode(garageData.getImage1(),"UTF-8"),"image.jpg");
-					Drawable image = ImageOperations(getContext(),request,"image.jpg");
-					ImageView imgView = new ImageView(getContext());
-					imgView = (ImageView)v.findViewById(R.id.icon);
-					imgView.setImageDrawable(image);
-				} catch (URISyntaxException e) {
-					Log.e("Garage data adapter error on garage parking id="+garageData.getParkingId(),e.getMessage());
-					e.printStackTrace();
-				}
+			if(garageData.getImageDrawable()!=null){
+				//use image from server
+				ImageView imgView = new ImageView(getContext());
+				imgView = (ImageView)v.findViewById(R.id.icon);
+				imgView.setImageDrawable(garageData.getImageDrawable());	
 			}else{
 				ImageView imag = (ImageView)v.findViewById(R.drawable.icon);
 				ImageView imgView = new ImageView(getContext());
 				imgView = (ImageView)v.findViewById(R.id.icon);
-				imgView=imag;
+				imgView = imag;
 			}
 
 		}
 		return v;
-	}
-
-	private Drawable ImageOperations(Context ctx, String url, String saveFilename) {
-		try {
-			InputStream is = (InputStream) this.fetch(url);
-			Drawable d = Drawable.createFromStream(is, "src");
-			return d;
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public Object fetch(String address) throws MalformedURLException,IOException {
-		URL url = new URL(address);
-		Object content = url.getContent();
-		return content;
 	}
 
 }

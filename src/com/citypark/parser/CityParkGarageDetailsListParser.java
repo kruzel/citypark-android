@@ -4,7 +4,10 @@
 package com.citypark.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +15,13 @@ import java.util.List;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.sax.Element;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.ImageView;
 
 import com.citypark.R;
 import com.citypark.constants.GarageAvailability;
@@ -76,6 +81,18 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 			node.getChild(XMLNS,"Image").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {						
 						gd.setImage1(body);
+						
+						if(gd.getImage1()!=null&& !"null".equalsIgnoreCase(gd.getImage1())&&!"".equals(gd.getImage1())){
+							try {
+								Drawable image = fetchImage(gd.getImage1());
+								gd.setImageDrawable(image);
+							} catch (URISyntaxException e) {
+								Log.e("Garage data adapter error on garage parking id="+gd.getParkingId(),e.getMessage());
+								e.printStackTrace();
+							}
+						}else{
+							gd.setImageDrawable(null);
+						}
 				}
 			});
 			
@@ -110,4 +127,24 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 			return gdList;
 	}
 
+	private Drawable fetchImage(String fileName) throws URISyntaxException {
+		try {
+			URI uri = new URI(
+				    "http", 
+				    "api.cityparkmobile.com", 
+				    fileName,
+				    null);
+			String request = uri.toASCIIString();
+			URL url = new URL(request);
+			InputStream is = (InputStream) url.getContent();
+			Drawable d = Drawable.createFromStream(is, "src");
+			return d;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
