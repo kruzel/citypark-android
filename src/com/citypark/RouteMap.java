@@ -280,8 +280,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	public void onResume() {
 		super.onResume();
 		
-		showDialog(R.id.awaiting_fix);
-		
 		/* Units preferences. */
 		unit = mSettings.getString("unitsPref", "km");
 		this.mLocationOverlay.enableMyLocation();
@@ -354,6 +352,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		showAllParkings();
 		isLoginInProgress = false;
 		app.doBindService();
+		
+		if(dialog.isShowing())
+			dialog.dismiss();
 	}
 	
 	/**
@@ -876,9 +877,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				showAllParkings(p);
 			}
 		}
-		
-		if(dialog.isShowing())
-			dialog.dismiss();
 	}
 	
 	public void stopNavigation() {
