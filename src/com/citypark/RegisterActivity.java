@@ -67,7 +67,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         txtPhoneNumber.setText(mPrefs.getString("phone_number", tMgr.getLine1Number()));
         
-        strPaymentMethod = mPrefs.getString("payment_method", getString(R.string.payment_method));
+        strPaymentMethod = mPrefs.getString(getString(R.string.payment_method),"None");
         btnPaymentMethod.setText(strPaymentMethod);
     } 
    
@@ -88,7 +88,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         mEditor.putString("last_name", txtLastName.getText().toString());
         mEditor.putString("license_plate", txtLicensePlate.getText().toString());
         mEditor.putString("phone_number",txtPhoneNumber.getText().toString());
-        mEditor.putString("payment_method", strPaymentMethod);
+        mEditor.putString(getString(R.string.payment_method), strPaymentMethod);
         
         //spawn registration task
         //we finish only after receiving response from the server

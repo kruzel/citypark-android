@@ -1,5 +1,6 @@
 package com.citypark;
 
+import java.io.IOException;
 import java.util.Calendar;
 
 import android.app.Activity;
@@ -11,6 +12,10 @@ import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
@@ -29,7 +34,7 @@ import com.citypark.service.StopPaymentTask;
 import com.citypark.service.TimeLimitAlertListener;
 import com.citypark.utility.ParkingSessionPersist;
 
-public abstract class PaymentActivity extends Activity {
+public class PaymentActivity extends Activity {
 	
 	/** payment parameters **/
 	protected EditText myLicensePlate;
@@ -51,6 +56,8 @@ public abstract class PaymentActivity extends Activity {
 	
 	/** operation result code **/
 	private int resultCode = -1;
+	
+	PendingIntent sender;	
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -137,12 +144,13 @@ public abstract class PaymentActivity extends Activity {
 	}
 	
 	public void OnRemind(View view) {
+		        
 		if(!parking_manager.isReminderActive()){
 			//start reminder service
 			Intent intent = new Intent(this, TimeLimitAlertListener.class);
-            PendingIntent sender = PendingIntent.getBroadcast(this,
-                    0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            
+			intent.putExtra(getString(R.string.payment_method), getPaymentMethod());
+	        sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	        
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.set(Calendar.HOUR_OF_DAY,timePicker.getCurrentHour());
@@ -157,12 +165,6 @@ public abstract class PaymentActivity extends Activity {
     		parking_manager.setReminder(now);
             
 		} else {
-
-			//stop reminder service
-			Intent intent = new Intent(PaymentActivity.this, TimeLimitAlertListener.class);
-            PendingIntent sender = PendingIntent.getBroadcast(PaymentActivity.this,
-                    0, intent, 0);
-
             // And cancel the alarm.
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.cancel(sender);
@@ -223,5 +225,8 @@ public abstract class PaymentActivity extends Activity {
 		super.onBackPressed();
 	}	
 	
-	public abstract String getPaymentMethod();
+	public String getPaymentMethod(){
+		return "None";
+	}
+	
 }

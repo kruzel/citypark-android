@@ -100,9 +100,8 @@
 <string name="phone_number">Phone number</string>
 <string name="city">City</string>
 <string name="parking_zone">Parking Zone</string>
-
 <string name="currency">NIS </string>
-
 <string name="unpark">unpark</string>
+<string name="reminder_intent">reminder_intent</string>
 
 </resources>

@@ -17,10 +17,7 @@
           android:title="@string/navigate_title" 
           android:icon="@drawable/ic_menu_navigate">
     </item>
-    <item android:id="@+id/directions"
-          android:title="@string/directions_title"
-          android:icon="@drawable/ic_menu_directions" android:visible="false" >
-    </item>
+    
     <item android:id="@+id/map"
     android:title="@string/map_title"
     android:icon="@drawable/ic_menu_map" android:visible="false"></item>
@@ -28,26 +25,16 @@
           android:title="@string/center_title"
           android:icon="@drawable/ic_menu_mylocation" >
     </item>
-    <item android:id="@+id/replan"
-          android:title="@string/replan_title"
-          android:icon="@drawable/ic_menu_rotate"
-          android:visible="false" >
+    
+    <item android:id="@+id/stop_nav" android:title="@string/stop_nav_title" android:icon="@drawable/ic_menu_close_clear_cancel" android:visible="false">
     </item>
-    <item android:id="@+id/showparking"
-          android:title="@string/showparking_title"
-          android:icon="@drawable/ic_menu_stand" android:visible="false">
+        
+    <item android:id="@+id/replan" android:title="@string/replan_title" android:icon="@drawable/ic_menu_rotate" android:visible="false">
+    </item><item android:id="@+id/prefs" android:title="@string/prefs_title" android:icon="@drawable/ic_menu_preferences"></item><item android:id="@+id/directions" android:title="@string/directions_title" android:icon="@drawable/ic_menu_directions" android:visible="false">
+    </item><item android:id="@+id/showparking" android:title="@string/showparking_title" android:icon="@drawable/ic_menu_stand" android:visible="false">
+    </item><item android:id="@+id/turnbyturn" android:title="@string/turnbyturn" android:icon="@drawable/ic_menu_turnbyturn" android:visible="false">
     </item>
-        <item android:id="@+id/turnbyturn"
-    	android:title="@string/turnbyturn"
-    	android:icon="@drawable/ic_menu_turnbyturn" android:visible="false" >
-    </item>
-    <item android:id="@+id/stop_nav"
-    android:title="@string/stop_nav_title"
-    android:icon="@drawable/ic_menu_close_clear_cancel" android:visible="false">
-    </item>
-    <item android:id="@+id/prefs"
-    android:title="@string/prefs_title"
-    android:icon="@drawable/ic_menu_preferences"></item>
+    
     <item android:id="@+id/elevation"
     android:title="Elevation"
     android:icon="@drawable/ic_menu_elevation" android:visible="false" ></item>

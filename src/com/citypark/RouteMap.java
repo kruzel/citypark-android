@@ -185,7 +185,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		/* Get location manager. */
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
-		payMethod = mPrefs.getString("payment_method", null);
+		payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 		
 		//Set OSD invisible
 		directionsVisible = false;
@@ -303,13 +303,17 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         
         if(app.getSessionId() != null) 
         	loginComplete(app.getSessionId());
-        else
+        else {
         	login();
+        	RouteMap.this.mLocationOverlay.followLocation(true);
+        }
         
 	    mHandler.removeCallbacks(mUpdateOverlaysTask);
 	    mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 	      
         mOsmv.setOnTouchListener(this);
+        
+        payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 	}
 	
 	@Override
@@ -607,6 +611,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				intent = new Intent(this, PaymentCelOParkActivity.class);
 				startActivity(intent);
 			} else {
+				intent = new Intent(this, PaymentActivity.class);
+				startActivity(intent);
 				Toast.makeText(this, "Undefined payment provider...",
 						Toast.LENGTH_LONG).show();
 			}
@@ -938,6 +944,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				intent = new Intent(this, PaymentCelOParkActivity.class);
 				startActivityForResult(intent, R.id.payment);
 			} else {
+				intent = new Intent(this, PaymentActivity.class);
+				startActivity(intent);
 				Toast.makeText(this, "Undefined payment provider...",
 						Toast.LENGTH_LONG).show();
 			}

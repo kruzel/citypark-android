@@ -82,12 +82,12 @@ public final class R {
         public static final int back_button=0x7f080056;
         public static final int bike=0x7f08007c;
         public static final int bottomtext=0x7f080051;
-        public static final int center=0x7f080078;
+        public static final int center=0x7f080077;
         public static final int comment=0x7f080024;
         public static final int comment_input=0x7f080025;
         public static final int contacts=0x7f08007e;
         public static final int cyclestreets=0x7f080071;
-        public static final int directions=0x7f080077;
+        public static final int directions=0x7f080079;
         public static final int directions_item=0x7f08001b;
         public static final int directions_layout=0x7f080053;
         public static final int directions_overlay=0x7f080054;
@@ -148,7 +148,7 @@ public final class R {
         public static final int prefs=0x7f08006f;
         public static final int progressBar1=0x7f08003b;
         public static final int progressBarPay=0x7f08005f;
-        public static final int replan=0x7f080079;
+        public static final int replan=0x7f080078;
         public static final int reserror=0x7f080002;
         public static final int result_ok=0x7f08000e;
         public static final int routeby=0x7f08006c;
@@ -333,6 +333,7 @@ public final class R {
         public static final int registration_missing_fields=0x7f06007a;
         public static final int registration_succeeded=0x7f060078;
         public static final int reminder_button=0x7f06007c;
+        public static final int reminder_intent=0x7f06008a;
         public static final int replan=0x7f060050;
         public static final int replan_title=0x7f060046;
         public static final int replanning=0x7f060055;
