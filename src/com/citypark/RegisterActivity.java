@@ -133,7 +133,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     	ProgressDialog pDialog;
         switch(id) {
         case R.id.select_payment_provider:
-        	final CharSequence[] items = {"None", "Pango", "CelOpark"};
+        	final CharSequence[] items = {"None", "Pango"}; //, "CelOpark"};
         	builder = new AlertDialog.Builder(this);
         	builder.setTitle("Select Payment Method");
         	builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
