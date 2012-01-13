@@ -180,7 +180,9 @@ public class PaymentActivity extends Activity {
             	mMediaPlayer=null;
             }
             parking_manager.stopReminder();
-
+            
+        	//we can report that we are not parking anymore (no reminder and no payment active
+        	resultCode = CityParkConsts.STOP_PAYMENT_SUCCEEDED;
 		}
 	}
 
@@ -226,14 +228,6 @@ public class PaymentActivity extends Activity {
 	         }
 		}
 	}
-
-	@Override
-	public void onBackPressed() {
-		setResult(resultCode);
-		finish();
-		
-		super.onBackPressed();
-	}	
 	
 	public String getPaymentMethod(){
 		return "None";
@@ -286,6 +280,9 @@ public class PaymentActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		parking_manager.stopReminder();
+		tgBtnRemind.setChecked(false);
 	}
 	
 }

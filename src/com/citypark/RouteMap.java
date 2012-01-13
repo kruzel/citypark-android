@@ -892,18 +892,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		mOsmv.invalidate();
 		app.setRoute(null);
 	}
-	
-	/**
-   	 * Finish cascade passer.
-     */
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == R.id.payment) {
-        	if (resultCode == CityParkConsts.STOP_PAYMENT_SUCCEEDED) {
-        		unparkCompletion();
-        	}
-        }
-    }
     
 	public void checkParkAndFinish(final Boolean finish, final int result) {	
 		//open dialog and ask user if he really un-parked
@@ -934,6 +922,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	}
 	
 	public void unpark() {
+		parking_manager.unPark();
 		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 			Intent intent;
 			
@@ -945,9 +934,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				startActivityForResult(intent, R.id.payment);
 			} else {
 				intent = new Intent(this, PaymentActivity.class);
-				startActivity(intent);
-				Toast.makeText(this, "Undefined payment provider...",
-						Toast.LENGTH_LONG).show();
+				startActivityForResult(intent, R.id.payment);
+				Toast.makeText(this, "Undefined payment provider...",Toast.LENGTH_LONG).show();
 			}
 		} else
 			unparkCompletion();
