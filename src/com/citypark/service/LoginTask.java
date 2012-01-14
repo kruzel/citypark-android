@@ -54,7 +54,8 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         		//user is not registered, register now (on the listener)
         		isLoginInProgress = false;
         		sessionId = null;
-        		loginListener.loginFailed();
+        		if(loginListener!=null)
+        			loginListener.loginFailed();
 	        }
 	        else {
 	        	isLoginInProgress = true;
@@ -69,10 +70,12 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 	
 	private void loginComplete(String sessionId) {
 		if(sessionId==null)
-			loginListener.loginFailed();
+			if(loginListener!=null)
+				loginListener.loginFailed();
 		else {
 			LoginTask.setSessionId(sessionId);
-			loginListener.loginComplete(sessionId);
+			if(loginListener!=null)
+				loginListener.loginComplete(sessionId);
 		}
 		isLoginInProgress = false;
 	}

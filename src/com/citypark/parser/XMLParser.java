@@ -2,10 +2,8 @@ package com.citypark.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
@@ -15,6 +13,8 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.citypark.service.LoginTask;
 
 import android.util.Log;
 
@@ -69,7 +69,9 @@ public class XMLParser {
 	        
 	        StatusLine statusLine = response.getStatusLine();
 	        if(statusLine.getStatusCode() == 401){
-	        	//TODO loginHandler.login();
+	        	//re login
+	        	LoginTask.login(null);
+	        	return null;
 	        }
 	        
 	        HttpEntity entity = response.getEntity();
