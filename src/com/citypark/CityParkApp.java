@@ -76,7 +76,7 @@ public class CityParkApp extends Application {
 	private LocationService mBoundService;
 	
 	/** Receiver for navigation updates. **/
-	private LocationReceiver mLocationReceiver;
+	private LocationReceiver mLocationReceiver = null;
 	
 	/** Connection to location service. **/
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -120,7 +120,10 @@ public class CityParkApp extends Application {
 	
 	public void finishAllAppObjecs(){
 		doUnbindService();
-	    unregisterReceiver(mLocationReceiver);
+		if(mLocationReceiver!=null){
+		    unregisterReceiver(mLocationReceiver);
+		    mLocationReceiver = null;
+		}
 	}
 	
 	public String getEmail() {
@@ -140,7 +143,7 @@ public class CityParkApp extends Application {
 	}
 	
 	/**
-	 * Bind to navigation service.
+	 * Bind to Location service.
 	 * called by RouteMap after login or with valid session id
 	 */
 	
