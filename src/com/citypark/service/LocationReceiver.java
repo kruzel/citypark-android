@@ -28,10 +28,6 @@ public class LocationReceiver extends BroadcastReceiver {
 	private ParkingSessionPersist parking_manager;
 	/** preferences file **/
 	protected SharedPreferences mPrefs = null;
-	/** Preferences mEditor. **/
-	private SharedPreferences.Editor editor = null;
-	/** street parking release task **/
-	ReportParkingReleaseTask reportParkingReleaseTask;
 	
 	public LocationReceiver(CityParkApp app) {
 		super();		

@@ -53,13 +53,9 @@ public class PaymentActivity extends Activity {
 	protected ParkingSessionPersist parking_manager = null;
 	/** preferences file **/
 	protected SharedPreferences mPrefs;
-	
-	/** operation result code **/
-	private int resultCode = -1;
-	
-	PendingIntent sender;	
-	
-	MediaPlayer mMediaPlayer;
+	private PendingIntent sender;	
+	private MediaPlayer mMediaPlayer;
+	private Boolean resultCode = false;
 	
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -140,6 +136,14 @@ public class PaymentActivity extends Activity {
 		super.onResume();
 	}
 
+	@Override
+	public void finish() {
+		Intent intent = new Intent(this,LiveRouteMap.class);
+		intent.putExtra("PaymentActivityResult", resultCode);
+		startActivity(intent);
+		super.finish();
+	}
+
 	public void OnPay(View view) {   	
 		if(parking_manager.isPaymentActive()){
 			Toast.makeText(this, R.string.payment_progress , Toast.LENGTH_SHORT).show();
@@ -182,7 +186,7 @@ public class PaymentActivity extends Activity {
             parking_manager.stopReminder();
             
         	//we can report that we are not parking anymore (no reminder and no payment active
-        	resultCode = CityParkConsts.STOP_PAYMENT_SUCCEEDED;
+            resultCode = true;
 		}
 	}
 
@@ -192,7 +196,8 @@ public class PaymentActivity extends Activity {
 		
 		if(parking_manager.isPaymentActive()) {
 			 if(success){
-				 resultCode = CityParkConsts.STOP_PAYMENT_SUCCEEDED;
+				 //stop payment succeeded
+				 resultCode = true;
 				 parking_manager.setPaymentEnd();
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
 				 stopPayTask = new StopPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
@@ -200,7 +205,8 @@ public class PaymentActivity extends Activity {
 				 stopPayTask.execute();
 			 }
 	         else {
-	        	 resultCode = CityParkConsts.STOP_PAYMENT_FAILED;
+	        	//stop payment failed
+	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
 	        	 stopPayTask = new StopPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
@@ -209,7 +215,8 @@ public class PaymentActivity extends Activity {
 	         }
 		} else {
 			 if(success) {
-				 resultCode = CityParkConsts.START_PAYMENT_SUCCEEDED;
+				//start payment succeeded
+				 resultCode = false;
 				 parking_manager.setPaymentStart();
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
 				 
@@ -219,7 +226,8 @@ public class PaymentActivity extends Activity {
 				payTask.execute();
 			 }
 	         else {
-	        	 resultCode = CityParkConsts.START_PAYMENT_FAILED;
+	        	//start payment failed
+	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
 	        	 payTask = new StartPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 

@@ -278,6 +278,12 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		if (intent.getBooleanExtra(getString(R.string.unpark), false)) {
 			showDialog(R.id.unpark);
 		}
+		//check if got back from PaymentActivity 
+		if (intent.getBooleanExtra("PaymentActivityResult", false)) {
+			if (!parking_manager.isPaymentActive() && !parking_manager.isReminderActive()) {
+				unparkCompletion();
+			}
+		}
 	}
 	
 	@Override
@@ -319,8 +325,15 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         
         payMethod = mPrefs.getString(getString(R.string.payment_method), null);
         
+        //check if awaken by location receiver
 		if (getIntent().getBooleanExtra(getString(R.string.unpark), false)) {
 			showDialog(R.id.unpark);
+		}
+		//check if got back from PaymentActivity 
+		if (getIntent().getBooleanExtra("PaymentActivityResult", false)) {
+			if (!parking_manager.isPaymentActive() && !parking_manager.isReminderActive()) {
+				unparkCompletion();
+			}
 		}
 	}
 	
@@ -935,7 +948,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	}
 	
 	public void unpark() {
-		parking_manager.unPark();
 		if (parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 			Intent intent;
 			
@@ -953,42 +965,27 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		} else
 			unparkCompletion();
 	}
-	
+
 	public void unparkCompletion() {
 		if(app.getSessionId()!=null){
 			showDialog(R.id.awaiting_fix);
 			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
 				@Override
 				public void run() {
-					if (RouteMap.this.dialog.isShowing()) {
+					if (RouteMap.this.dialog.isShowing())
 							RouteMap.this.dismissDialog(R.id.awaiting_fix);
-							Location self = mLocationOverlay.getLastFix();
 							
-							if (self == null) {
-								self = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-							}
-							if (self == null) {
-								self = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-							}
-							if (self != null) {
-								reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,app.getSessionId(),self.getLatitude(), self.getLongitude());
-								reportParkingReleaseTask.execute();
-							}
+					if (parking_manager.isParking()) {
+						reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,app.getSessionId(),parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6);
+						reportParkingReleaseTask.execute();
+						parking_manager.unPark();
+						login(); //renew session
+						RouteMap.this.hideStep();
+						carAlert.unsetAlert();
 					}
 				}
 			});
-		}
-			
-		parking_manager.unPark();
-		
-		//TODO check if we got here from background via speed detection
-		//if yes exit app
-		//else renew session
-			login();
-		
-		RouteMap.this.hideStep();
-		carAlert.unsetAlert();
-		
+		}	
 	}
 
 	@Override
