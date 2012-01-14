@@ -22,7 +22,6 @@ import com.citypark.utility.route.PGeoPoint;
  */
 public class LocationReceiver extends BroadcastReceiver {
 	//Get application reference
-	private CityParkApp app;
 	private PGeoPoint last = null;
 	private Time lastTime = null;
 	private ParkingSessionPersist parking_manager;
@@ -31,7 +30,6 @@ public class LocationReceiver extends BroadcastReceiver {
 	
 	public LocationReceiver(CityParkApp app) {
 		super();		
-		this.app = app;
 		parking_manager = new ParkingSessionPersist(app.getApplicationContext());
 	}
 	
@@ -45,7 +43,7 @@ public class LocationReceiver extends BroadcastReceiver {
 		curTime.setToNow();
 		
 		//update citypark server on location
-		if(app != null && app.getSessionId() != null) {
+		if(LoginTask.isLoggedIn()) {
 			ReportLocationTask locTask = null;
 			long timediff = 0; //millis
 			int distDiff = 0; //meters
@@ -55,7 +53,7 @@ public class LocationReceiver extends BroadcastReceiver {
 			}
 				
 			if ((last == null) || (distDiff > 20.0) || (timediff > 30000)) { // position update report
-					locTask = new ReportLocationTask(context, app.getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
+					locTask = new ReportLocationTask(context, LoginTask.getSessionId(), current.getLatitudeE6()/1E6, current.getLongitudeE6()/1E6);
 					locTask.execute();
 					
 					last = current;

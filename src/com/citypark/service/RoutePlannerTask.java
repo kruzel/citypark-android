@@ -70,17 +70,13 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
     protected String startAddressInput;
     protected String endAddressInput;
 	private RouteListener mAct;
-	private Intent mIntent;
-	/** Application reference. **/
-	protected CityParkApp app;
+	private Intent mIntent;        
         
-        
-        public RoutePlannerTask(RouteListener act, Intent intent, CityParkApp app) {
+        public RoutePlannerTask(RouteListener act, Intent intent) {
                 super();
                 mIntent = intent;
                 mAct = act;
                 planner = new RouteManager(mAct.getContext());
-                this.app = app;
         }
         
         public void setListener(final RouteListener listener) {
@@ -138,7 +134,7 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
         				msg = R.id.result_ok;
         				try {
         					planner.setStart(startAddressInput);
-        					planner.setDest(ParkingOverlayHandler.getNearest(planner.getStart(), mAct.getContext(),app.getSessionId()));	
+        					planner.setDest(ParkingOverlayHandler.getNearest(planner.getStart(), mAct.getContext(),LoginTask.getSessionId()));	
         				} catch (GeocodeException e) {
 							msg = R.id.geocodeerror;
         				}  catch (GeocodeConnectException e) {

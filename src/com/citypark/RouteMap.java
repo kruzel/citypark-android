@@ -141,12 +141,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	
 	Boolean finishOnPark = false;
 	
-	/** user info**/
-	private String strEmail = null;
-	private String strPassword = null;
-	//login info
-	Boolean isLoginInProgress = false;
-	
 	ReportParkingReleaseTask reportParkingReleaseTask;
 	ReportParkingTask reportParkingTask;
 	
@@ -238,9 +232,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		carAlert = new CarAlert(this);
 		
 		//init live marker updaters
-		garages = new LiveGarageMarkers(mOsmv, this, app);
-		streetSegments = new LiveStreetLinesMarkers(mOsmv, this, app);
-		streetParkingReleases = new LiveStreetReleasesMarkers(mOsmv, this, app);
+		garages = new LiveGarageMarkers(mOsmv, this);
+		streetSegments = new LiveStreetLinesMarkers(mOsmv, this);
+		streetParkingReleases = new LiveStreetReleasesMarkers(mOsmv, this);
 				
 		//Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -250,7 +244,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			//TODO open in last location
 		}
 		
-		if(app.getSessionId()==null) {
+		if(!LoginTask.isLoggedIn()) {
 			//center on my location
 			RouteMap.this.mLocationOverlay.followLocation(true);
 		}
@@ -262,7 +256,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	}
 
 	/**
-	 * Handle jump intents from directionsview.
+	 * Handle jump intents from directions view.
 	 */
 	
 	@Override
@@ -311,10 +305,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
     		}
         }
         
-        if(app.getSessionId() != null) 
-        	loginComplete(app.getSessionId());
+        if(LoginTask.isLoggedIn()) 
+        	loginComplete(LoginTask.getSessionId());
         else {
-        	login();
+        	LoginTask.login(this);
         	RouteMap.this.mLocationOverlay.followLocation(true);
         }
         
@@ -351,37 +345,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 
 	}
 	
-	public void login() {
-		if(app.getSessionId() == null && !isLoginInProgress) {       	
-        	strEmail = mPrefs.getString("email", null);
-            strPassword = mPrefs.getString("password", null);
-            
-        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
-        		//user is not registered, register now
-        		this.startActivity(new Intent(this, RegisterActivity.class));
-	        }
-	        else {
-	        	isLoginInProgress = true;
-	        	LoginTask loginTask = new LoginTask(strEmail, strPassword, this,this);
-	          	loginTask.execute((Void[])null);
-	        }
-		}
-		else 
-			showAllParkings();
-		return;
-	}
-	
 	@Override
 	public void loginComplete(String sessionId) {
-		app.setSessionId(sessionId);
 		showAllParkings();
-		isLoginInProgress = false;
 		app.doBindService();
 		
 		if(dialog.isShowing())
 			dialog.dismiss();
 	}
 	
+	@Override
+	public void loginFailed() {
+		//user is not registered, register now
+		this.startActivity(new Intent(this, RegisterActivity.class));
+	}
+
 	/**
 	 * Draw the route to the map.
 	 */
@@ -598,7 +576,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			export(gpx, R.string.filename_gpx);
 			break;
 		case R.id.park:
-			if(app.getSessionId()!=null) {
+			if(LoginTask.isLoggedIn()) {
 				showDialog(R.id.awaiting_fix);
 				RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
 					@Override
@@ -615,8 +593,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 								}
 								if (self != null) {
 									parking_manager.park(new PGeoPoint(self.getLatitude(), self.getLongitude()));
-									reportParkingTask = new ReportParkingTask(RouteMap.this, app.getSessionId(), self.getLatitude(), self.getLongitude());
-									reportParkingTask.execute(null);
+									reportParkingTask = new ReportParkingTask(RouteMap.this, LoginTask.getSessionId(), self.getLatitude(), self.getLongitude());
+									reportParkingTask.execute((Void[])null);
 								}
 						}
 					}
@@ -880,7 +858,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	}
 
 	public void showAllParkings(GeoPoint p) {
-		if(app.getSessionId() != null) {
+		if(LoginTask.isLoggedIn()) {
 			streetSegments.refresh(p);
 			garages.refresh(p);
 			streetParkingReleases.refresh(p);
@@ -967,7 +945,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	}
 
 	public void unparkCompletion() {
-		if(app.getSessionId()!=null){
+		if(LoginTask.isLoggedIn()){
 			showDialog(R.id.awaiting_fix);
 			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
 				@Override
@@ -976,10 +954,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 							RouteMap.this.dismissDialog(R.id.awaiting_fix);
 							
 					if (parking_manager.isParking()) {
-						reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,app.getSessionId(),parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6);
+						reportParkingReleaseTask = new ReportParkingReleaseTask(RouteMap.this,LoginTask.getSessionId(),parking_manager.getLocation().getLatitudeE6()/1E6, parking_manager.getLocation().getLongitudeE6()/1E6);
 						reportParkingReleaseTask.execute();
 						parking_manager.unPark();
-						login(); //renew session
+						LoginTask.login(RouteMap.this); //renew session
 						RouteMap.this.hideStep();
 						carAlert.unsetAlert();
 					}

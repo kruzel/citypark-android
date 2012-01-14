@@ -120,8 +120,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 			searchIntent.putExtra(RoutePlannerTask.PLAN_TYPE,
 					RoutePlannerTask.FILE_PLAN);
 			searchIntent.putExtra(RoutePlannerTask.FILE, uri.getPath());
-			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this,
-					searchIntent, app);
+			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this,searchIntent);
 			LiveRouteMap.this.search.execute();
 			// Set the launching intent to one without file data now route is
 			// loaded.
@@ -209,8 +208,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 					RoutePlannerTask.END_POINT,
 					(Parcelable) app.getRoute().getPoints()
 							.get(app.getRoute().getPoints().size() - 1));
-			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this,
-					searchIntent, app);
+			LiveRouteMap.this.search = new RoutePlannerTask(LiveRouteMap.this,searchIntent);
 			LiveRouteMap.this.search.execute();
 		} else {
 			dismissDialog(R.id.plan);

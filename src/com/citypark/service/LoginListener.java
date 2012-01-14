@@ -13,4 +13,6 @@ public interface LoginListener {
 	 * @param session ID or null
 	 */
 	public void loginComplete(String sessionId);
+	
+	public void loginFailed();
 }

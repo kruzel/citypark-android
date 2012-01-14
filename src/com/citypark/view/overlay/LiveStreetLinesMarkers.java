@@ -15,12 +15,11 @@ import android.os.Message;
 import com.citypark.CityParkApp;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkStreetLinesParser;
+import com.citypark.service.LoginTask;
 import com.citypark.utility.ParkingSessionPersist;
 
 public class LiveStreetLinesMarkers {
 	private final Context context;
-	/** Application reference. **/
-	protected static CityParkApp app;
 	
 	/** street segments overlay **/
 	protected List<PathOverlay> mSegmentsOverlays = null;
@@ -31,10 +30,9 @@ public class LiveStreetLinesMarkers {
 	/** Radius to return markers within. **/
 	protected static final int RADIUS = 500;
 
-	public LiveStreetLinesMarkers(MapView osmv, final Context ctxt, CityParkApp app) {
+	public LiveStreetLinesMarkers(MapView osmv, final Context ctxt) {
 		this.mOsmv = osmv;
 		context = ctxt.getApplicationContext();	
-		this.app = app;
 	}
 	
 	public void clearSegments(final List<PathOverlay> segmentsOverlays){
@@ -68,7 +66,7 @@ public class LiveStreetLinesMarkers {
 		final List<PathOverlay> segments = new ArrayList<PathOverlay>();
 		
 		//use CityPark to find street segments
-		String cpSessionId = app.getSessionId();
+		String cpSessionId = LoginTask.getSessionId();
 		PathOverlay overlay;
 		int color = Color.TRANSPARENT;
 		if (cpSessionId != null) {

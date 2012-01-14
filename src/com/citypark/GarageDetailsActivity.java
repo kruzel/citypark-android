@@ -19,6 +19,7 @@ import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.GarageDetailes;
 import com.citypark.service.GarageDetailsFetchTask;
 import com.citypark.service.GarageDetailsListener;
+import com.citypark.service.LoginTask;
 
 public class GarageDetailsActivity extends Activity implements GarageDetailsListener {
 	
@@ -45,10 +46,7 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	private TextView allDayWeekend;
 	
 	private TextView couponText;
-	
-	/** Application reference. **/
-	protected CityParkApp app;
-	
+		
 	Thread t;
 	
 	@Override
@@ -57,8 +55,7 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.garage_detailes);
 		
-		app = (CityParkApp) getApplicationContext();
-		if (app.getSessionId()==null)
+		if (!LoginTask.isLoggedIn())
 			return;
 		
 		garageId = getIntent().getIntExtra(CityParkConsts.GARAGE_ID, 0);
@@ -93,8 +90,8 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 
 	@Override
 	protected void onResume() {
-		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, app.getSessionId(), garageId);
-		task.execute(null);
+		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, LoginTask.getSessionId(), garageId);
+		task.execute((Void[])null);
 		super.onResume();
 	}
 	

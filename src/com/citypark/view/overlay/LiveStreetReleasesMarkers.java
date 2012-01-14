@@ -17,6 +17,7 @@ import com.citypark.CityParkApp;
 import com.citypark.R;
 import com.citypark.dto.StreetParkingPoint;
 import com.citypark.parser.CityParkParkingReleasesParser;
+import com.citypark.service.LoginTask;
 
 /**
  * This file is part of BikeRoute.
@@ -54,15 +55,12 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
 	private ItemizedParkingOverlay iOverlay;
-	/** Application reference. **/
-	protected CityParkApp app;
 
-	public LiveStreetReleasesMarkers(final MapView mOsmv, final Context ctxt, CityParkApp app) {
+	public LiveStreetReleasesMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
 		iOverlay = new ItemizedParkingOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), null, mv.getResourceProxy());;
-		this.app = app;
 	}
 
 	/**
@@ -75,7 +73,7 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				markers = getMarkers(p, RADIUS, context,app.getSessionId());
+				markers = getMarkers(p, RADIUS, context,LoginTask.getSessionId());
 				if(markers!=null)
 					LiveStreetReleasesMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}

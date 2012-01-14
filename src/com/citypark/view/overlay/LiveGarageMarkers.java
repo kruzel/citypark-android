@@ -19,6 +19,7 @@ import com.citypark.CityParkApp;
 import com.citypark.GarageDetailsActivity;
 import com.citypark.R;
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LoginTask;
 
 /**
  * This file is part of BikeRoute.
@@ -54,15 +55,12 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
 	private ItemizedParkingOverlay iOverlay;
-	/** Application reference. **/
-	protected CityParkApp app;
 
-	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt, CityParkApp app) {
+	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
 		iOverlay = new ItemizedParkingOverlay(mOverlays,ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), this, mv.getResourceProxy());
-		this.app = app;
 	}
 
 	/**
@@ -76,7 +74,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			@Override
 			public void run() {
 				//TODO exception handling: don't update map
-				markers = ParkingOverlayHandler.getMarkers(p, CityParkConsts.RADIUS, context,app.getSessionId());
+				markers = ParkingOverlayHandler.getMarkers(p, CityParkConsts.RADIUS, context,LoginTask.getSessionId());
 				if(markers != null)
 					LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);
 			}

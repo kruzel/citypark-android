@@ -17,6 +17,7 @@ import android.os.IBinder;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.LocationReceiver;
 import com.citypark.service.LocationService;
+import com.citypark.service.LoginTask;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.RouteDatabase;
 import com.citypark.utility.route.Route;
@@ -65,11 +66,7 @@ public class CityParkApp extends Application {
 	private RouteDatabase routeDB;
 	/** preferences file **/
 	protected SharedPreferences mPrefs;
-	/** user info**/
-	private String strEmail = null;
-	private String strPassword = null;
-	/** session info **/ 
-	private String mSessionId = null;
+
 	private int zoom = CityParkConsts.ZOOM;
 	
 	/** Navigation service. **/
@@ -108,7 +105,8 @@ public class CityParkApp extends Application {
 		};
 		t.start();
 		ACRA.init(this);
-				
+		LoginTask.init(this);		
+		
 		super.onCreate();
 	}
 	
@@ -124,22 +122,6 @@ public class CityParkApp extends Application {
 		    unregisterReceiver(mLocationReceiver);
 		    mLocationReceiver = null;
 		}
-	}
-	
-	public String getEmail() {
-		return strEmail;
-	}
-
-	public String getPassword() {
-		return strPassword;
-	}
-	
-	public String getSessionId() {
-		return mSessionId;
-	}
-
-	public void setSessionId(String mSessionId) {
-		this.mSessionId = mSessionId;
 	}
 	
 	/**

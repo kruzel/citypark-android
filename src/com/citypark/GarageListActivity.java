@@ -21,6 +21,7 @@ import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GarageData;
 import com.citypark.service.GarageDetailsListFetchTask;
 import com.citypark.service.GarageDetailsListListener;
+import com.citypark.service.LoginTask;
 
 public class GarageListActivity extends ListActivity implements GarageDetailsListListener {
 
@@ -49,13 +50,11 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 		if(lat==0||lng==0) {			
 			return;
 		}
-
-		String sessionId = ((CityParkApp)getApplicationContext()).getSessionId();
-		if(sessionId == null) return;
-		task = new GarageDetailsListFetchTask(this, this, sessionId, lat, lng);
-		task.execute();
-		/*m_ProgressDialog = ProgressDialog.show(GarageListActivity.this,
-				"Please wait...", "Retrieving data ...", true);*/
+		
+		if(LoginTask.isLoggedIn()) {
+			task = new GarageDetailsListFetchTask(this, this, LoginTask.getSessionId(), lat, lng);
+			task.execute();
+		}
 	}
 
 	@Override

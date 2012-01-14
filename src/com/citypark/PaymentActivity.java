@@ -29,6 +29,7 @@ import android.widget.ToggleButton;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.CityParkParkingZoneParser;
 import com.citypark.parser.CityParkParkingZoneParser.LocationData;
+import com.citypark.service.LoginTask;
 import com.citypark.service.StartPaymentTask;
 import com.citypark.service.StopPaymentTask;
 import com.citypark.service.TimeLimitAlertListener;
@@ -47,8 +48,6 @@ public class PaymentActivity extends Activity {
 	private StartPaymentTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
-	/** Application reference. **/
-	private CityParkApp app;
 	/** ParkingSessionPersist manager. */
 	protected ParkingSessionPersist parking_manager = null;
 	/** preferences file **/
@@ -61,7 +60,6 @@ public class PaymentActivity extends Activity {
 	public void onCreate(final Bundle savedState) {
 		super.onCreate(savedState);
 		
-		app = (CityParkApp) getApplication();
 		setContentView(R.layout.pay);
 		
 		// Initialize parking manager
@@ -102,8 +100,8 @@ public class PaymentActivity extends Activity {
 				
 				if (self != null) {
 					try {
-						if(app!=null && app.getSessionId()!=null) {
-							CityParkParkingZoneParser zoneParser = new CityParkParkingZoneParser(PaymentActivity.this,app.getSessionId(),self.getLatitude(),self.getLongitude());
+						if(LoginTask.isLoggedIn()) {
+							CityParkParkingZoneParser zoneParser = new CityParkParkingZoneParser(PaymentActivity.this,LoginTask.getSessionId(),self.getLatitude(),self.getLongitude());
 							LocationData ld = zoneParser.parse();
 							parkingZone.setText(ld.getParkingZone());
 							parkingCity.setText(ld.getCity());
@@ -200,7 +198,7 @@ public class PaymentActivity extends Activity {
 				 resultCode = true;
 				 parking_manager.setPaymentEnd();
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
-				 stopPayTask = new StopPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
+				 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
 						 parking_manager.getLocation().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				 stopPayTask.execute();
 			 }
@@ -209,7 +207,7 @@ public class PaymentActivity extends Activity {
 	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
-	        	 stopPayTask = new StopPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
+	        	 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
 						 parking_manager.getLocation().getLongitudeE6()/1E6, "FAILED");
 				 stopPayTask.execute();
 	         }
@@ -221,7 +219,7 @@ public class PaymentActivity extends Activity {
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
 				 
 				//TODO operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
-				payTask = new StartPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
+				payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
 						parking_manager.getLocation().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				payTask.execute();
 			 }
@@ -230,7 +228,7 @@ public class PaymentActivity extends Activity {
 	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
-	        	 payTask = new StartPaymentTask(this, app.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
+	        	 payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
 							parking_manager.getLocation().getLongitudeE6()/1E6, "FAILED");
 					payTask.execute();
 	         }

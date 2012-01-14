@@ -1,26 +1,33 @@
 package com.citypark.service;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+
+import com.citypark.R;
 import com.citypark.parser.CityParkLoginParser;
 
 public class LoginTask extends AsyncTask<Void, Void, String> {
-	private String email; 
-	private String password;
-	private Context mAct;
+	//set once on app init
+	private static String strEmail = null; 
+	private static String strPassword = null;
+	private static Context mAct = null;
+	
+	//global app variables
+	private static String sessionId = null;
+	private static Boolean isLoginInProgress = false;
+	
+	//per login listener
 	private LoginListener loginListener;
 	
-	public LoginTask(String email, String password, Context mAct, LoginListener loginListener) {
-		this.email = email;
-		this.password = password;
-		this.mAct = mAct;
+	protected LoginTask(LoginListener loginListener) {
 		this.loginListener = loginListener;
 	}
 	
 	@Override
 	protected String doInBackground(Void... arg) {
 		
-		CityParkLoginParser loginParser = new CityParkLoginParser(mAct, email, password);
+		CityParkLoginParser loginParser = new CityParkLoginParser(mAct, strEmail, strPassword);
 		
 		String sessionId = loginParser.parse();
 
@@ -28,6 +35,57 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 	}
 	
 	protected void onPostExecute(String sessionId) {
-		loginListener.loginComplete(sessionId);
+		loginComplete(sessionId);
+	}
+	
+	public static Boolean init(Context context) {
+		LoginTask.mAct = context;
+		
+		SharedPreferences mPrefs = context.getSharedPreferences(context.getString(R.string.prefs_name), Context.MODE_PRIVATE);
+		LoginTask.strEmail = mPrefs.getString("email", null);
+		LoginTask.strPassword = mPrefs.getString("password", null);
+		
+		return true;
+	}
+	
+	public static void login(LoginListener loginListener) {
+		if(getSessionId() == null && !isLoginInProgress) {       	            
+        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
+        		//user is not registered, register now (on the listener)
+        		isLoginInProgress = false;
+        		sessionId = null;
+        		loginListener.loginFailed();
+	        }
+	        else {
+	        	isLoginInProgress = true;
+	        	sessionId = null;
+	        	LoginTask loginTask = new LoginTask(loginListener);
+	          	loginTask.execute((Void[])null);
+	        }
+		}
+	
+		return;
+	}
+	
+	private void loginComplete(String sessionId) {
+		if(sessionId==null)
+			loginListener.loginFailed();
+		else {
+			LoginTask.setSessionId(sessionId);
+			loginListener.loginComplete(sessionId);
+		}
+		isLoginInProgress = false;
+	}
+
+	public static Boolean isLoggedIn() {
+		return (getSessionId() != null);
+	}
+	
+	public static String getSessionId() {
+		return sessionId;
+	}
+
+	public static void setSessionId(String sessionId) {
+		LoginTask.sessionId = sessionId;
 	}
 }

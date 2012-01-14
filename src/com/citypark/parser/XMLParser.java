@@ -11,6 +11,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -65,6 +66,11 @@ public class XMLParser {
 	        final HttpResponse response = new DefaultHttpClient().execute(request);
 	        Header ce = response.getFirstHeader("Content-Encoding");
 	        String contentEncoding = null;
+	        
+	        StatusLine statusLine = response.getStatusLine();
+	        if(statusLine.getStatusCode() == 401){
+	        	//TODO loginHandler.login();
+	        }
 	        
 	        HttpEntity entity = response.getEntity();
 	        InputStream instream = null;
