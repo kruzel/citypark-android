@@ -159,17 +159,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		   public void run() {
-			   if(LastMapCenter!=null && LastMapCenter.distanceTo(mOsmv.getMapCenter()) > 100)
+			   if(LastMapCenter!=null && LastMapCenter.distanceTo(mOsmv.getMapCenter()) > 100) {
 			   		showAllParkings();
+				   lastMapUpdateTime.setToNow();
+				   LastMapCenter = mOsmv.getMapCenter();
+			   }
 			   else {
 				   Time curTime = new Time();
 				   curTime.setToNow();
-				   if(curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 3) //refresh ony releases points
+				   if(curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) { //refresh only releases points
 					   streetParkingReleases.refresh(mOsmv.getMapCenter());
+					   lastMapUpdateTime.setToNow();
+					   LastMapCenter = mOsmv.getMapCenter();
+				   }
 			   }
 			   
-			   lastMapUpdateTime.setToNow();
-			   LastMapCenter = mOsmv.getMapCenter();
 			   mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		   }
 		};
@@ -314,6 +318,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         mOsmv.setOnTouchListener(this);
         
         payMethod = mPrefs.getString(getString(R.string.payment_method), null);
+        
+		if (getIntent().getBooleanExtra(getString(R.string.unpark), false)) {
+			showDialog(R.id.unpark);
+		}
 	}
 	
 	@Override
@@ -402,7 +410,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 								public void onClick(
 										final DialogInterface dialog,
 										final int id) {
-									unpark();			
+									unpark();
 									dialog.dismiss();
 								}
 							})
@@ -886,7 +894,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	}
 	
 	public void stopNavigation() {
-		//nothing to do in this class, only in LiveRouteMap class where nvigation is done
+		//nothing to do in this class, only in LiveRouteMap class where navigation is done
 		travelledRouteOverlay.clearPath();
 		routeOverlay.clearPath();
 		mOsmv.invalidate();
@@ -895,7 +903,12 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
     
 	public void checkParkAndFinish(final Boolean finish, final int result) {	
 		//open dialog and ask user if he really un-parked
-		if(parking_manager.isParking() || parking_manager.isPaymentActive()) {
+		if(!parking_manager.isParking() && !parking_manager.isPaymentActive() && !parking_manager.isReminderActive()) {
+			app.finishAllAppObjecs(); //terminate app
+			setResult(1);
+			finish();
+		}
+		else if(parking_manager.isParking() || parking_manager.isPaymentActive()) {
 			setResult(1);
 			finish();
 		} else {
@@ -968,8 +981,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			
 		parking_manager.unPark();
 		
-		//renew session
-		login();
+		//TODO check if we got here from background via speed detection
+		//if yes exit app
+		//else renew session
+			login();
 		
 		RouteMap.this.hideStep();
 		carAlert.unsetAlert();

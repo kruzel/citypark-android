@@ -114,9 +114,13 @@ public class CityParkApp extends Application {
 	
 	@Override
 	public void onTerminate() {
+
+		super.onTerminate();
+	}
+	
+	public void finishAllAppObjecs(){
 		doUnbindService();
 	    unregisterReceiver(mLocationReceiver);
-		super.onTerminate();
 	}
 	
 	public String getEmail() {
@@ -154,7 +158,7 @@ public class CityParkApp extends Application {
 	}
 
 	/**
-	 * Unbind from navigation service.
+	 * Unbind from location service.
 	 */
 	
 	public void doUnbindService() {

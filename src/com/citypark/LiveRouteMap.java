@@ -296,7 +296,6 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 		case R.id.stop_nav:
 			stopNavigation();
 			checkParkAndFinish(true,1);
-			// finishActivity(R.id.trace);
 			// setResult(1);
 			// this.finish();
 			break;
@@ -541,7 +540,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 	}
 
-	// overides RouteMap
+	// overrides RouteMap
 	public void stopNavigation() {
 		super.stopNavigation();
 

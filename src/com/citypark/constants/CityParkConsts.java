@@ -60,7 +60,7 @@ public final class CityParkConsts {
 	/** Initial zoom level. */
 	public static final int ZOOM = 17;
 	
-	public static final Long OVERLAY_UPDATE_INTERVAL = 5000L;
+	public static final Long OVERLAY_UPDATE_INTERVAL = 1000L;
 	
 	public static final int START_PAYMENT_SUCCEEDED = 0;
 	public static final int START_PAYMENT_FAILED = 1;

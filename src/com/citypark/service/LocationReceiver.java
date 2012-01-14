@@ -3,18 +3,16 @@
  */
 package com.citypark.service;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.format.Time;
+import android.widget.Toast;
 
 import com.citypark.CityParkApp;
-import com.citypark.PaymentActivity;
+import com.citypark.LiveRouteMap;
 import com.citypark.R;
-import com.citypark.RouteMap;
 import com.citypark.utility.ParkingSessionPersist;
 import com.citypark.utility.route.PGeoPoint;
 
@@ -70,11 +68,14 @@ public class LocationReceiver extends BroadcastReceiver {
 			
 			//TODO if not parking and speed is < 10 for 5 min, ask user if he is parking
 			
+			//TODO if parking and getting close the car report new API - reportEarlyParkingRelease (mark as yellow on map)
+			
 			//if parking and started driving, close session, and free parking in parking_manager (app in background)
 			//TODO this code have a bug
 			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
 				float speed = distDiff / 1000f / timediff / 3600000f; //kmph
-				if (speed > 20) { 
+				if (speed > 15) { 
+					Toast.makeText(context, "idenrified unpark",Toast.LENGTH_SHORT).show();
 					unpark(context);
 				}
 			}
@@ -82,10 +83,11 @@ public class LocationReceiver extends BroadcastReceiver {
 	}
 	
 	public void unpark(Context context) {
-		Intent intent = new Intent(context,RouteMap.class);
+		Intent intent = new Intent(context,LiveRouteMap.class);
 		intent.putExtra(context.getString(R.string.unpark), true);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		context.startActivity(intent);
-		
 	}
 
 }
