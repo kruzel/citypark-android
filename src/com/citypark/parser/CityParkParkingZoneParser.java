@@ -52,14 +52,7 @@ public class CityParkParkingZoneParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkParkingZoneParser(final Context context, final String sessionId, final double latitude, final double longitude) {
-		
-		try {
-			feedUrl = new URL(context.getString(R.string.citypark_api) + "getParkingAreaZone" + "?sessionId=" + sessionId + "&latitude="+ latitude + "&longitude=" + longitude );
-			//feedUrl = new URL(context.getString(R.string.citypark_garages_api) + "?sessionId=" + sessionId + "&latitude="+ "32.0717" + "&longitude=" + "34.7792");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		super(context.getString(R.string.citypark_api) + "getParkingAreaZone" + "?sessionId=" + sessionId + "&latitude="+ latitude + "&longitude=" + longitude, context);
 	}
 
 	public class LocationData{
