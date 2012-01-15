@@ -62,7 +62,7 @@ public class MapQuestParser extends XMLParser implements Parser {
 	 * @param feedUrl
 	 */
 	public MapQuestParser(String feedUrl, Context context) {
-		super(feedUrl, context);
+		super(feedUrl);
 	}
 	
 	/**

@@ -46,7 +46,7 @@ public class CityParkStopPaymentParser extends XMLParser {
 	 * @param operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED
 	 */
 	public CityParkStopPaymentParser(final Context context, final String sessionId, final String paymentProviderName, final double latitude, final double longitude, final String operationStatus) { 
-		super(context.getString(R.string.citypark_api) + "reportStopPayment" + "?sessionId=" + sessionId + "&paymentProviderName=" + paymentProviderName + "&latitude=" + Double.toString(latitude) + "&longitude=" + Double.toString(longitude) + "&operationStatus=" + operationStatus, context);
+		super(context.getString(R.string.citypark_api) + "reportStopPayment" + "?sessionId=" + sessionId + "&paymentProviderName=" + paymentProviderName + "&latitude=" + Double.toString(latitude) + "&longitude=" + Double.toString(longitude) + "&operationStatus=" + operationStatus);
 	}
 
 	public String parse() {
@@ -67,10 +67,8 @@ public class CityParkStopPaymentParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "CityParkStopPaymentParser - " + feedUrl);
-			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkStopPaymentParser - " + feedUrl);
-			Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 		}
 		return res.result;
 	}

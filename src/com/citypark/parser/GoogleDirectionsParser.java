@@ -50,7 +50,7 @@ public class GoogleDirectionsParser extends XMLParser implements Parser {
 	private int distance;
 	
 	public GoogleDirectionsParser(String feedUrl, Context context) {
-		super(feedUrl, context);
+		super(feedUrl);
 	}
 	
 	/**

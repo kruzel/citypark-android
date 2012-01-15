@@ -44,7 +44,7 @@ public class CityParkReportParkingReleaseParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkReportParkingReleaseParser(final Context context, final String sessionId, final double latitude, final double longitude) {
-		super(context.getString(R.string.citypark_api) + "reportStreetParkingRelease" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude), context );
+		super(context.getString(R.string.citypark_api) + "reportStreetParkingRelease" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
 	}
 
 	public boolean parse() {
@@ -66,10 +66,8 @@ public class CityParkReportParkingReleaseParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "CityParkReportParkingReleaseParser - " + feedUrl);
-			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkReportParkingReleaseParser - " + feedUrl);
-			Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 		}
 		return res.res;
 	}

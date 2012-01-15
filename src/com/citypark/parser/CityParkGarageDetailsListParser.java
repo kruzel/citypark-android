@@ -40,7 +40,7 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkGarageDetailsListParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
-		super(context.getString(R.string.citypark_api) + "findAllGarageParkingDataByLatitudeLongitude" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance, context);
+		super(context.getString(R.string.citypark_api) + "findAllGarageParkingDataByLatitudeLongitude" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
 	}
 
 	
@@ -113,11 +113,9 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 						.getContentHandler());
 			} catch (IOException e) {
 				Log.e(e.toString(), "CityParkGaragesParser - " + feedUrl);
-				Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			} catch (SAXException e) {
 				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
-				Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 			}catch(Exception ex){
 				Log.e( "CityParkGaragesParser - " + feedUrl, ex.getMessage());

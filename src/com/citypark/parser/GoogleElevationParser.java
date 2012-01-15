@@ -47,7 +47,7 @@ public class GoogleElevationParser extends XMLParser implements Parser {
 	private final Route route;
 	
 	public GoogleElevationParser(final String feedUrl, final Route route, Context context) {
-		super(feedUrl, context);
+		super(feedUrl);
 		this.route = route;
 	}
 	

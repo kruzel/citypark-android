@@ -48,7 +48,7 @@ public class OSMParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public OSMParser(final String feedUrl, Context context) {
-		super(feedUrl, context);
+		super(feedUrl);
 	}
 
 

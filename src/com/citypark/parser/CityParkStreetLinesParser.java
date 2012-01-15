@@ -51,7 +51,7 @@ public class CityParkStreetLinesParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkStreetLinesParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
-		super(context.getString(R.string.citypark_api) + "getStreetParkingPrediction" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance, context);
+		super(context.getString(R.string.citypark_api) + "getStreetParkingPrediction" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
 	}
 
 	public List<StreetSegment> parse() {
@@ -111,12 +111,10 @@ public class CityParkStreetLinesParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage()+e.toString(), "CityParkStreetLinesParser - " + feedUrl);			
-			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 			return null;
 		} catch (SAXException e) {
 			Log.e(e.getMessage()+e.toString(), "CityParkStreetLinesParser - " + feedUrl);
-			Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 			return null;
 		} catch(Exception e){

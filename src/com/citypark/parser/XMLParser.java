@@ -48,21 +48,18 @@ public class XMLParser {
 	protected static final String MARKERS = "markers";
 	protected static final String MARKER = "marker";
 	
-	protected Context mContext;
 	protected URL feedUrl;
 	
 	protected XMLParser() {
 		
 	}
 	
-	protected XMLParser(final String feedUrl, Context context) {
+	protected XMLParser(final String feedUrl) {
 		try {
 			this.feedUrl = new URL(feedUrl);
 		} catch (MalformedURLException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);
 		}
-		
-		this.mContext = context;
 	}
 
 	protected InputStream getInputStream() {
@@ -76,7 +73,6 @@ public class XMLParser {
 	        
 	        StatusLine statusLine = response.getStatusLine();
 	        if(statusLine.getStatusCode() == 401){
-	        	Toast.makeText(mContext, mContext.getString(R.string.awaiting_login),Toast.LENGTH_LONG).show();
 	        	//re login
 	        	LoginTask.login(null);
 	        	return null;
@@ -98,7 +94,6 @@ public class XMLParser {
 			return instream;
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);
-			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}
