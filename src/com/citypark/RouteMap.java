@@ -139,24 +139,27 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	/** Wakelock. **/
 	private PowerManager.WakeLock wl;
 	
-	Boolean finishOnPark = false;
+	private Boolean finishOnPark = false;
 	
-	ReportParkingReleaseTask reportParkingReleaseTask;
-	ReportParkingTask reportParkingTask;
+	private ReportParkingReleaseTask reportParkingReleaseTask;
+	private ReportParkingTask reportParkingTask;
 	
-	//map overlays update handler
-	GeoPoint LastMapCenter = null;
+	//map parking releases overlays update handler
 	Time lastMapUpdateTime = new Time();
 	
-	private Handler mHandler = new Handler();
-	private Boolean mFirstTimeOverlayUpdaye = true; //work around to MapView OnTouch event received only once
+	//map all overlays update handler
+	private GeoPoint lastAllOverlaysUpdateCenter = null;
+	private Time lastAllOverlaysUpdateTime = new Time();
 	
+	//map overlays handler
+	private Handler mHandler = new Handler();
+	//map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		   public void run() {
-			   if(LastMapCenter!=null && LastMapCenter.distanceTo(mOsmv.getMapCenter()) > 100) {
+			   if(lastAllOverlaysUpdateCenter!=null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 100) {
 			   		showAllParkings();
-				   lastMapUpdateTime.setToNow();
-				   LastMapCenter = mOsmv.getMapCenter();
+				   lastAllOverlaysUpdateTime.setToNow();
+				   lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 			   }
 			   else {
 				   Time curTime = new Time();
@@ -164,7 +167,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				   if(curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) { //refresh only releases points
 					   streetParkingReleases.refresh(mOsmv.getMapCenter());
 					   lastMapUpdateTime.setToNow();
-					   LastMapCenter = mOsmv.getMapCenter();
 				   }
 			   }
 			   
@@ -176,8 +178,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	public void onCreate(final Bundle savedState) {
 		super.onCreate(savedState);
 		
-		showDialog(R.id.awaiting_fix);
-		
 		/* Get Preferences. */
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 		/* Get location manager. */
@@ -188,7 +188,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		//Set OSD invisible
 		directionsVisible = false;
 		
-		//Get wakelock
+		//Get wake lock
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Navigating");
 		
@@ -199,6 +199,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         mOsmv.setTileSource(TileSourceFactory.MAPNIK);
         this.mLocationOverlay = new MyLocationOverlay(this.getApplicationContext(), this.mOsmv, mResourceProxy);
         this.mLocationOverlay.enableCompass();
+        this.mLocationOverlay.followLocation(true);
+        
         this.mOsmv.setBuiltInZoomControls(true);
         this.mOsmv.setMultiTouchControls(true);
         this.mOsmv.getOverlays().add(this.mLocationOverlay);
@@ -224,7 +226,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		app = (CityParkApp)getApplication();
 		
 		mOsmv.getController().setZoom(app.getZoom());
-
+		
 		// Initialize parking manager
 		parking_manager = new ParkingSessionPersist(this);
 
@@ -243,12 +245,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			showStep();
 			//TODO open in last location
 		}
-		
-		if(!LoginTask.isLoggedIn()) {
-			//center on my location
-			RouteMap.this.mLocationOverlay.followLocation(true);
-		}
-				
+						
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE, RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
 			//TODO make it work again
 			carAlert.setCarAlert(parking_manager.getLocation());
@@ -290,10 +287,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         this.mLocationOverlay.disableFollowLocation();
         this.mLocationOverlay.enableCompass();
         mOsmv.setTileSource(TileSourceFactory.getTileSource(mSettings.getString("tilePref", "Mapnik")));
-        
-	      //center on my location
-	    //RouteMap.this.mLocationOverlay.followLocation(true);
-        
+               
         if(app.getRoute() != null) {
         	ErrorReporter.getInstance().putCustomData("Route", app.getRoute().getName());
         	ErrorReporter.getInstance().putCustomData("Router", app.getRoute().getRouter());
@@ -304,14 +298,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
     			wl.acquire();
     		}
         }
-        
-        if(LoginTask.isLoggedIn()) 
-        	loginComplete(LoginTask.getSessionId());
-        else {
-        	LoginTask.login(this);
-        	RouteMap.this.mLocationOverlay.followLocation(true);
-        }
-        
+               
 	    mHandler.removeCallbacks(mUpdateOverlaysTask);
 	    mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 	      
@@ -343,6 +330,22 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
 
+	}
+	
+	@Override
+	protected void onStart() {
+		RouteMap.this.mLocationOverlay.followLocation(true);
+		
+        if(LoginTask.isLoggedIn()) 
+        	loginComplete(LoginTask.getSessionId());
+        else {
+        	if(LoginTask.isRegistered())
+        		LoginTask.login(this);
+        	else
+        		this.startActivity(new Intent(this, RegisterActivity.class));
+        }
+        
+		super.onStart();
 	}
 	
 	@Override

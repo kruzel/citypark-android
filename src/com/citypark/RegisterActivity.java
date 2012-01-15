@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
+import com.citypark.service.LoginTask;
 import com.citypark.service.RegisterationListener;
 import com.citypark.service.RegistrationTask;
 
@@ -114,6 +115,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 		}
 		
 		if(mEditor.commit()){
+			LoginTask.reload();
 			this.startActivity(new Intent(this, LiveRouteMap.class));
         	finish();
         } else {

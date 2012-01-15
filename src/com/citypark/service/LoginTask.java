@@ -48,9 +48,17 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 		return true;
 	}
 	
+	public static Boolean reload() {		
+		SharedPreferences mPrefs = LoginTask.mAct.getSharedPreferences(LoginTask.mAct.getString(R.string.prefs_name), Context.MODE_PRIVATE);
+		LoginTask.strEmail = mPrefs.getString("email", null);
+		LoginTask.strPassword = mPrefs.getString("password", null);
+		
+		return true;
+	}
+	
 	public static void login(LoginListener loginListener) {
 		if(getSessionId() == null && !isLoginInProgress) {       	            
-        	if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) {
+        	if(!isRegistered()) {
         		//user is not registered, register now (on the listener)
         		isLoginInProgress = false;
         		sessionId = null;
@@ -90,5 +98,13 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 
 	public static void setSessionId(String sessionId) {
 		LoginTask.sessionId = sessionId;
+	}
+	
+	public static Boolean isRegistered() {
+		if((strEmail == null) || (strEmail.length() == 0) || (strPassword == null) ||(strPassword.length() == 0) ) 
+			return false;
+		else
+			return true;
+		
 	}
 }
