@@ -65,6 +65,14 @@ public class OpenStreetMapActivity extends Activity {
     }
 
     @Override
+		protected void onDestroy() {
+    		mOsmv.getTileProvider().clearTileCache();
+	    	System.gc();
+    	
+			super.onDestroy();
+		}
+
+	@Override
     protected void onPause() {
         final SharedPreferences.Editor edit = mPrefs.edit();
         edit.putInt(getString(R.string.prefs_scrollx), mOsmv.getScrollX());

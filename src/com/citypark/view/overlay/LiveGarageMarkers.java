@@ -54,13 +54,13 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
-	private ItemizedParkingOverlay iOverlay;
+	private static ItemizedParkingOverlay iOverlay;
 
 	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
 		context = ctxt.getApplicationContext();
 		mOverlays = new ArrayList<OverlayItem>(1);
-		iOverlay = new ItemizedParkingOverlay(mOverlays,ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), this, mv.getResourceProxy());
+		//iOverlay = new ItemizedParkingOverlay(mOverlays,ctxt.getResources().getDrawable(R.drawable.ic_marker_garage), this, mv.getResourceProxy());
 	}
 
 	/**
