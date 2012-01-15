@@ -77,10 +77,10 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 	}
 	
 	private void loginComplete(String sessionId) {
-		if(sessionId==null)
+		if(sessionId==null) {
 			if(loginListener!=null)
 				loginListener.loginFailed();
-		else {
+		} else {
 			LoginTask.setSessionId(sessionId);
 			if(loginListener!=null)
 				loginListener.loginComplete(sessionId);

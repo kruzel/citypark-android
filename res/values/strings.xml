@@ -95,6 +95,7 @@
 <string name="skip_payment">Skip</string>
 <string name="stop_payment">Stop Payment</string>
 <string name="time_limit_reached">time limit reached</string>
+<string name="awaiting_login">Awaiting login</string>
 <string name="login_failed">Login Failed</string>
 
 <string name="phone_number">Phone number</string>

@@ -339,8 +339,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         if(LoginTask.isLoggedIn()) 
         	loginComplete(LoginTask.getSessionId());
         else {
-        	if(LoginTask.isRegistered())
+        	if(LoginTask.isRegistered()) {
         		LoginTask.login(this);
+        		showDialog(R.id.awaiting_login);
+        	}
         	else
         		this.startActivity(new Intent(this, RegisterActivity.class));
         }
@@ -359,6 +361,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	
 	@Override
 	public void loginFailed() {
+		if(dialog.isShowing())
+			dialog.dismiss();
+		
+		Toast.makeText(this, getString(R.string.login_failed),Toast.LENGTH_LONG).show();
+		
 		//user is not registered, register now
 		this.startActivity(new Intent(this, RegisterActivity.class));
 	}
@@ -453,6 +460,19 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				@Override
 				public void onDismiss(DialogInterface arg0) {
 					RouteMap.this.removeDialog(R.id.awaiting_fix);
+				}
+			});
+			dialog = pDialog;
+			break;
+		case R.id.awaiting_login:
+			pDialog = new ProgressDialog(this);
+			pDialog.setCancelable(true);
+			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pDialog.setMessage(getText(R.string.awaiting_login));
+			pDialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface arg0) {
+					RouteMap.this.removeDialog(R.id.awaiting_login);
 				}
 			});
 			dialog = pDialog;
