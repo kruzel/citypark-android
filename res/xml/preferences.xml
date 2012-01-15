@@ -8,7 +8,7 @@
         		android:key="tts"
         		/>
         	<CheckBoxPreference
-        	android:title="Keep screen awake while navigating"
+        	android:title="Keep screen awake"
         	android:defaultValue="true"
         		android:key="keepAwake" />
         </PreferenceCategory>

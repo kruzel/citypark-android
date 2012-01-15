@@ -294,10 +294,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
         	ErrorReporter.getInstance().putCustomData("Route Length", app.getRoute().getSegments().toString());
         	traverse(app.getSegment().startPoint());
     		mOsmv.getController().setCenter(app.getSegment().startPoint());
-    		if(mSettings.getBoolean("keepAwake", false)) {
-    			wl.acquire();
-    		}
         }
+        
+        if(mSettings.getBoolean("keepAwake", false)) {
+			wl.acquire();
+		}
                
 	    mHandler.removeCallbacks(mUpdateOverlaysTask);
 	    mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
