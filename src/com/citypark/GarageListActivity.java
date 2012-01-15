@@ -80,7 +80,9 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	public void GarageDetailsFetchComplete(List<GarageData> gdList) {
 		m_garage.addAll(gdList);
 		m_adapter.notifyDataSetChanged();
-		dismissDialog(R.id.awaiting_fix);
+		
+		if(dialog!=null && dialog.isShowing())
+			dialog.dismiss();
 	}
 	
     protected Dialog onCreateDialog(int id) {
