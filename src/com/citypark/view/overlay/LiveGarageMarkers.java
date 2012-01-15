@@ -73,7 +73,6 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-				//TODO exception handling: don't update map
 				markers = ParkingOverlayHandler.getMarkers(p, CityParkConsts.RADIUS, context,LoginTask.getSessionId());
 				if(markers != null)
 					LiveGarageMarkers.this.messageHandler.sendEmptyMessage(MSG);

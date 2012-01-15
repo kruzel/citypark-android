@@ -496,6 +496,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		final MenuItem share = menu.findItem(R.id.sharing);
 		final MenuItem csShare = menu.findItem(R.id.share);
 		final MenuItem save = menu.findItem(R.id.save);
+		final MenuItem navigate = menu.findItem(R.id.navigate);
+		
+		//TODO need to resolve Geocoding stability issue (web service availability)
+		navigate.setVisible(false);
+		
 		if (parking_manager.isParking() || parking_manager.isPaymentActive() || parking_manager.isReminderActive()) {
 			park.setVisible(false);
 			unPark.setVisible(true);

@@ -43,8 +43,8 @@ public final class CityParkConsts {
 	public static final double EARTH_RADIUS = 3960.0;
 	
 	/** parking consts **/
-	public static final double FAST_PARKING_LIMIT = 5*60; //sec
-	public static final double MEDIUM_PARKING_LIMIT = 15*60; //sec
+	public static final double FAST_PARKING_LIMIT = 33; //% probability
+	public static final double MEDIUM_PARKING_LIMIT = 67; //% probability
 	
 	/** Router Consts. **/
 	/** Google. **/
