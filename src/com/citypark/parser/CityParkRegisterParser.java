@@ -61,8 +61,10 @@ public class CityParkRegisterParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
+			return null;
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkRegisterParser - " + feedUrl);
+			return null;
 		}
 		
 		return res.response;

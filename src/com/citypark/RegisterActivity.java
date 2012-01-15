@@ -108,10 +108,16 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 		if(dialog!=null && dialog.isShowing())
 			dialog.dismiss();
 		
+		if(successCode==null) {
+			Log.e("onRegister", "registration failed due to server error");
+        	Toast.makeText(this, R.string.registration_failed, Toast.LENGTH_LONG).show();
+        	return;
+		}
+		
 		if(CityParkConsts.USER_ALREADY_EXISTS.equalsIgnoreCase(successCode)){
 			Log.e(CityParkConsts.USER_ALREADY_EXISTS,"User already exists in the system!");
 			
-			//TODO get user data from server and store locally
+			//TODO handle existing user - re-registration
 		}
 		
 		if(mEditor.commit()){

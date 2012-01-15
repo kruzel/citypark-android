@@ -100,6 +100,7 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	@Override
 	public void GarageDetailsFetchComplete(GarageDetailes garageDetails) {
 		if(garageDetails==null) {
+			Toast.makeText(this, getString(R.string.io_error_msg), Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
