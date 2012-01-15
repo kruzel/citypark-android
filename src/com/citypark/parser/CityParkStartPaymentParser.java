@@ -10,6 +10,8 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.Toast;
+
 import com.citypark.R;
 
 /**
@@ -42,7 +44,7 @@ public class CityParkStartPaymentParser extends XMLParser {
 	 * @param operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED
 	 */
 	public CityParkStartPaymentParser(final Context context, final String sessionId, final String paymentProviderName, final double latitude, final double longitude, final String operationStatus) { 
-		super(context.getString(R.string.citypark_api) + "reportStartPayment" + "?sessionId=" + sessionId + "&paymentProviderName=" + paymentProviderName + "&latitude=" + Double.toString(latitude) + "&longitude=" + Double.toString(longitude) + "&operationStatus=" + operationStatus);
+		super(context.getString(R.string.citypark_api) + "reportStartPayment" + "?sessionId=" + sessionId + "&paymentProviderName=" + paymentProviderName + "&latitude=" + Double.toString(latitude) + "&longitude=" + Double.toString(longitude) + "&operationStatus=" + operationStatus, context);
 	}
 
 	public String parse() {
@@ -63,8 +65,10 @@ public class CityParkStartPaymentParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "CityParkStartPaymentParser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkStartPaymentParser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 		}
 		return res.result;
 	}

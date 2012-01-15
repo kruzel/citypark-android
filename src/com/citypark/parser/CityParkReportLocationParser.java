@@ -11,6 +11,8 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.Toast;
+
 import com.citypark.R;
 
 /**
@@ -42,7 +44,7 @@ public class CityParkReportLocationParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkReportLocationParser(final Context context, final String sessionId, final double latitude, final double longitude) {
-		super(context.getString(R.string.citypark_api) + "reportLocation" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude) );
+		super(context.getString(R.string.citypark_api) + "reportLocation" + "?sessionId=" + sessionId + "&latitude="+ Double.toString(latitude) + "&longitude=" + Double.toString(longitude), context );
 	}
 
 	public boolean parse() {
@@ -64,8 +66,10 @@ public class CityParkReportLocationParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "CityParkReportLocationParser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkReportLocationParser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 		}
 		return res.res;
 	}

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.parser.GarageDetailes;
@@ -179,6 +180,7 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
+			Toast.makeText(this, getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}

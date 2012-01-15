@@ -1,20 +1,22 @@
 package com.citypark.adapter;
 
-import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
-import android.widget.ArrayAdapter;
-import android.widget.Filter;
-
-import com.citypark.CityParkApp;
-import com.citypark.utility.AddressDatabase;
-import com.citypark.utility.StringAddress;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Toast;
+
+import com.citypark.CityParkApp;
+import com.citypark.R;
+import com.citypark.utility.AddressDatabase;
+import com.citypark.utility.StringAddress;
 
 /**
  * Overrides the arrayadapter to display a list of suggestions retrieved
@@ -112,6 +114,7 @@ public class FindPlaceAdapter extends ArrayAdapter<String> {
 					res.count = results.size();
 					res.values = results;
 				} catch (IOException e) {
+					Toast.makeText(getContext(), getContext().getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 					res.count = -1; //pass result back to ui thread to show message
 				}
 				

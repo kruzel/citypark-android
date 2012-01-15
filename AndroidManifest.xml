@@ -45,7 +45,7 @@
 		<activity android:name="com.citypark.Preferences" android:label="Preferences" />
 		<activity android:name="org.achartengine.GraphicalActivity" android:label="Elevations" />
 		<activity android:name="com.citypark.Feedback" android:label="Feedback" />
-		<activity android:name="com.citypark.RegisterActivity" android:label="Registration" android:theme="@android:style/Theme.Black.NoTitleBar" />
+		<activity android:name="com.citypark.RegisterActivity" android:label="Registration" android:theme="@android:style/Theme.Black.NoTitleBar" android:launchMode="singleTop" />
 		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
 		<activity android:name="com.citypark.PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>
 		<activity android:name="com.citypark.PaymentPangoActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>

@@ -3,23 +3,24 @@
  */
 package com.citypark.parser;
 
-import android.util.Log;
-
-import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.route.PGeoPoint;
-import com.citypark.utility.route.Route;
-import com.citypark.utility.route.Segment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.citypark.constants.CityParkConsts;
+import com.citypark.utility.route.PGeoPoint;
+import com.citypark.utility.route.Route;
+import com.citypark.utility.route.Segment;
 
 /**
  * This file is part of BikeRoute.
@@ -60,8 +61,8 @@ public class MapQuestParser extends XMLParser implements Parser {
 	/**
 	 * @param feedUrl
 	 */
-	public MapQuestParser(String feedUrl) {
-		super(feedUrl);
+	public MapQuestParser(String feedUrl, Context context) {
+		super(feedUrl, context);
 	}
 	
 	/**

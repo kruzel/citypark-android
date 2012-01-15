@@ -14,9 +14,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.citypark.R;
 import com.citypark.service.LoginTask;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * This file is part of BikeRoute.
@@ -44,18 +47,22 @@ public class XMLParser {
 	// names of the XML tags
 	protected static final String MARKERS = "markers";
 	protected static final String MARKER = "marker";
-
+	
+	protected Context mContext;
 	protected URL feedUrl;
-
+	
 	protected XMLParser() {
+		
 	}
 	
-	protected XMLParser(final String feedUrl) {
+	protected XMLParser(final String feedUrl, Context context) {
 		try {
 			this.feedUrl = new URL(feedUrl);
 		} catch (MalformedURLException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);
 		}
+		
+		this.mContext = context;
 	}
 
 	protected InputStream getInputStream() {
@@ -69,6 +76,7 @@ public class XMLParser {
 	        
 	        StatusLine statusLine = response.getStatusLine();
 	        if(statusLine.getStatusCode() == 401){
+	        	Toast.makeText(mContext, mContext.getString(R.string.awaiting_login),Toast.LENGTH_LONG).show();
 	        	//re login
 	        	LoginTask.login(null);
 	        	return null;
@@ -90,6 +98,7 @@ public class XMLParser {
 			return instream;
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}

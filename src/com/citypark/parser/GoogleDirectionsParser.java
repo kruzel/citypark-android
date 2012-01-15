@@ -1,5 +1,17 @@
 package com.citypark.parser;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
 import android.util.Log;
 
 import com.citypark.constants.CityParkConsts;
@@ -7,17 +19,6 @@ import com.citypark.utility.Convert;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -48,8 +49,8 @@ public class GoogleDirectionsParser extends XMLParser implements Parser {
 	/** Distance covered. **/
 	private int distance;
 	
-	public GoogleDirectionsParser(String feedUrl) {
-		super(feedUrl);
+	public GoogleDirectionsParser(String feedUrl, Context context) {
+		super(feedUrl, context);
 	}
 	
 	/**

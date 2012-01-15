@@ -1,18 +1,19 @@
 package com.citypark.parser;
 
-import android.util.Log;
-
-import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.route.Route;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.content.Context;
+import android.util.Log;
+
+import com.citypark.constants.CityParkConsts;
+import com.citypark.utility.route.Route;
 
 
 /**
@@ -45,8 +46,8 @@ public class GoogleElevationParser extends XMLParser implements Parser {
 	/** Route to work on. **/
 	private final Route route;
 	
-	public GoogleElevationParser(final String feedUrl, final Route route) {
-		super(feedUrl);
+	public GoogleElevationParser(final String feedUrl, final Route route, Context context) {
+		super(feedUrl, context);
 		this.route = route;
 	}
 	

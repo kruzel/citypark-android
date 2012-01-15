@@ -17,6 +17,7 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.Toast;
 
 import com.citypark.R;
 import com.citypark.constants.GarageAvailability;
@@ -126,10 +127,12 @@ public class CityParkGaragesParser extends XMLParser {
 						.getContentHandler());
 			} catch (IOException e) {
 				Log.e(e.toString(), "CityParkGaragesParser - " + feedUrl);
+				Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 				return null;
 			} catch (SAXException e) {
 				Log.e(e.getMessage(), "CityParkGaragesParser - " + feedUrl);
+				Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 				e.printStackTrace();
 				return null;
 			}catch(Exception e){

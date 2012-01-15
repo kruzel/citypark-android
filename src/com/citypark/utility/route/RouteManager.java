@@ -141,7 +141,7 @@ public class RouteManager {
 			sBuf.append(Convert.asDegrees(dest.getLongitudeE6()));
 			sBuf.append("&sensor=true&mode=driving");
 			
-			parser = new GoogleDirectionsParser(sBuf.toString());
+			parser = new GoogleDirectionsParser(sBuf.toString(),ctxt);
 		} 
 		
 		Route r =  parser.parse();

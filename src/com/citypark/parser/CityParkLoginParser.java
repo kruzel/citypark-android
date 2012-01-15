@@ -11,6 +11,7 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.Toast;
 
 import com.citypark.R;
 
@@ -43,7 +44,7 @@ public class CityParkLoginParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkLoginParser(final Context context, String email, String password) {
-		super(context.getString(R.string.citypark_api) + "login" + "?username="+ email + "&password=" + password);
+		super(context.getString(R.string.citypark_api) + "login" + "?username="+ email + "&password=" + password, context);
 	}
 
 	public String parse() {
@@ -65,8 +66,10 @@ public class CityParkLoginParser extends XMLParser {
 					.getContentHandler());
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 		} catch (SAXException e) {
 			Log.e(e.getMessage(), "CityParkLoginParser - " + feedUrl);
+			Toast.makeText(mContext, mContext.getString(R.string.response_error_msg),Toast.LENGTH_LONG).show();
 		}
 		return sessionId.mSessionId;
 	}

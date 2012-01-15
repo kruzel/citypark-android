@@ -3,6 +3,14 @@
  */
 package com.citypark.parser;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import android.content.Context;
 import android.sax.Element;
 import android.sax.EndElementListener;
 import android.sax.RootElement;
@@ -11,13 +19,6 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.citypark.utility.route.PGeoPoint;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This file is part of BikeRoute.
@@ -46,8 +47,8 @@ public class OSMParser extends XMLParser {
 	/**
 	 * @param feedUrl
 	 */
-	public OSMParser(final String feedUrl) {
-		super(feedUrl);
+	public OSMParser(final String feedUrl, Context context) {
+		super(feedUrl, context);
 	}
 
 

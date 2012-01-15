@@ -301,7 +301,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
                
 	    mHandler.removeCallbacks(mUpdateOverlaysTask);
 	    mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
-	      
+	    lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
+	    
         mOsmv.setOnTouchListener(this);
         
         payMethod = mPrefs.getString(getString(R.string.payment_method), null);
@@ -355,7 +356,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		showAllParkings();
 		app.doBindService();
 		
-		if(dialog.isShowing())
+		if(dialog != null && dialog.isShowing())
 			dialog.dismiss();
 	}
 	
