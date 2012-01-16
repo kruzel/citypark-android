@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
@@ -177,6 +178,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	@Override
 	public void onCreate(final Bundle savedState) {
 		super.onCreate(savedState);
+		
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		/* Get Preferences. */
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
