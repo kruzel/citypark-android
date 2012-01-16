@@ -17,10 +17,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.citypark.api.task.LoginTask;
+import com.citypark.api.task.RegisterationListener;
+import com.citypark.api.task.RegistrationTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.LoginTask;
-import com.citypark.service.RegisterationListener;
-import com.citypark.service.RegistrationTask;
 
 public class RegisterActivity extends Activity implements RegisterationListener {
 
@@ -141,7 +141,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     	ProgressDialog pDialog;
         switch(id) {
         case R.id.select_payment_provider:
-        	final CharSequence[] items = {"None", "Pango"}; //, "CelOpark"};
+        	final CharSequence[] items = {"None"}; //, "Pango"}; , "CelOpark"};
         	builder = new AlertDialog.Builder(this);
         	builder.setTitle("Select Payment Method");
         	builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {

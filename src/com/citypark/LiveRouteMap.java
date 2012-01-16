@@ -26,8 +26,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.citypark.api.task.RouteListener;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.RouteListener;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.utility.route.PGeoPoint;

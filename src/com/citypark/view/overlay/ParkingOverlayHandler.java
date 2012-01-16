@@ -11,9 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 
 import com.citypark.R;
+import com.citypark.api.parser.CityParkGaragesParser;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GaragePoint;
-import com.citypark.parser.CityParkGaragesParser;
 import com.citypark.utility.Convert;
 
 /**

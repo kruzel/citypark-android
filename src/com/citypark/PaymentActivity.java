@@ -22,16 +22,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.citypark.api.parser.CityParkParkingZoneParser;
+import com.citypark.api.parser.CityParkParkingZoneParser.LocationData;
+import com.citypark.api.task.LoginTask;
+import com.citypark.api.task.StartPaymentTask;
+import com.citypark.api.task.StopPaymentTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.CityParkParkingZoneParser;
-import com.citypark.parser.CityParkParkingZoneParser.LocationData;
-import com.citypark.service.LoginTask;
-import com.citypark.service.StartPaymentTask;
-import com.citypark.service.StopPaymentTask;
 import com.citypark.service.TimeLimitAlertListener;
 import com.citypark.utility.ParkingSessionPersist;
 
@@ -65,63 +66,79 @@ public class PaymentActivity extends Activity {
 		// Initialize parking manager
 		parking_manager = new ParkingSessionPersist(this);
 		
-		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
 		tgBtnRemind = (ToggleButton) findViewById(R.id.toggleButtonRemind);
-		progBarPayment = (ProgressBar) findViewById(R.id.progressBarPay);
 		timePicker = (TimePicker) findViewById(R.id.timePickerEnd);
+		
+		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
+		progBarPayment = (ProgressBar) findViewById(R.id.progressBarPay);
 		myLicensePlate = (EditText) findViewById(R.id.editTextLicnsePlate);
 		parkingCity = (EditText) findViewById(R.id.editTextCity);
 		parkingZone = (EditText) findViewById(R.id.editTextParkingZone);
+		
+		timePicker.setIs24HourView(true);
+		tgBtnRemind.setChecked(parking_manager.isReminderActive());
 
-		//set license plate 
-		mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
-   	 	myLicensePlate.setText(mPrefs.getString("license_plate", null));
-				
-   	 	//initiate city fetching via GeoLocator 
-		Thread tcity = new Thread() {
-			@Override
-			public void run() {
-				//Initialise geocoder
-				final Geocoder geocoder = new Geocoder(PaymentActivity.this);
-				/* Get current lat & lng if available. */
-				final LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-				try {
-				Location self = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				Location selfNet= lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-				
-				//Only use GPS if more recent fix 
-				if (self != null) {
-					self =  (selfNet == null) || (selfNet.getTime() < self.getTime() + 600000) ? self : selfNet;
-				}
-				
-				/* Autofill starting location by reverse geocoding current
-				 * lat & lng
-				 */
-				
-				if (self != null) {
+		//enable payment only if payment provider is defined
+		if(!getPaymentMethod().equals("None")) {
+
+			//set license plate 
+			mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
+	   	 	myLicensePlate.setText(mPrefs.getString("license_plate", null));
+	   	 	
+			progBarPayment.setVisibility(View.INVISIBLE);
+			tgBtnPay.setChecked(parking_manager.isPaymentActive());
+					
+	   	 	//initiate city fetching via GeoLocator 
+			Thread tcity = new Thread() {
+				@Override
+				public void run() {
+					//Initialise geocoder
+					final Geocoder geocoder = new Geocoder(PaymentActivity.this);
+					/* Get current lat & lng if available. */
+					final LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 					try {
-						if(LoginTask.isLoggedIn()) {
-							CityParkParkingZoneParser zoneParser = new CityParkParkingZoneParser(PaymentActivity.this,LoginTask.getSessionId(),self.getLatitude(),self.getLongitude());
-							LocationData ld = zoneParser.parse();
-							parkingZone.setText(ld.getParkingZone());
-							parkingCity.setText(ld.getCity());
+					Location self = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					Location selfNet= lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					
+					//Only use GPS if more recent fix 
+					if (self != null) {
+						self =  (selfNet == null) || (selfNet.getTime() < self.getTime() + 600000) ? self : selfNet;
+					}
+					
+					/* Autofill starting location by reverse geocoding current
+					 * lat & lng
+					 */
+					
+					if (self != null) {
+						try {
+							if(LoginTask.isLoggedIn()) {
+								CityParkParkingZoneParser zoneParser = new CityParkParkingZoneParser(PaymentActivity.this,LoginTask.getSessionId(),self.getLatitude(),self.getLongitude());
+								LocationData ld = zoneParser.parse();
+								parkingZone.setText(ld.getParkingZone());
+								parkingCity.setText(ld.getCity());
+							}
+						} catch (Exception e) {
+							Log.e(e.getMessage(), "FindPlace - location: " + self);
 						}
-					} catch (Exception e) {
-						Log.e(e.getMessage(), "FindPlace - location: " + self);
+					}
+					} catch (IllegalArgumentException e) {
+						Log.e("Location Service", "No Location provider.");
 					}
 				}
-				} catch (IllegalArgumentException e) {
-					Log.e("Location Service", "No Location provider.");
-				}
-			}
-		};
-		tcity.run();
-   	 	
-		progBarPayment.setVisibility(View.INVISIBLE);
-		timePicker.setIs24HourView(true);
-		tgBtnPay.setChecked(parking_manager.isPaymentActive());
-		tgBtnRemind.setChecked(parking_manager.isReminderActive());
-		
+			};
+			tcity.run();	
+		} else { 
+			//hide all payment views
+			tgBtnPay.setVisibility(View.INVISIBLE);
+			progBarPayment.setVisibility(View.INVISIBLE);
+			myLicensePlate.setVisibility(View.INVISIBLE);
+			parkingCity.setVisibility(View.INVISIBLE);
+			parkingZone.setVisibility(View.INVISIBLE);
+			findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
+			findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
+			findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
+		}
+   	 			
 		if (getIntent().getBooleanExtra(getString(R.string.reminder_intent), false)) 
 			alarmRing();
 	}

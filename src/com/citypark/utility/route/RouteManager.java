@@ -8,8 +8,8 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.citypark.api.parser.*;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.*;
 import com.citypark.utility.Convert;
 import com.citypark.R;
 import org.osmdroid.util.GeoPoint;

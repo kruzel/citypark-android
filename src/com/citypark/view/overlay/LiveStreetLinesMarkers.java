@@ -13,9 +13,9 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.citypark.CityParkApp;
+import com.citypark.api.parser.CityParkStreetLinesParser;
+import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.CityParkStreetLinesParser;
-import com.citypark.service.LoginTask;
 import com.citypark.utility.ParkingSessionPersist;
 
 public class LiveStreetLinesMarkers {

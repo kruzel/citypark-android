@@ -16,11 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.citypark.api.parser.GarageDetailes;
+import com.citypark.api.task.GarageDetailsFetchTask;
+import com.citypark.api.task.GarageDetailsListener;
+import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.parser.GarageDetailes;
-import com.citypark.service.GarageDetailsFetchTask;
-import com.citypark.service.GarageDetailsListener;
-import com.citypark.service.LoginTask;
 
 public class GarageDetailsActivity extends Activity implements GarageDetailsListener {
 	

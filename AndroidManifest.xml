@@ -18,7 +18,7 @@
     
     <application android:label="@string/app_name" 
         android:icon="@drawable/logo" 
-        android:name="CityParkApp" 
+        android:name=".CityParkApp" 
         android:debuggable="true">
         <activity android:name="com.citypark.Navigate" android:label="CityPark" />
         <activity android:name="com.citypark.LiveRouteMap" android:label="CityPark" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
@@ -51,8 +51,8 @@
 		<activity android:name="com.citypark.PaymentPangoActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>
 		<activity android:name="com.citypark.PaymentCelOParkActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>
 		<activity android:name="com.citypark.GarageListActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Garage List" android:launchMode="singleTop"/>
-		<activity android:name="com.citypark.GarageDetailsActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="GarageDetails" android:launchMode="singleTop"/>
-		<service android:name="com.citypark.service.LocationService" android:enabled="true" android:label="Router" android:exported="false" />
-		<receiver android:name="com.citypark.service.TimeLimitAlertListener" android:label="TimeAlert"/>
+		<activity android:name=".GarageDetailsActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="GarageDetails" android:launchMode="singleTop"/>
+		<service android:name=".service.LocationService" android:enabled="true" android:label="Router" android:exported="false" />
+		<receiver android:name=".service.TimeLimitAlertListener" android:label="TimeAlert"/>
 	</application>
 </manifest>

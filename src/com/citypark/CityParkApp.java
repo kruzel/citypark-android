@@ -14,10 +14,10 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 
+import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.LocationReceiver;
 import com.citypark.service.LocationService;
-import com.citypark.service.LoginTask;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.RouteDatabase;
 import com.citypark.utility.route.Route;

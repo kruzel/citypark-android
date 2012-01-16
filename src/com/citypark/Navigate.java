@@ -23,7 +23,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import com.citypark.adapter.FindPlaceAdapter;
-import com.citypark.service.RouteListener;
+import com.citypark.api.task.RouteListener;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.ParkingSessionPersist;

@@ -17,11 +17,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.citypark.adapter.GarageDataAdapter;
+import com.citypark.api.task.GarageDetailsListFetchTask;
+import com.citypark.api.task.GarageDetailsListListener;
+import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GarageData;
-import com.citypark.service.GarageDetailsListFetchTask;
-import com.citypark.service.GarageDetailsListListener;
-import com.citypark.service.LoginTask;
 
 public class GarageListActivity extends ListActivity implements GarageDetailsListListener {
 
