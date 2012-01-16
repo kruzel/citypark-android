@@ -23,9 +23,9 @@ import com.citypark.R;
 import com.citypark.view.overlay.StreetSegment;
 
 /**
- * This file is part of BikeRoute.
+ * This file is part of CityPark.
  * 
- * Copyright (C) 2011  Jonathan Gray
+ * Copyright (C) 2011  Ofer Kruzel
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,9 +40,10 @@ import com.citypark.view.overlay.StreetSegment;
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
- * @author jono@nanosheep.net
- * @version Jun 26, 2010
+ * A class to display markers on a map and update them from a remote
+ * feed.
+ * @author okruzel@gmail.com
+ * @version Dec 21, 2011
  */
 public class CityParkStreetLinesParser extends XMLParser {
 	static final String XMLNS = "http://citypark.co.il/ws/";

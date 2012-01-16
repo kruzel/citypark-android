@@ -68,28 +68,16 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 	 * @param p the Geopoint to gather markers around.
 	 */
 
-	public void refresh(final GeoPoint p) {
-		Thread update = new Thread() {
-			private static final int MSG = 0;
-			@Override
-			public void run() {
-				markers = getMarkers(p, RADIUS, context,LoginTask.getSessionId());
-				if(markers!=null)
-					LiveStreetReleasesMarkers.this.messageHandler.sendEmptyMessage(MSG);
-			}
-		};
-		update.start();
+	public Boolean fetch(final GeoPoint p) {
+		markers = getMarkers(p, RADIUS, context,LoginTask.getSessionId());
+		if(markers!=null) 
+			return true;
+		
+		return false;
 	}
 	
-	/**
-	 * Handler for parking thread.
-	 * Remove the existing parking overlay if it exists and
-	 * replace it with the new one from the thread.
-	 */
-	
-	private final Handler messageHandler = new Handler() {
-		@Override
-		public void handleMessage(final Message msg) {
+	public void updateMap() {
+		if(markers!=null) {
 			if (mv.getOverlays().contains(iOverlay)) {
 				mv.getOverlays().remove(iOverlay);
 			}
@@ -98,9 +86,8 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			iOverlay = new ItemizedParkingOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveStreetReleasesMarkers.this, mv.getResourceProxy());;
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
-			//mv.postInvalidate();
 		}
-	};
+	}
 
 	/* (non-Javadoc)
 	 * @see org.andnav.osm.views.overlay.OpenStreetMapViewItemizedOverlay.OnItemGestureListener#onItemLongPress(int, java.lang.Object)

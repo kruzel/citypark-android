@@ -109,35 +109,21 @@ public class LiveStreetLinesMarkers {
 	 * @param p the Geopoint to gather segments markers around.
 	 */
 
-	public void refresh(final GeoPoint p) {
-		Thread update = new Thread() {
-			private static final int MSG = 0;
-			@Override
-			public void run() {
-				mSegmentsOverlays = getSegments(p, RADIUS, context);
-				if (mSegmentsOverlays != null)
-					LiveStreetLinesMarkers.this.messageHandler.sendEmptyMessage(MSG);
-			}
-		};
-		update.start();
+	public Boolean fetch(final GeoPoint p) {
+		mSegmentsOverlays = getSegments(p, RADIUS, context);
+		if(mSegmentsOverlays!=null)
+			return true;
+		
+		return false;
 	}
 	
-	/**
-	 * Handler for street segments thread.
-	 * Remove the existing segments overlay if they exist and
-	 * replace them with the new one from the thread.
-	 */
-	
-	private final Handler messageHandler = new Handler() {
-		@Override
-		public void handleMessage(final Message msg) {
+	public void updateMap() {
+		if (mSegmentsOverlays != null){
 			setSegments(mSegmentsOverlays);
 			clearSegments(mOldSegmentsOverlays);
 			
 			mOldSegmentsOverlays.clear();
 			mOldSegmentsOverlays.addAll(mSegmentsOverlays);
-			mOsmv.postInvalidate();
 		}
-	};
-	
+	}
 }

@@ -50,6 +50,9 @@ import android.widget.Toast;
 
 import com.citypark.api.task.LoginListener;
 import com.citypark.api.task.LoginTask;
+import com.citypark.api.task.AllOverlayFetchTask;
+import com.citypark.api.task.OverlayListener;
+import com.citypark.api.task.ReleasesOverlayFetchTask;
 import com.citypark.api.task.ReportParkingReleaseTask;
 import com.citypark.api.task.ReportParkingTask;
 import com.citypark.constants.CityParkConsts;
@@ -93,14 +96,11 @@ import com.citypark.view.overlay.RouteOverlay;
  * 
  */
 
-public class RouteMap extends OpenStreetMapActivity implements LoginListener, OnTouchListener {
+public class RouteMap extends OpenStreetMapActivity implements LoginListener, OnTouchListener, OverlayListener {
 
-	/** ParkingOverlayHandler markers overlay. */
-	private LiveGarageMarkers garages;
-	/** Street segments lines overlay **/
-	private LiveStreetLinesMarkers streetSegments;
-	/** Street parking releases overlay **/
-	private LiveStreetReleasesMarkers streetParkingReleases;
+	/** markers overlay handler task. */
+	private AllOverlayFetchTask overlayTask;
+	private ReleasesOverlayFetchTask releasesOverlayTask;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;
 	/** Travelled route overlay. **/
@@ -166,7 +166,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 				   Time curTime = new Time();
 				   curTime.setToNow();
 				   if(curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) { //refresh only releases points
-					   streetParkingReleases.refresh(mOsmv.getMapCenter());
+					   releasesOverlayTask.refresh(mOsmv.getMapCenter());
 					   lastMapUpdateTime.setToNow();
 				   }
 			   }
@@ -179,6 +179,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	public void onCreate(final Bundle savedState) {
 		super.onCreate(savedState);
 		
+		//TODO proper rotation handling while avoiding re-fetch of all overlays
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		/* Get Preferences. */
@@ -237,9 +238,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 		carAlert = new CarAlert(this);
 		
 		//init live marker updaters
-		garages = new LiveGarageMarkers(mOsmv, this);
-		streetSegments = new LiveStreetLinesMarkers(mOsmv, this);
-		streetParkingReleases = new LiveStreetReleasesMarkers(mOsmv, this);
+		overlayTask = new AllOverlayFetchTask(mOsmv, this, this);
+		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this);
 				
 		//Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -339,7 +339,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 	
 	@Override
 	protected void onStart() {
-		RouteMap.this.mLocationOverlay.followLocation(true);
+		//RouteMap.this.mLocationOverlay.followLocation(true);
 		
         if(LoginTask.isLoggedIn()) 
         	loginComplete(LoginTask.getSessionId());
@@ -889,20 +889,15 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			
 		}
 	}
-
-	public void showAllParkings(GeoPoint p) {
-		if(LoginTask.isLoggedIn()) {
-			streetSegments.refresh(p);
-			garages.refresh(p);
-			streetParkingReleases.refresh(p);
-		}
-	}
 	
 	public void showAllParkings() {
+		if(!LoginTask.isLoggedIn())
+			return;
+		
 		Route route = app.getRoute();
 		
 		if(route == null) {
-			showAllParkings(mOsmv.getMapCenter());
+			overlayTask.refresh(mOsmv.getMapCenter());
 		} else {
 			//show parking around destination
 			int index = app.getRoute().getSegments().size()-1;
@@ -912,7 +907,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			if(seg!=null) {
 				List<PGeoPoint> pList = seg.getPoints();
 				GeoPoint p = pList.get(pList.size()-1);
-				showAllParkings(p);
+				overlayTask.refresh(p);
 			}
 		}
 	}
@@ -1006,6 +1001,12 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener, On
 			showAllParkings();
        }
 		return false;
+	}
+
+	@Override
+	public void overlayFetchComplete(Boolean success) {
+		if(success)
+			mOsmv.invalidate(); 
 	}
 	
 }
