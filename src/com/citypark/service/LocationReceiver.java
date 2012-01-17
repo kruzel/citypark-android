@@ -70,7 +70,8 @@ public class LocationReceiver extends BroadcastReceiver {
 			//TODO this code have a bug
 			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
 				float speed = distDiff / 1000f / timediff / 3600000f; //kmph
-				if (speed > 15) { 
+				Toast.makeText(context, "speed="+speed,Toast.LENGTH_SHORT).show();
+				if (speed > 10) { 
 					Toast.makeText(context, "idenrified unpark",Toast.LENGTH_SHORT).show();
 					unpark(context);
 				}

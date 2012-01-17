@@ -54,7 +54,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
-	private static ItemizedParkingOverlay iOverlay;
+	private static ItemizedGaragesOverlay iOverlay;
 
 	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
@@ -83,7 +83,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			}
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedParkingOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveGarageMarkers.this, mv.getResourceProxy());
+			iOverlay = new ItemizedGaragesOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveGarageMarkers.this, mv.getResourceProxy());
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
 		}

@@ -24,13 +24,13 @@ import android.text.TextPaint;
  * @author TQJ764
  *
  */
-public class ItemizedParkingOverlay extends ItemizedIconOverlay<OverlayItem> {
+public class ItemizedGaragesOverlay extends ItemizedIconOverlay<OverlayItem> {
 	private static final int FONT_SIZE = 14;
     private static final int TITLE_MARGIN = 3;
     private int markerHeight;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	
-	public ItemizedParkingOverlay(List<OverlayItem> pList, Drawable pDefaultMarker,
+	public ItemizedGaragesOverlay(List<OverlayItem> pList, Drawable pDefaultMarker,
 			OnItemGestureListener mOnItemGestureListener, ResourceProxy pResourceProxy) {
 		super(pList, pDefaultMarker, mOnItemGestureListener, pResourceProxy);
 		
@@ -40,7 +40,6 @@ public class ItemizedParkingOverlay extends ItemizedIconOverlay<OverlayItem> {
 	@Override
 	public void draw(android.graphics.Canvas canvas, MapView mapView,
             boolean shadow) {
-		// TODO Auto-generated method stub
 		super.draw(canvas, mapView, shadow);
 		
 		// go through all OverlayItems and draw title for each of them
@@ -60,20 +59,22 @@ public class ItemizedParkingOverlay extends ItemizedIconOverlay<OverlayItem> {
 	            Paint paintRect = new Paint();
 	
 	            Rect rect = new Rect();
-	            paintText.setTextSize(FONT_SIZE);
+	            paintText.setTextSize(14.0f);
+	            paintText.setFakeBoldText(true);
 	            paintText.getTextBounds(item.getTitle(), 0, item.getTitle().length(), rect);
 	
-	            rect.inset(-TITLE_MARGIN, -TITLE_MARGIN);
+	            rect.inset(TITLE_MARGIN, TITLE_MARGIN);
 	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight - rect.height()); 
 	
 	            paintText.setTextAlign(Paint.Align.CENTER);
 	            paintText.setTextSize(FONT_SIZE);
-	            paintText.setARGB(255, 255, 255, 255);
-	            paintRect.setARGB(255, 0, 0, 0);
+	            //paintText.setARGB(255, 255, 255, 255);
+	            paintText.setARGB(255, 0, 0, 0);
+	            //paintRect.setARGB(255, 255, 255, 255);
 	
-	            canvas.drawRoundRect( new RectF(rect), 2, 2, paintRect);
+	            //canvas.drawRoundRect( new RectF(rect), 2, 2, paintRect);
 	            canvas.drawText(item.getTitle(), rect.left + rect.width() / 2,
-	                    rect.bottom - TITLE_MARGIN , paintText);
+	                    rect.bottom , paintText);
         	}
         }
 	}
