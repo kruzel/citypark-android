@@ -20,13 +20,13 @@ public class AllOverlayFetchTask {
 	
 	private Boolean res = false;
 
-	public AllOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener) {
+	public AllOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveGarageMarkers garageMarkers) {
 		super();
 		this.listener = listener;
 		
 		lineMarkers = new LiveStreetLinesMarkers(osmv, context);
 		releasesMarkers = new LiveStreetReleasesMarkers(osmv, context);
-		garageMarkers = new LiveGarageMarkers(osmv, context);
+		this.garageMarkers = garageMarkers;
 	}
 	
 	/**

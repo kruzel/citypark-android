@@ -16,13 +16,15 @@ public class ReleasesOverlayFetchTask {
 	
 	private OverlayListener listener;
 	private LiveStreetReleasesMarkers releasesMarkers;
+	private LiveGarageMarkers garageMarkers;
 	private Boolean res = false;
 
-	public ReleasesOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener) {
+	public ReleasesOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveGarageMarkers garageMarkers) {
 		super();
 		this.listener = listener;
 		
 		releasesMarkers = new LiveStreetReleasesMarkers(osmv, context);
+		this.garageMarkers = garageMarkers;
 	}
 
 	public void refresh(final GeoPoint p) {
@@ -50,6 +52,7 @@ public class ReleasesOverlayFetchTask {
 		public void handleMessage(final Message msg) {
 			if(res) {
 				releasesMarkers.updateMap();
+				garageMarkers.updateMap(); //keep garage markers on top
 			}
 				
 			listener.overlayFetchComplete(res);

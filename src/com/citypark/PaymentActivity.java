@@ -173,6 +173,9 @@ public class PaymentActivity extends Activity {
 		        
 		if(!parking_manager.isReminderActive()){
 			//start reminder service
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button_pressed)); 
+			tgBtnRemind.setChecked(true);
+			
 			Intent intent = new Intent(this, TimeLimitAlertListener.class);
 			intent.putExtra(getString(R.string.payment_method), getPaymentMethod());
 	        sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -192,6 +195,9 @@ public class PaymentActivity extends Activity {
             
 		} else {
             // And cancel the alarm.
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button)); 
+			tgBtnRemind.setChecked(false);
+			
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.cancel(sender);
             if(mMediaPlayer!=null){
@@ -282,6 +288,7 @@ public class PaymentActivity extends Activity {
 
 		mMediaPlayer = new MediaPlayer();
 		try {
+			parking_manager.stopReminder();
 			mMediaPlayer.setDataSource(this, alert);
 
 			final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -304,7 +311,6 @@ public class PaymentActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		parking_manager.stopReminder();
 		tgBtnRemind.setChecked(false);
 	}
 	

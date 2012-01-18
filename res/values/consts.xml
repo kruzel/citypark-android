@@ -28,4 +28,5 @@
 <item type="id" name="awaiting_register" />
 <item type="id" name="select_payment_provider" />
 <item type="id" name="awaiting_login"/>
+<item type="id" name="loading_info"/>
 </resources>

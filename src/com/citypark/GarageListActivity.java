@@ -38,7 +38,7 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		showDialog(R.id.awaiting_fix);
+		showDialog(R.id.loading_info);
 		setContentView(R.layout.garage_item_list_view);
 		m_garage = new ArrayList<GarageData>();
 		this.m_adapter = new GarageDataAdapter(this, R.layout.garage_item,
@@ -92,11 +92,11 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
     protected Dialog onCreateDialog(int id) {
     	ProgressDialog pDialog;
         switch(id) {
-        case R.id.awaiting_fix:
+        case R.id.loading_info:
 			pDialog = new ProgressDialog(this);
 			pDialog.setCancelable(true);
 			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pDialog.setMessage(getText(R.string.fix_msg));
+			pDialog.setMessage(getText(R.string.load_msg));
 			pDialog.setOnDismissListener(new OnDismissListener() {
 				@Override
 				public void onDismiss(DialogInterface dialog) {

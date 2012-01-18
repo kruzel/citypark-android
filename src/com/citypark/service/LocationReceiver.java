@@ -26,6 +26,7 @@ public class LocationReceiver extends BroadcastReceiver {
 	//Get application reference
 	private PGeoPoint last = null;
 	private Time lastTime = null;
+	private Time lastUnparkAckRequest = null;
 	private ParkingSessionPersist parking_manager;
 	/** preferences file **/
 	protected SharedPreferences mPrefs = null;
@@ -67,13 +68,16 @@ public class LocationReceiver extends BroadcastReceiver {
 			//TODO if parking and getting close the car report new API - reportEarlyParkingRelease (mark as yellow on map)
 			
 			//if parking and started driving, close session, and free parking in parking_manager (app in background)
-			//TODO this code have a bug
+			//TODO we need to ask not more then once in an hour.
+			//		add soft sound to get attention
+			//		dismiss automatically without changing to unpark (timer of 10 sec)
 			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
-				float speed = distDiff / 1000f / timediff / 3600000f; //kmph
-				Toast.makeText(context, "speed="+speed,Toast.LENGTH_SHORT).show();
+				float speed = distDiff / 1000f / timediff * 3600000f; //kmph
 				if (speed > 10) { 
-					Toast.makeText(context, "idenrified unpark",Toast.LENGTH_SHORT).show();
-					unpark(context);
+					if(lastUnparkAckRequest==null || (curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) { 
+						unpark(context);
+						lastUnparkAckRequest.setToNow();
+					}
 				}
 			}
 		}

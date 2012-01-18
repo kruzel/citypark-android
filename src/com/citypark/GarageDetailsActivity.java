@@ -8,7 +8,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +29,10 @@ import com.citypark.constants.CityParkConsts;
 public class GarageDetailsActivity extends Activity implements GarageDetailsListener {
 	
 	private GarageDetailsFetchTask task;
+	Thread t;
+	
+	/** Dialog display. **/
+	protected Dialog dialog;
 	
 	private int garageId;
 	private TextView garageName;
@@ -47,8 +55,6 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	private TextView allDayWeekend;
 	
 	private TextView couponText;
-		
-	Thread t;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,8 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		
 		if (!LoginTask.isLoggedIn())
 			return;
+		
+		showDialog(R.id.loading_info);
 		
 		garageId = getIntent().getIntExtra(CityParkConsts.GARAGE_ID, 0);
 		if(garageId==0) {
@@ -169,6 +177,9 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	
 		//coupon
 		couponText.setText(garageDetails.getCouponText());
+		
+		if(dialog!=null && dialog.isShowing())
+			dialog.dismiss();
 	}
 
 	private Drawable ImageOperations(Context ctx, String url, String saveFilename) {
@@ -192,4 +203,25 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		return content;
 	}
 
+    protected Dialog onCreateDialog(int id) {
+    	ProgressDialog pDialog;
+        switch(id) {
+        case R.id.loading_info:
+			pDialog = new ProgressDialog(this);
+			pDialog.setCancelable(true);
+			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pDialog.setMessage(getText(R.string.load_msg));
+			pDialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					dialog.dismiss();
+				}
+			});
+			dialog = pDialog;
+			break;
+		default:
+            dialog = null;
+        }
+        return dialog;
+    }
 }

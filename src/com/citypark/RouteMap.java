@@ -102,6 +102,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	/** markers overlay handler task. */
 	private AllOverlayFetchTask overlayTask;
 	private ReleasesOverlayFetchTask releasesOverlayTask;
+	private LiveGarageMarkers garageMarkers;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;
 	/** Travelled route overlay. **/
@@ -160,7 +161,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		public void run() {
 			if (lastAllOverlaysUpdateCenter != null
 					&& lastAllOverlaysUpdateCenter.distanceTo(mOsmv
-							.getMapCenter()) > 100) {
+							.getMapCenter()) > 250) {
 				showAllParkings();
 				lastAllOverlaysUpdateTime.setToNow();
 				lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
@@ -177,6 +178,13 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			}
 
 			mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+		}
+	};
+	
+	private Runnable mUnparkDialogTimer = new Runnable() {
+		public void run() {
+			if(dialog!=null && dialog.isShowing())
+				dialog.dismiss();
 		}
 	};
 
@@ -244,8 +252,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		carAlert = new CarAlert(this);
 
 		// init live marker updaters
-		overlayTask = new AllOverlayFetchTask(mOsmv, this, this);
-		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this);
+		garageMarkers = new LiveGarageMarkers(mOsmv, this);
+		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers);
+		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this, garageMarkers);
 
 		// Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -361,9 +370,12 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	@Override
 	protected void onStart() {
 		// RouteMap.this.mLocationOverlay.followLocation(true);
+		
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		if (LoginTask.isLoggedIn())
+		if (LoginTask.isLoggedIn()) {
 			loginComplete(LoginTask.getSessionId());
+		}
 		else {
 			if (LoginTask.isRegistered()) {
 				LoginTask.login(this);
@@ -377,11 +389,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	@Override
 	public void loginComplete(String sessionId) {
-		showAllParkings();
-		app.doBindService();
-
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
+		
+		showAllParkings();
+		app.doBindService();
 	}
 
 	@Override
@@ -451,6 +463,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 								}
 							});
 			dialog = builder.create();
+			mHandler.postDelayed(mUnparkDialogTimer, 10000);
 			break;
 		case R.id.park:
 			builder = new AlertDialog.Builder(this);
@@ -499,6 +512,19 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			pDialog.setCancelable(true);
 			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			pDialog.setMessage(getText(R.string.awaiting_login));
+			pDialog.setOnDismissListener(new OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface arg0) {
+					RouteMap.this.removeDialog(R.id.awaiting_login);
+				}
+			});
+			dialog = pDialog;
+			break;
+		case R.id.loading_info:
+			pDialog = new ProgressDialog(this);
+			pDialog.setCancelable(true);
+			pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			pDialog.setMessage(getText(R.string.load_msg));
 			pDialog.setOnDismissListener(new OnDismissListener() {
 				@Override
 				public void onDismiss(DialogInterface arg0) {
@@ -960,6 +986,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		Route route = app.getRoute();
 
 		if (route == null) {
+			showDialog(R.id.loading_info);
 			overlayTask.refresh(mOsmv.getMapCenter());
 		} else {
 			// show parking around destination
@@ -970,6 +997,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			if (seg != null) {
 				List<PGeoPoint> pList = seg.getPoints();
 				GeoPoint p = pList.get(pList.size() - 1);
+				showDialog(R.id.loading_info);
 				overlayTask.refresh(p);
 			}
 		}
@@ -1081,6 +1109,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	public void overlayFetchComplete(Boolean success) {
 		if (success)
 			mOsmv.invalidate();
+		
+		if(dialog!=null && dialog.isShowing())
+			dialog.dismiss();
 	}
 
 }

@@ -151,7 +151,7 @@ public class ParkingSessionPersist {
 
 	public final void stopReminder() {
 		editor.remove(ALARM_TIME);
-		editor.commit();
+		Boolean res = editor.commit();
 	}
 
 	/**
