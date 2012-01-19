@@ -92,12 +92,15 @@ public class RouteManager {
 		try {
 			country = geocoder.getFromLocation(Convert.asDegrees(dest.getLatitudeE6()),Convert.asDegrees(dest.getLongitudeE6()), 1).get(0).getCountryCode();
 			route = plan(start, dest);
-			route.setCountry(country);
-			if (RouteManager.this.route.getPoints().isEmpty()) {
-				throw new PlanException("Route is empty.");
-			}
-			//Build KD tree for the route
-			route.buildTree();
+			if(route != null) {
+				route.setCountry(country);
+				if (RouteManager.this.route.getPoints().isEmpty()) {
+					throw new PlanException("Route is empty.");
+				}
+				//Build KD tree for the route
+				route.buildTree();
+			} else
+				return R.id.plan_fail;
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "Planner");
 			return R.id.plan_fail;

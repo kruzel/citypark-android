@@ -62,7 +62,7 @@ public class XMLParser {
 		}
 	}
 
-	protected InputStream getInputStream() {
+	protected InputStream getInputStream() throws IOException {
 		try {
 			HttpUriRequest request = new HttpGet(feedUrl.toString());
 			request.addHeader("Accept-Encoding", "gzip");
@@ -94,7 +94,7 @@ public class XMLParser {
 			return instream;
 		} catch (IOException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);
-			return null;
+			throw e;
 		}
 	}
 }

@@ -59,7 +59,12 @@ public class GoogleElevationParser extends XMLParser implements Parser {
 	@Override
 	public Route parse() {
 		// turn the stream into a string
-		final String result = convertStreamToString(this.getInputStream());
+		final String result;
+		try {
+			result = convertStreamToString(this.getInputStream());
+		} catch (IOException e) {
+			return null;
+		}
 		try {
 			//Tranform the string into a json object
 			final JSONObject json = new JSONObject(result);

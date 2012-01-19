@@ -73,7 +73,12 @@ public class MapQuestParser extends XMLParser implements Parser {
 	@Override
 	public Route parse() {
 		// turn the stream into a string
-		final String result = convertStreamToString(this.getInputStream());
+		final String result;
+		try {
+			result = convertStreamToString(this.getInputStream());
+		} catch (IOException e) {
+			return null;
+		}
 		//Create an empty route
 		final Route route = new Route();
 		route.setRouter(CityParkConsts.MQ);
