@@ -373,7 +373,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		if (LoginTask.isLoggedIn()) {
-			loginComplete(LoginTask.getSessionId());
+			if(lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)
+				showAllParkings();
 		}
 		else {
 			if (LoginTask.isRegistered()) {
