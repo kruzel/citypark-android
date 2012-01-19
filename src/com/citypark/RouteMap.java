@@ -1,6 +1,7 @@
 package com.citypark;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -28,6 +29,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,9 +52,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.citypark.api.task.AllOverlayFetchTask;
 import com.citypark.api.task.LoginListener;
 import com.citypark.api.task.LoginTask;
-import com.citypark.api.task.AllOverlayFetchTask;
 import com.citypark.api.task.OverlayListener;
 import com.citypark.api.task.ReleasesOverlayFetchTask;
 import com.citypark.api.task.ReportParkingReleaseTask;
@@ -66,8 +70,6 @@ import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
 import com.citypark.view.overlay.LiveGarageMarkers;
-import com.citypark.view.overlay.LiveStreetLinesMarkers;
-import com.citypark.view.overlay.LiveStreetReleasesMarkers;
 import com.citypark.view.overlay.RouteOverlay;
 
 /**
@@ -154,6 +156,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	private GeoPoint lastAllOverlaysUpdateCenter = null;
 	private Time lastAllOverlaysUpdateTime = new Time();
 	private int lastZoomLevel = 0;
+	
+	private MediaPlayer mMediaPlayer;
 
 	// map overlays handler
 	private Handler mHandler = new Handler();
@@ -287,6 +291,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		if (intent.getBooleanExtra(getString(R.string.unpark), false)) {
+			alarmRing();
 			showDialog(R.id.unpark);
 		}
 		// check if got back from PaymentActivity
@@ -337,6 +342,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 		// check if awaken by location receiver
 		if (getIntent().getBooleanExtra(getString(R.string.unpark), false)) {
+			alarmRing();
 			showDialog(R.id.unpark);
 		}
 		// check if got back from PaymentActivity
@@ -345,10 +351,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 					&& !parking_manager.isReminderActive()) {
 				unparkCompletion();
 			}
-		}
-
-		if (getIntent().getBooleanExtra(getString(R.string.unpark), false)) {
-			showDialog(R.id.unpark);
 		}
 	}
 
@@ -373,8 +375,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		if (LoginTask.isLoggedIn()) {
-			if(lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)
+			if(lastAllOverlaysUpdateCenter==null || (lastAllOverlaysUpdateCenter!=null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)) {
+				showDialog(R.id.loading_info);
 				showAllParkings();
+			}
 		}
 		else {
 			if (LoginTask.isRegistered()) {
@@ -392,6 +396,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 		
+		showDialog(R.id.loading_info);
 		showAllParkings();
 		app.doBindService();
 	}
@@ -989,7 +994,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		Route route = app.getRoute();
 
 		if (route == null) {
-			showDialog(R.id.loading_info);
 			overlayTask.refresh(mOsmv.getMapCenter());
 		} else {
 			// show parking around destination
@@ -1000,7 +1004,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			if (seg != null) {
 				List<PGeoPoint> pList = seg.getPoints();
 				GeoPoint p = pList.get(pList.size() - 1);
-				showDialog(R.id.loading_info);
 				overlayTask.refresh(p);
 			}
 		}
@@ -1119,6 +1122,49 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		
 		if(dialog!=null && dialog.isShowing())
 			dialog.dismiss();
+	}
+	
+	private void alarmRing() {
+		// send off alarm sound
+		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		if (alert == null) {
+			// alert is null, using backup
+			alert = RingtoneManager
+					.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			if (alert == null) { // I can't see this ever being null (as always
+									// have a default notification) but just in
+									// case
+				// alert backup is null, using 2nd backup
+				alert = RingtoneManager
+						.getDefaultUri(RingtoneManager.TYPE_ALARM);
+			}
+		}
+
+		mMediaPlayer = new MediaPlayer();
+		try {
+			parking_manager.stopReminder();
+			mMediaPlayer.setDataSource(this, alert);
+
+			final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+				mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+				mMediaPlayer.prepare();
+				mMediaPlayer.start();
+			}
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

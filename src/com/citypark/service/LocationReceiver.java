@@ -74,7 +74,11 @@ public class LocationReceiver extends BroadcastReceiver {
 			if (parking_manager.isParking() && last!=null && lastTime!=null && timediff>0) {
 				float speed = distDiff / 1000f / timediff * 3600000f; //kmph
 				if (speed > 10) { 
-					if(lastUnparkAckRequest==null || (curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) { 
+					if(lastUnparkAckRequest==null) { 
+						unpark(context);
+						lastUnparkAckRequest = new Time();
+						lastUnparkAckRequest.setToNow();
+					} else if ((curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) {
 						unpark(context);
 						lastUnparkAckRequest.setToNow();
 					}

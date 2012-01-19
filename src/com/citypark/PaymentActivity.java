@@ -173,8 +173,7 @@ public class PaymentActivity extends Activity {
 		        
 		if(!parking_manager.isReminderActive()){
 			//start reminder service
-			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button_pressed)); 
-			tgBtnRemind.setChecked(true);
+			//tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button_pressed)); 
 			
 			Intent intent = new Intent(this, TimeLimitAlertListener.class);
 			intent.putExtra(getString(R.string.payment_method), getPaymentMethod());
@@ -195,8 +194,7 @@ public class PaymentActivity extends Activity {
             
 		} else {
             // And cancel the alarm.
-			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button)); 
-			tgBtnRemind.setChecked(false);
+			//tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button)); 
 			
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.cancel(sender);
@@ -272,17 +270,17 @@ public class PaymentActivity extends Activity {
 	
 	private void alarmRing() {
 		// send off alarm sound
-		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		if (alert == null) {
 			// alert is null, using backup
 			alert = RingtoneManager
-					.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+					.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
 			if (alert == null) { // I can't see this ever being null (as always
 									// have a default notification) but just in
 									// case
 				// alert backup is null, using 2nd backup
 				alert = RingtoneManager
-						.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+						.getDefaultUri(RingtoneManager.TYPE_ALARM);
 			}
 		}
 
