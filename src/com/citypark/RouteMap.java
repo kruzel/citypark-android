@@ -153,27 +153,25 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	// map all overlays update handler
 	private GeoPoint lastAllOverlaysUpdateCenter = null;
 	private Time lastAllOverlaysUpdateTime = new Time();
+	private int lastZoomLevel = 0;
 
 	// map overlays handler
 	private Handler mHandler = new Handler();
 	// map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
-			if (lastAllOverlaysUpdateCenter != null
-					&& lastAllOverlaysUpdateCenter.distanceTo(mOsmv
-							.getMapCenter()) > 250) {
+			if ((lastAllOverlaysUpdateCenter != null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250) ||
+					(mOsmv.getZoomLevel() > lastZoomLevel) && mOsmv.getZoomLevel() ==15) {
 				showAllParkings();
-				lastAllOverlaysUpdateTime.setToNow();
-				lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 			} else {
 				Time curTime = new Time();
 				curTime.setToNow();
-				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) { // refresh
-																																// only
-																																// releases
-																																// points
-					releasesOverlayTask.refresh(mOsmv.getMapCenter());
-					lastMapUpdateTime.setToNow();
+				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) { 
+					// refresh only releases points
+					if(mOsmv.getZoomLevel()>=15) {
+						releasesOverlayTask.refresh(mOsmv.getMapCenter());
+						lastMapUpdateTime.setToNow();
+					}
 				}
 			}
 
@@ -331,6 +329,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		mHandler.postDelayed(mUpdateOverlaysTask,
 				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
+		lastZoomLevel = mOsmv.getZoomLevel();
 
 		mOsmv.setOnTouchListener(this);
 
@@ -982,6 +981,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	public void showAllParkings() {
 		if (!LoginTask.isLoggedIn())
 			return;
+		
+		if(mOsmv.getZoomLevel()<15)
+			return;
 
 		Route route = app.getRoute();
 
@@ -1001,6 +1003,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 				overlayTask.refresh(p);
 			}
 		}
+		
+		lastAllOverlaysUpdateTime.setToNow();
+		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
+		lastZoomLevel = mOsmv.getZoomLevel();
 	}
 
 	public void stopNavigation() {
