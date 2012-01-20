@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" android:background="@drawable/background">
+    android:orientation="vertical" android:background="#FFFFFF">
     
     <ImageView
 	    android:id="@+id/imageViewLogo"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" >
+            android:layout_marginRight="10dp" android:layout_marginTop="10dp">
         </EditText>
 
     </LinearLayout>
@@ -87,25 +87,20 @@
 
     <ToggleButton
         android:id="@+id/toggleButtonPay"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="ToggleButton" android:layout_gravity="center_horizontal" android:textOn="@string/stop_payment" android:textOff="@string/start_payment" android:layout_marginTop="10dp" android:onClick="OnPay"/>
-
-    <ProgressBar
-        android:id="@+id/progressBarPay"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginTop="5dp"/>
+        android:layout_height="50dp"
+        android:text="ToggleButton" android:layout_gravity="center_horizontal" android:textOn="@string/stop_payment" android:textOff="@string/start_payment" android:layout_marginTop="10dp" android:onClick="OnPay" android:textSize="20dp" android:background="@drawable/button_normal" android:textColor="#D64700" android:textStyle="bold"/>
 
     <TimePicker
         android:id="@+id/timePickerEnd"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_marginTop="10dp" android:layout_gravity="bottom|center_horizontal" android:layout_marginBottom="10dp"/>
+        android:layout_height="wrap_content" android:layout_marginTop="20dp" android:layout_gravity="bottom|center_horizontal" android:layout_marginBottom="10dp" android:background="@drawable/button_normal"/>
 
     <ToggleButton
         android:id="@+id/toggleButtonRemind"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="bottom|center_horizontal" 
-        android:layout_marginTop="20dp" android:text="@string/reminder_button" android:textOff="@string/reminder_button" android:textOn="@string/reminder_button" android:onClick="OnRemind" android:layout_marginBottom="10dp" android:duplicateParentState="false" android:hapticFeedbackEnabled="false"/>
+        android:layout_marginTop="10dp" android:text="@string/reminder_button" android:textOff="@string/reminder_button" android:textOn="@string/reminder_button" android:onClick="OnRemind" android:layout_marginBottom="10dp" android:duplicateParentState="false" android:hapticFeedbackEnabled="false" android:checked="true" android:background="@drawable/button_normal" android:textSize="20dp" android:textColor="#D64700" android:textStyle="bold"/>
 
 </LinearLayout>

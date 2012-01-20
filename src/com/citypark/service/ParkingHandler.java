@@ -105,7 +105,7 @@ public class ParkingHandler {
 				if(curDistFromCar<40 && (lastDistFromCar-curDistFromCar)>20) { //approaching car, by foot
 					approachedCar = true;
 					
-					Toast.makeText(context, "approaching car...", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(context, "approaching car...", Toast.LENGTH_SHORT).show();
 					
 					//TODO if parking approaching the car report new API - reportPotentialParkingRelease (mark as yellow on map)
 				}

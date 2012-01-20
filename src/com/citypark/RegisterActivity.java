@@ -35,6 +35,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 	private String strPaymentMethod = "None";
 	private Button btnPaymentMethod = null;
 	private EditText txtPhoneNumber = null;
+	private Button btnRegister = null;
 	
 	/** Dialog display. **/
 	protected Dialog dialog;
@@ -56,6 +57,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         txtLicensePlate = (EditText) findViewById(R.id.id_licenseplate);
         btnPaymentMethod = (Button) findViewById(R.id.id_payment_method);
         txtPhoneNumber = (EditText) findViewById(R.id.id_phone_number);
+        btnRegister = (Button) findViewById(R.id.id_register);
         
         txtEmail.setText(mPrefs.getString("email", null));
         txtPassword.setText(mPrefs.getString("password", null));
@@ -73,6 +75,8 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     } 
    
     public void onRegister(View view) {
+    	btnRegister.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_pressed));
+    	
     	showDialog(R.id.awaiting_register);
     	
     	if(txtEmail.getText().length() == 0 || txtPassword.getText().length() == 0) {
@@ -97,6 +101,8 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         		txtPassword.getText().toString(), txtFirstName.getText().toString(), 
         		txtLastName.getText().toString(), txtPhoneNumber.getText().toString(), txtLicensePlate.getText().toString(), strPaymentMethod);
         regTask.execute((Void[])null);
+        
+        btnRegister.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal));
     }
     
     public void OnPaymenMethodClick(View view) {

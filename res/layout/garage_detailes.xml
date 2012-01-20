@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
-    android:background="@drawable/background">
+    android:background="#FFFFFF">
 
 		    <ImageView
 	        android:id="@+id/imageViewLogo"
@@ -15,6 +15,9 @@
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+    	android:layout_marginRight="5dp"
+    	android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -29,21 +32,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewPaymentMethod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
@@ -110,7 +113,9 @@
     <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="5dp"
+    	android:layout_marginRight="5dp">
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -123,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:text="             "
                 android:textAppearance="?android:attr/textAppearanceLarge" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -131,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:text="Sun-Thu"
                 android:textAppearance="?android:attr/textAppearanceLarge" android:layout_gravity="center_horizontal"
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -139,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:text="Fri-Sat"
                 android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="10dp" android:layout_gravity="center_horizontal"
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
         </TableRow>
 
@@ -154,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:text="First Hour"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewFirstHourMidWeek"
@@ -162,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewFirstHourWeekend"
@@ -170,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
         </TableRow>
 
@@ -185,7 +190,7 @@
                 android:layout_height="wrap_content"
                 android:text="Extra Quater"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewExtraQuaterMidWeek"
@@ -193,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewExtraQuaterWeekend"
@@ -201,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
         </TableRow>
 
@@ -223,7 +228,7 @@
                 android:layout_height="wrap_content"
                 android:text="All Day"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewAllDayMidWeek"
@@ -231,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
             <TextView
                 android:id="@+id/textViewAllDayWeekend"
@@ -239,7 +244,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#000000" />
+                android:textColor="#D64700" />
 
         </TableRow>
     </TableLayout>
@@ -254,8 +259,10 @@
         android:id="@+id/textViewCouponText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+    	android:layout_marginRight="5dp"
         android:text="Cupons"
         android:textAppearance="?android:attr/textAppearanceMedium" 
-        android:textColor="#000000" />
+        android:textColor="#D64700" />
 
 </LinearLayout>

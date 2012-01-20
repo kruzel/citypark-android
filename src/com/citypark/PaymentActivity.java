@@ -45,7 +45,8 @@ public class PaymentActivity extends Activity {
 	/** controls **/
 	private ToggleButton tgBtnPay = null;
 	private ToggleButton tgBtnRemind = null;
-	private ProgressBar progBarPayment = null;
+	//TODO replace with a progress dialog
+	//private ProgressBar progBarPayment = null;
 	private StartPaymentTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
@@ -70,7 +71,7 @@ public class PaymentActivity extends Activity {
 		timePicker = (TimePicker) findViewById(R.id.timePickerEnd);
 		
 		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
-		progBarPayment = (ProgressBar) findViewById(R.id.progressBarPay);
+		//progBarPayment = (ProgressBar) findViewById(R.id.progressBarPay);
 		myLicensePlate = (EditText) findViewById(R.id.editTextLicnsePlate);
 		parkingCity = (EditText) findViewById(R.id.editTextCity);
 		parkingZone = (EditText) findViewById(R.id.editTextParkingZone);
@@ -85,7 +86,7 @@ public class PaymentActivity extends Activity {
 			mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
 	   	 	myLicensePlate.setText(mPrefs.getString("license_plate", null));
 	   	 	
-			progBarPayment.setVisibility(View.INVISIBLE);
+			//progBarPayment.setVisibility(View.INVISIBLE);
 			tgBtnPay.setChecked(parking_manager.isPaymentActive());
 					
 	   	 	//initiate city fetching via GeoLocator 
@@ -130,7 +131,7 @@ public class PaymentActivity extends Activity {
 		} else { 
 			//hide all payment views
 			tgBtnPay.setVisibility(View.INVISIBLE);
-			progBarPayment.setVisibility(View.INVISIBLE);
+			//progBarPayment.setVisibility(View.INVISIBLE);
 			myLicensePlate.setVisibility(View.INVISIBLE);
 			parkingCity.setVisibility(View.INVISIBLE);
 			parkingZone.setVisibility(View.INVISIBLE);
@@ -162,10 +163,10 @@ public class PaymentActivity extends Activity {
 	public void OnPay(View view) {   	
 		if(parking_manager.isPaymentActive()){
 			Toast.makeText(this, R.string.payment_progress , Toast.LENGTH_SHORT).show();
-			progBarPayment.setVisibility(View.VISIBLE);
+			//progBarPayment.setVisibility(View.VISIBLE);
 		} else {
 			Toast.makeText(this, R.string.payment_progress , Toast.LENGTH_SHORT).show();
-			progBarPayment.setVisibility(View.VISIBLE);
+			//progBarPayment.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -173,7 +174,7 @@ public class PaymentActivity extends Activity {
 		        
 		if(!parking_manager.isReminderActive()){
 			//start reminder service
-			//tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button_pressed)); 
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_pressed)); 
 			
 			Intent intent = new Intent(this, TimeLimitAlertListener.class);
 			intent.putExtra(getString(R.string.payment_method), getPaymentMethod());
@@ -194,7 +195,7 @@ public class PaymentActivity extends Activity {
             
 		} else {
             // And cancel the alarm.
-			//tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.reminder_button)); 
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal)); 
 			
             AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
             am.cancel(sender);
@@ -211,7 +212,7 @@ public class PaymentActivity extends Activity {
 
 	public void PaymentComplete(Boolean success) {
 		
-		progBarPayment.setVisibility(View.INVISIBLE);
+		//progBarPayment.setVisibility(View.INVISIBLE);
 		
 		if(parking_manager.isPaymentActive()) {
 			 if(success){
