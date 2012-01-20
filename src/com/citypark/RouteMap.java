@@ -63,7 +63,7 @@ import com.citypark.constants.CityParkConsts;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.CarAlert;
 import com.citypark.utility.Convert;
-import com.citypark.utility.ParkingSessionPersist;
+import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.TurnByTurnGestureListener;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.utility.route.PGeoPoint;
@@ -116,7 +116,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	protected boolean isSearching = false;
 
 	/** ParkingSessionPersist manager. */
-	protected ParkingSessionPersist parking_manager;
+	protected ParkingSessionManager parking_manager;
 
 	/** Bike alert manager. **/
 	private CarAlert carAlert;
@@ -187,6 +187,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		public void run() {
 			if(dialog!=null && dialog.isShowing())
 				dialog.dismiss();
+			
+			//default assume user is parking
+			unpark();
 		}
 	};
 
@@ -248,7 +251,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		mOsmv.getController().setZoom(app.getZoom());
 
 		// Initialize parking manager
-		parking_manager = new ParkingSessionPersist(this);
+		parking_manager = new ParkingSessionManager(this);
 
 		// Initialize car alert manager
 		carAlert = new CarAlert(this);
@@ -468,7 +471,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 								}
 							});
 			dialog = builder.create();
-			mHandler.postDelayed(mUnparkDialogTimer, 10000);
+			mHandler.postDelayed(mUnparkDialogTimer, 30000);
 			break;
 		case R.id.park:
 			builder = new AlertDialog.Builder(this);
@@ -492,6 +495,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 										int id) {
 									dialog.cancel();
 									if (finishOnPark) {
+										app.finishAllAppObjecs(); // terminate app
 										setResult(1);
 										finish();
 									}
@@ -1024,16 +1028,14 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	public void checkParkAndFinish(final Boolean finish, final int result) {
 		// open dialog and ask user if he really un-parked
-		if (!parking_manager.isParking() && !parking_manager.isPaymentActive()
-				&& !parking_manager.isReminderActive()) {
-			app.finishAllAppObjecs(); // terminate app
-			setResult(1);
-			finish();
-		} else if (parking_manager.isParking()
-				|| parking_manager.isPaymentActive()) {
+		if (parking_manager.isParking()
+			|| parking_manager.isPaymentActive() 
+			|| parking_manager.isReminderActive()) {
+			//keep location tracking on for unpark detection
 			setResult(1);
 			finish();
 		} else {
+			//check with user if really parked
 			finishOnPark = finish;
 			showDialog(R.id.park);
 		}
@@ -1071,6 +1073,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 				intent = new Intent(this, PaymentCelOParkActivity.class);
 				startActivityForResult(intent, R.id.payment);
 			} else {
+				unparkCompletion();
 				intent = new Intent(this, PaymentActivity.class);
 				startActivityForResult(intent, R.id.payment);
 				Toast.makeText(this, "Undefined payment provider...",

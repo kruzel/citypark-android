@@ -34,7 +34,7 @@ import com.citypark.api.task.StartPaymentTask;
 import com.citypark.api.task.StopPaymentTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.TimeLimitAlertListener;
-import com.citypark.utility.ParkingSessionPersist;
+import com.citypark.utility.ParkingSessionManager;
 
 public class PaymentActivity extends Activity {
 	
@@ -50,7 +50,7 @@ public class PaymentActivity extends Activity {
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
 	/** ParkingSessionPersist manager. */
-	protected ParkingSessionPersist parking_manager = null;
+	protected ParkingSessionManager parking_manager = null;
 	/** preferences file **/
 	protected SharedPreferences mPrefs;
 	private PendingIntent sender;	
@@ -64,7 +64,7 @@ public class PaymentActivity extends Activity {
 		setContentView(R.layout.pay);
 		
 		// Initialize parking manager
-		parking_manager = new ParkingSessionPersist(this);
+		parking_manager = new ParkingSessionManager(this);
 		
 		tgBtnRemind = (ToggleButton) findViewById(R.id.toggleButtonRemind);
 		timePicker = (TimePicker) findViewById(R.id.timePickerEnd);

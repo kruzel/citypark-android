@@ -26,7 +26,7 @@ import com.citypark.adapter.FindPlaceAdapter;
 import com.citypark.api.task.RouteListener;
 import com.citypark.service.RoutePlannerTask;
 import com.citypark.utility.AddressDatabase;
-import com.citypark.utility.ParkingSessionPersist;
+import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.StringAddress;
 import com.citypark.utility.contacts.AbstractContactAccessor;
 import com.citypark.utility.dialog.DialogFactory;
@@ -67,7 +67,7 @@ public class Navigate extends Activity implements RouteListener {
 	private transient AutoCompleteTextView endAddressField;
 
 	/** ParkingSessionPersist manager. */
-	private ParkingSessionPersist prk;
+	private ParkingSessionManager prk;
 	
 	/** Address db. **/
 	private AddressDatabase db;
@@ -108,7 +108,7 @@ public class Navigate extends Activity implements RouteListener {
 		db = app.getDb();
 		
 		//ParkingSessionPersist manager
-		prk = new ParkingSessionPersist(this);
+		prk = new ParkingSessionManager(this);
 		
 		//Initialise fields
 		startAddressField = (AutoCompleteTextView) findViewById(R.id.start_address_input);

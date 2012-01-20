@@ -16,7 +16,7 @@ import com.citypark.CityParkApp;
 import com.citypark.api.parser.CityParkStreetLinesParser;
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.ParkingSessionPersist;
+import com.citypark.utility.ParkingSessionManager;
 
 public class LiveStreetLinesMarkers {
 	private final Context context;

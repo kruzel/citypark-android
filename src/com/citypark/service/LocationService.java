@@ -65,6 +65,9 @@ public class LocationService extends Service implements LocationListener {
 	/** Intent for callbacks from notifier. **/
 	private PendingIntent contentIntent;
 	
+	/** Receiver for navigation updates. **/
+	private ParkingHandler mLocationReceiver;
+	
 	 /**
      * Class for clients to access.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with
@@ -90,6 +93,7 @@ public class LocationService extends Service implements LocationListener {
         /* Get location manager. */
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         app = (CityParkApp) getApplication();
+        mLocationReceiver = new ParkingHandler(app);
         int icon = R.drawable.logo;
         CharSequence tickerText = "";
         long when = System.currentTimeMillis();
@@ -170,9 +174,9 @@ public class LocationService extends Service implements LocationListener {
     	} else {
 //    		stopSelf();
 //    		shutdown();
-    		update.putExtra(getString(R.string.point), (Parcelable)self);
-    		sendBroadcast(update);
     	}
+    	
+    	mLocationReceiver.run(app,self);
 	}
     
     private void shutdown() {

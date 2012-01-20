@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.citypark" android:versionCode="24" android:versionName="Alpha 24">
+    package="com.citypark" android:versionCode="26" android:versionName="Alpha 26">
     
     <uses-sdk android:minSdkVersion="7" />
 

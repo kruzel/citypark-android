@@ -35,7 +35,7 @@ import com.citypark.constants.CityParkConsts;
  * 
  */
 
-public class ParkingSessionPersist {
+public class ParkingSessionManager {
 		
 	/** Preference name. **/
 	public static final String PREFS_NAME = "bikepark_location";
@@ -53,7 +53,9 @@ public class ParkingSessionPersist {
 	/** Preferences mEditor. **/
 	private final SharedPreferences.Editor editor;
 
-	public ParkingSessionPersist(final Context context) {
+	private Boolean approachedCar = false;
+	
+	public ParkingSessionManager(final Context context) {
 		settings = context.getSharedPreferences(PREFS_NAME, 0);
 		editor = settings.edit();
 	}
@@ -163,4 +165,14 @@ public class ParkingSessionPersist {
 	public final boolean isReminderActive() {
 		return settings.contains(ALARM_TIME);
 	}
+
+	public Boolean getApproachedCar() {
+		return approachedCar;
+	}
+
+	public void setApproachedCar(Boolean approachedCar) {
+		this.approachedCar = approachedCar;
+	}
+	
+	
 }

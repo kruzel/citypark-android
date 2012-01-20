@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 
 import com.citypark.api.task.LoginTask;
 import com.citypark.api.task.RouteListener;
-import com.citypark.utility.ParkingSessionPersist;
+import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.RouteManager;
 import com.citypark.utility.route.RouteManager.GeocodeConnectException;
@@ -114,7 +114,7 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
         			}
         			break;
         		case BIKE_PLAN:
-        			final ParkingSessionPersist prk = new ParkingSessionPersist(mAct.getContext());
+        			final ParkingSessionManager prk = new ParkingSessionManager(mAct.getContext());
         			if ("".equals(startAddressInput)) {
         				msg = R.id.argerror;
         			} else {

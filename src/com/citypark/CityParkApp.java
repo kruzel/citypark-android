@@ -16,7 +16,7 @@ import android.os.IBinder;
 
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.LocationReceiver;
+import com.citypark.service.ParkingHandler;
 import com.citypark.service.LocationService;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.RouteDatabase;
@@ -72,8 +72,8 @@ public class CityParkApp extends Application {
 	/** Navigation service. **/
 	private LocationService mBoundService;
 	
-	/** Receiver for navigation updates. **/
-	private LocationReceiver mLocationReceiver = null;
+//	/** Receiver for navigation updates. **/
+//	private ParkingHandler mLocationReceiver = null;
 	
 	/** Connection to location service. **/
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -118,10 +118,10 @@ public class CityParkApp extends Application {
 	
 	public void finishAllAppObjecs(){
 		doUnbindService();
-		if(mLocationReceiver!=null){
-		    unregisterReceiver(mLocationReceiver);
-		    mLocationReceiver = null;
-		}
+//		if(mLocationReceiver!=null){
+//		    unregisterReceiver(mLocationReceiver);
+//		    mLocationReceiver = null;
+//		}
 	}
 	
 	/**
@@ -130,11 +130,11 @@ public class CityParkApp extends Application {
 	 */
 	
 	public void doBindService() {
-		if (mLocationReceiver == null) {
-			mLocationReceiver = new LocationReceiver(this);
-			registerReceiver(mLocationReceiver, new IntentFilter(
-					getString(R.string.navigation_intent)));
-		}
+//		if (mLocationReceiver == null) {
+//			mLocationReceiver = new ParkingHandler(this);
+//			registerReceiver(mLocationReceiver, new IntentFilter(
+//					getString(R.string.navigation_intent)));
+//		}
 		
 		if (!mIsBound) {
 			bindService(new Intent(CityParkApp.this, LocationService.class), mConnection, Context.BIND_AUTO_CREATE);

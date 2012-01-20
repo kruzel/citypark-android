@@ -107,7 +107,7 @@ public final class ParkingOverlayHandler {
 				
 				OverlayItem marker;
 				if (garagePoint.getPrice()>0)
-					marker = new OverlayItem(mAct.getResources().getString(R.string.currency) + Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString(), garagePoint.getPGeoPoint());
+					marker = new OverlayItem(Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString(), garagePoint.getPGeoPoint()); //mAct.getResources().getString(R.string.currency) +
 				else
 					marker = new OverlayItem("", garagePoint.getIdString(), garagePoint.getPGeoPoint());
 				marker.setMarker(markerIcon);
