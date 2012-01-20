@@ -28,6 +28,8 @@ public class ParkingHandler {
 	//Get application reference
 	private PGeoPoint lastPos = null;
 	private Time lastTime = null;
+	private PGeoPoint lastSpeedPos = null;
+	private Time lastSpeedTime = null;
 	private Time lastUnparkAckRequest = null;
 	private int lastDistFromCar = 0;
 	private Boolean approachedCar = false;
@@ -55,6 +57,8 @@ public class ParkingHandler {
 		if(lastPos==null || lastTime==null) {
 			lastPos = curPos;
 			lastTime = curTime;
+			lastSpeedPos = curPos;
+			lastSpeedTime = curTime;
 		}
 		
 		//update citypark server on location
@@ -66,58 +70,64 @@ public class ParkingHandler {
 
 			distDiff = lastPos.distanceTo(curPos);
 			timediff = curTime.toMillis(true) - lastTime.toMillis(true);
-			if(lastTime != curTime)
+			
+			if(curPos.distanceTo(lastSpeedPos)>40 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) {
 				speed = distDiff / 1000f / timediff * 3600000f; //kmph
-				
-			if ((distDiff > 20.0) || (timediff > 30000)) { // position update report
-					locTask = new ReportLocationTask(context, LoginTask.getSessionId(), curPos.getLatitudeE6()/1E6, curPos.getLongitudeE6()/1E6);
-					locTask.execute();
-			} 
+				lastSpeedPos = curPos;
+				lastSpeedTime = curTime;
+			}		
 			
-			//TODO if not parking and speed is < 10 for 5 min, ask user if he is parking - consider false positive
+			if(parking_manager.isParking()){ 
+				//if parking and started driving, close session, and free parking in parking_manager (app in background)
+				if (speed > 15) { 
+						Toast.makeText(context, "identified unpark via speed", Toast.LENGTH_SHORT).show();
 						
-			//handle car approach
-			if(parking_manager.isParking() && curDistFromCar<40 && (lastDistFromCar-curDistFromCar)>20) { //approaching car, by foot
-				approachedCar = true;
-				
-				Toast.makeText(context, "approaching car...", Toast.LENGTH_SHORT).show();
-				
-				//TODO if parking approaching the car report new API - reportPotentialParkingRelease (mark as yellow on map)
-			}
-			
-			if(parking_manager.isParking() && curDistFromCar>30 && approachedCar==false) //update only when we're not close to car and haven't approached yet (sensitivity issues)
-				lastDistFromCar = curDistFromCar; 
-			
-			
-			if(parking_manager.isParking() && approachedCar==true && curDistFromCar>30) {
-					Toast.makeText(context, "identified unpark via car approach alg", Toast.LENGTH_SHORT).show();
+						if(lastUnparkAckRequest==null) { 
+							unpark(context);
+							lastUnparkAckRequest = new Time();
+							lastUnparkAckRequest.setToNow();
+						} else if ((curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) { //3600 once an hour
+							unpark(context);
+							lastUnparkAckRequest.setToNow();
+						}
+				}
 					
-					if(lastUnparkAckRequest==null) { 
-						unpark(context);
-						lastUnparkAckRequest = new Time();
-						lastUnparkAckRequest.setToNow();
-					} else if ((curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) { //3600 once an hour
-						unpark(context);
-						lastUnparkAckRequest.setToNow();
-					}
-			}
-			
-			//if parking and started driving, close session, and free parking in parking_manager (app in background)
-//			if (parking_manager.isParking() && speed > 15) { 
-//					Toast.makeText(context, "identified unpark via speed", Toast.LENGTH_SHORT).show();
-//					if(lastUnparkAckRequest==null) { 
-//						unpark(context);
-//						lastUnparkAckRequest = new Time();
-//						lastUnparkAckRequest.setToNow();
-//					} else if ((curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) { //3600 once an hour
-//						unpark(context);
-//						lastUnparkAckRequest.setToNow();
-//					}
-//			}
-			
+				if ((distDiff > 20.0) || (timediff > 30000)) { // position update report
+						locTask = new ReportLocationTask(context, LoginTask.getSessionId(), curPos.getLatitudeE6()/1E6, curPos.getLongitudeE6()/1E6);
+						locTask.execute();
+				} 
+					
+				//1. detect user getting far away from the parking car
+				if(curDistFromCar>30 && approachedCar==false) 
+					lastDistFromCar = curDistFromCar; 
+				
+				//2. detect user approaching parking car
+				if(curDistFromCar<40 && (lastDistFromCar-curDistFromCar)>20) { //approaching car, by foot
+					approachedCar = true;
+					
+					Toast.makeText(context, "approaching car...", Toast.LENGTH_SHORT).show();
+					
+					//TODO if parking approaching the car report new API - reportPotentialParkingRelease (mark as yellow on map)
+				}
+				
+				//3. detect user started driving car after approached it
+				if(approachedCar==true && curDistFromCar>30) {
+						Toast.makeText(context, "identified unpark via car approach alg", Toast.LENGTH_SHORT).show();
+						
+						if(lastUnparkAckRequest==null) { 
+							unpark(context);
+							lastUnparkAckRequest = new Time();
+							lastUnparkAckRequest.setToNow();
+						} else if ((curTime.toMillis(true) - lastUnparkAckRequest.toMillis(true))/1000 > 3600) { //3600 once an hour
+							unpark(context);
+							lastUnparkAckRequest.setToNow();
+						}
+				}
+			} 			
+			//TODO else, if not parking and speed is < 10 for 5 min, ask user if he is parking - consider false positive
+
 			lastPos = curPos;
 			lastTime = curTime;
-			
 		}
 	}
 	
