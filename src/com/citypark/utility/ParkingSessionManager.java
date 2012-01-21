@@ -102,7 +102,7 @@ public class ParkingSessionManager {
 	 *         found.
 	 */
 
-	public final GeoPoint getLocation() {
+	public final GeoPoint getGeoPoint() {
 		final int lat = settings.getInt(LAT, -1);
 		final int lng = settings.getInt(LNG, -1);
 		return new GeoPoint(lat, lng);

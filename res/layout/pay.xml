@@ -15,8 +15,8 @@
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:orientation="horizontal">
+        android:layout_height="60dp" 
+        android:orientation="horizontal" android:background="@drawable/button_normal" android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/textView1"
@@ -24,8 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:textColor="#000000"
-            android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/city"/>
+            android:textColor="#D64700"
+            android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/city" android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/editTextCity"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" android:layout_marginTop="10dp">
+            android:layout_marginRight="10dp">
         </EditText>
 
     </LinearLayout>
@@ -41,8 +41,8 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:orientation="horizontal" android:background="@drawable/button_normal">
 
         <TextView
             android:id="@+id/textView2"
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:textColor="#000000"
-            android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/parking_zone"/>
+            android:textColor="#D64700"
+            android:textAppearance="?android:attr/textAppearanceMedium" android:text="@string/parking_zone" android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/editTextParkingZone"
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:inputType="number" >
+            android:inputType="number" android:layout_gravity="center_vertical">
         </EditText>
 
     </LinearLayout>
@@ -67,21 +67,21 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:orientation="horizontal" android:background="@drawable/button_normal">
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="10dp" android:text="@string/license_plate"/>
+            android:textColor="#D64700"
+            android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginLeft="10dp" android:text="@string/license_plate" android:layout_gravity="center_vertical" android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/editTextLicnsePlate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:inputType="number" android:layout_marginRight="10dp" android:layout_marginLeft="10dp"/>
+            android:inputType="number" android:layout_marginRight="10dp" android:layout_marginLeft="10dp" android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 
@@ -89,18 +89,18 @@
         android:id="@+id/toggleButtonPay"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text="ToggleButton" android:layout_gravity="center_horizontal" android:textOn="@string/stop_payment" android:textOff="@string/start_payment" android:layout_marginTop="10dp" android:onClick="OnPay" android:textSize="20dp" android:background="@drawable/button_normal" android:textColor="#D64700" android:textStyle="bold"/>
+        android:text="ToggleButton" android:layout_gravity="center_horizontal" android:textOn="@string/stop_payment" android:textOff="@string/start_payment" android:onClick="OnPay" android:textSize="20dp" android:background="@drawable/button_normal" android:textColor="#D64700" android:textStyle="bold" android:layout_marginTop="10dp"/>
 
     <TimePicker
         android:id="@+id/timePickerEnd"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_marginTop="20dp" android:layout_gravity="bottom|center_horizontal" android:layout_marginBottom="10dp" android:background="@drawable/button_normal"/>
+        android:layout_height="wrap_content" android:layout_marginTop="10dp" android:layout_gravity="bottom|center_horizontal" android:layout_marginBottom="10dp" android:background="@drawable/button_normal"/>
 
     <ToggleButton
         android:id="@+id/toggleButtonRemind"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_gravity="bottom|center_horizontal" 
+        android:layout_gravity="center_horizontal" 
         android:layout_marginTop="10dp" android:text="@string/reminder_button" android:textOff="@string/reminder_button" android:textOn="@string/reminder_button" android:onClick="OnRemind" android:layout_marginBottom="10dp" android:duplicateParentState="false" android:hapticFeedbackEnabled="false" android:checked="true" android:background="@drawable/button_normal" android:textSize="20dp" android:textColor="#D64700" android:textStyle="bold"/>
 
 </LinearLayout>

@@ -121,7 +121,7 @@ public class RoutePlannerTask extends AsyncTask<Void, Void, Integer> {
         				try {
         					msg = R.id.result_ok;
         					planner.setStart(startAddressInput);
-        					planner.setDest(prk.getLocation());	
+        					planner.setDest(prk.getGeoPoint());	
         				} catch (GeocodeException e) {
 							msg = R.id.geocodeerror;
         				}  catch (GeocodeConnectException e) {

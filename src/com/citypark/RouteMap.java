@@ -2,6 +2,7 @@ package com.citypark;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -12,8 +13,10 @@ import org.acra.ErrorReporter;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.MyLocationOverlay;
 import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 
 import android.app.AlertDialog;
@@ -61,7 +64,6 @@ import com.citypark.api.task.ReportParkingReleaseTask;
 import com.citypark.api.task.ReportParkingTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.RoutePlannerTask;
-import com.citypark.utility.CarAlert;
 import com.citypark.utility.Convert;
 import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.TurnByTurnGestureListener;
@@ -109,6 +111,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	protected PathOverlay routeOverlay;
 	/** Travelled route overlay. **/
 	protected PathOverlay travelledRouteOverlay;
+	/** Parked car location overlay **/
+	protected ItemizedIconOverlay<OverlayItem> parkedCarOverlay;
+	protected List<OverlayItem> parkedCarOverlayItems;
+	
 	/** Location manager. **/
 	protected LocationManager mLocationManager;
 
@@ -117,9 +123,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	/** ParkingSessionPersist manager. */
 	protected ParkingSessionManager parking_manager;
-
-	/** Bike alert manager. **/
-	private CarAlert carAlert;
 
 	/** Dialog display. **/
 	protected Dialog dialog;
@@ -234,7 +237,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		travelledRouteOverlay = new RouteOverlay(Color.GREEN, this);
 		mOsmv.getOverlays().add(routeOverlay);
 		mOsmv.getOverlays().add(travelledRouteOverlay);
-
+		
 		mOsmv.getController().setZoom(
 				mPrefs.getInt(getString(R.string.prefs_zoomlevel), 16));
 		mOsmv.scrollTo(mPrefs.getInt(getString(R.string.prefs_scrollx), 0),
@@ -253,13 +256,16 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		// Initialize parking manager
 		parking_manager = new ParkingSessionManager(this);
 
-		// Initialize car alert manager
-		carAlert = new CarAlert(this);
-
 		// init live marker updaters
 		garageMarkers = new LiveGarageMarkers(mOsmv, this);
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers);
 		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this, garageMarkers);
+		
+		parkedCarOverlayItems = new ArrayList<OverlayItem>(1);
+		
+		if(parking_manager.isParking()) {
+			setCarLocationFlag(parking_manager.getGeoPoint());
+		}
 
 		// Handle rotations
 		final Object[] data = (Object[]) getLastNonConfigurationInstance();
@@ -273,7 +279,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (getIntent().getIntExtra(RoutePlannerTask.PLAN_TYPE,
 				RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
 			// TODO make it work again
-			carAlert.setCarAlert(parking_manager.getLocation());
+			//carAlert.setCarAlert(parking_manager.getLocation());
 		}
 	}
 
@@ -291,7 +297,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		}
 		if (intent.getIntExtra(RoutePlannerTask.PLAN_TYPE,
 				RoutePlannerTask.ADDRESS_PLAN) == RoutePlannerTask.BIKE_PLAN) {
-			carAlert.setCarAlert(parking_manager.getLocation());
+			// TODO make it work again
+			//carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		if (intent.getBooleanExtra(getString(R.string.unpark), false)) {
 			alarmRing();
@@ -477,7 +484,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage("Have you parked?")
 					.setCancelable(false)
-					.setPositiveButton("Yes",
+					.setPositiveButton("Yes, Exit",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -489,6 +496,31 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 									}
 								}
 							})
+					.setNeutralButton("Yes, Pay",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int id) {
+							park();
+							dialog.cancel();
+							Intent intent;
+							if (payMethod.contains("Pango")) {
+								intent = new Intent(RouteMap.this, PaymentPangoActivity.class);
+								startActivity(intent);
+							} else if (payMethod.contains("CelOpark")) {
+								intent = new Intent(RouteMap.this, PaymentCelOParkActivity.class);
+								startActivity(intent);
+							} else {
+								intent = new Intent(RouteMap.this, PaymentActivity.class);
+								startActivity(intent);
+								//Toast.makeText(this, "Payment provider no set !",
+								//		Toast.LENGTH_LONG).show();
+							}
+//							if (finishOnPark) {
+//								setResult(1);
+//								finish();
+//							}
+						}
+					})
 					.setNegativeButton("No",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
@@ -679,40 +711,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			export(gpx, R.string.filename_gpx);
 			break;
 		case R.id.park:
-			if (LoginTask.isLoggedIn()) {
-				showDialog(R.id.awaiting_fix);
-				RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
-					@Override
-					public void run() {
-						if (RouteMap.this.dialog.isShowing()) {
-							RouteMap.this.dismissDialog(R.id.awaiting_fix);
-							Location self = mLocationOverlay.getLastFix();
-
-							if (self == null) {
-								self = mLocationManager
-										.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-							}
-							if (self == null) {
-								self = mLocationManager
-										.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-							}
-							if (self != null) {
-								parking_manager.park(new PGeoPoint(self
-										.getLatitude(), self.getLongitude()));
-								reportParkingTask = new ReportParkingTask(
-										RouteMap.this,
-										LoginTask.getSessionId(), self
-												.getLatitude(), self
-												.getLongitude());
-								reportParkingTask.execute((Void[]) null);
-							}
-						}
-					}
-				});
-			}
-
-			stopNavigation();
-
+			park();
+		
 			if (payMethod.contains("Pango")) {
 				intent = new Intent(this, PaymentPangoActivity.class);
 				startActivity(intent);
@@ -722,10 +722,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			} else {
 				intent = new Intent(this, PaymentActivity.class);
 				startActivity(intent);
-				Toast.makeText(this, "Undefined payment provider...",
-						Toast.LENGTH_LONG).show();
+				//Toast.makeText(this, "Payment provider no set !",
+				//		Toast.LENGTH_LONG).show();
 			}
-
 			break;
 		case R.id.directions:
 			intent = new Intent(this, DirectionsView.class);
@@ -1043,21 +1042,38 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	public void park() {
 		showDialog(R.id.awaiting_fix);
-
-		Location self = mLocationOverlay.getLastFix();
-
-		if (self == null) {
-			self = mLocationManager
-					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		}
-		if (self == null) {
-			self = mLocationManager
-					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		}
-		if (self != null) {
-			parking_manager.park(new PGeoPoint(self.getLatitude(), self
-					.getLongitude()));
-		}
+		RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
+			@Override
+			public void run() {
+				Location self = mLocationOverlay.getLastFix();
+		
+				if (self == null) {
+					self = mLocationManager
+							.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				}
+				if (self == null) {
+					self = mLocationManager
+							.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+				}
+				if (self != null) {
+					parking_manager.park(new PGeoPoint(self.getLatitude(), self
+							.getLongitude()));
+					setCarLocationFlag(parking_manager.getGeoPoint());
+					
+					if (LoginTask.isLoggedIn()) {
+						reportParkingTask = new ReportParkingTask(
+								RouteMap.this,
+								LoginTask.getSessionId(), self
+										.getLatitude(), self
+										.getLongitude());
+						reportParkingTask.execute((Void[]) null);
+					}
+				}
+			}
+		});
+		
+		stopNavigation();
+		
 		dismissDialog(R.id.awaiting_fix);
 	}
 
@@ -1076,7 +1092,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 				unparkCompletion();
 				intent = new Intent(this, PaymentActivity.class);
 				startActivityForResult(intent, R.id.payment);
-				Toast.makeText(this, "Undefined payment provider...",
+				Toast.makeText(this, getString(R.string.payment_method_not_defined),
 						Toast.LENGTH_LONG).show();
 			}
 		} else
@@ -1084,6 +1100,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	}
 
 	public void unparkCompletion() {
+		clearCarLocationFlag();
+		
 		if (LoginTask.isLoggedIn()) {
 			showDialog(R.id.awaiting_fix);
 			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
@@ -1096,13 +1114,14 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 						reportParkingReleaseTask = new ReportParkingReleaseTask(
 								RouteMap.this,
 								LoginTask.getSessionId(),
-								parking_manager.getLocation().getLatitudeE6() / 1E6,
-								parking_manager.getLocation().getLongitudeE6() / 1E6);
+								parking_manager.getGeoPoint().getLatitudeE6() / 1E6,
+								parking_manager.getGeoPoint().getLongitudeE6() / 1E6);
 						reportParkingReleaseTask.execute();
 						parking_manager.unPark();
 						LoginTask.login(RouteMap.this); // renew session
 						RouteMap.this.hideStep();
-						carAlert.unsetAlert();
+						// TODO make it work again
+						//carAlert.unsetAlert();
 					}
 				}
 			});
@@ -1170,4 +1189,20 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		
 	}
 
+	protected void setCarLocationFlag(GeoPoint p) {
+		clearCarLocationFlag();
+		
+		OverlayItem parkedCarFlag = new OverlayItem("", "", p);
+		parkedCarOverlayItems.add(parkedCarFlag);
+		parkedCarOverlay = new ItemizedIconOverlay<OverlayItem>(parkedCarOverlayItems, getResources().getDrawable(R.drawable.flag_red), null, mResourceProxy);
+		parkedCarOverlay.addItem(parkedCarFlag);
+		mOsmv.getOverlays().add(parkedCarOverlay);
+	}
+	
+	protected void clearCarLocationFlag() {
+		if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
+			mOsmv.getOverlays().remove(parkedCarOverlay);
+		}
+		parkedCarOverlayItems.clear();
+	}
 }

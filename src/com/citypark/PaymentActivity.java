@@ -46,7 +46,6 @@ public class PaymentActivity extends Activity {
 	private ToggleButton tgBtnPay = null;
 	private ToggleButton tgBtnRemind = null;
 	//TODO replace with a progress dialog
-	//private ProgressBar progBarPayment = null;
 	private StartPaymentTask payTask = null;
 	private StopPaymentTask stopPayTask = null;
 	private TimePicker timePicker = null;
@@ -71,7 +70,6 @@ public class PaymentActivity extends Activity {
 		timePicker = (TimePicker) findViewById(R.id.timePickerEnd);
 		
 		tgBtnPay = (ToggleButton) findViewById(R.id.toggleButtonPay);
-		//progBarPayment = (ProgressBar) findViewById(R.id.progressBarPay);
 		myLicensePlate = (EditText) findViewById(R.id.editTextLicnsePlate);
 		parkingCity = (EditText) findViewById(R.id.editTextCity);
 		parkingZone = (EditText) findViewById(R.id.editTextParkingZone);
@@ -86,7 +84,6 @@ public class PaymentActivity extends Activity {
 			mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
 	   	 	myLicensePlate.setText(mPrefs.getString("license_plate", null));
 	   	 	
-			//progBarPayment.setVisibility(View.INVISIBLE);
 			tgBtnPay.setChecked(parking_manager.isPaymentActive());
 					
 	   	 	//initiate city fetching via GeoLocator 
@@ -131,13 +128,15 @@ public class PaymentActivity extends Activity {
 		} else { 
 			//hide all payment views
 			tgBtnPay.setVisibility(View.INVISIBLE);
-			//progBarPayment.setVisibility(View.INVISIBLE);
 			myLicensePlate.setVisibility(View.INVISIBLE);
 			parkingCity.setVisibility(View.INVISIBLE);
 			parkingZone.setVisibility(View.INVISIBLE);
 			findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
 			findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
 			findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
+			findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
+			findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
+			findViewById(R.id.linearLayout3).setVisibility(View.INVISIBLE);
 		}
    	 			
 		if (getIntent().getBooleanExtra(getString(R.string.reminder_intent), false)) 
@@ -163,10 +162,8 @@ public class PaymentActivity extends Activity {
 	public void OnPay(View view) {   	
 		if(parking_manager.isPaymentActive()){
 			Toast.makeText(this, R.string.payment_progress , Toast.LENGTH_SHORT).show();
-			//progBarPayment.setVisibility(View.VISIBLE);
 		} else {
 			Toast.makeText(this, R.string.payment_progress , Toast.LENGTH_SHORT).show();
-			//progBarPayment.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -213,17 +210,15 @@ public class PaymentActivity extends Activity {
 	}
 
 	public void PaymentComplete(Boolean success) {
-		
-		//progBarPayment.setVisibility(View.INVISIBLE);
-		
+				
 		if(parking_manager.isPaymentActive()) {
 			 if(success){
 				 //stop payment succeeded
 				 resultCode = true;
 				 parking_manager.setPaymentEnd();
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
-				 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
-						 parking_manager.getLocation().getLongitudeE6()/1E6, "ACKNOWLEDGED");
+				 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
+						 parking_manager.getGeoPoint().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				 stopPayTask.execute();
 			 }
 	         else {
@@ -231,8 +226,8 @@ public class PaymentActivity extends Activity {
 	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
-	        	 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
-						 parking_manager.getLocation().getLongitudeE6()/1E6, "FAILED");
+	        	 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
+						 parking_manager.getGeoPoint().getLongitudeE6()/1E6, "FAILED");
 				 stopPayTask.execute();
 	         }
 		} else {
@@ -243,8 +238,8 @@ public class PaymentActivity extends Activity {
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
 				 
 				//TODO operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
-				payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
-						parking_manager.getLocation().getLongitudeE6()/1E6, "ACKNOWLEDGED");
+				payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
+						parking_manager.getGeoPoint().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				payTask.execute();
 			 }
 	         else {
@@ -252,8 +247,8 @@ public class PaymentActivity extends Activity {
 	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
-	        	 payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getLocation().getLatitudeE6()/1E6, 
-							parking_manager.getLocation().getLongitudeE6()/1E6, "FAILED");
+	        	 payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
+							parking_manager.getGeoPoint().getLongitudeE6()/1E6, "FAILED");
 					payTask.execute();
 	         }
 		}

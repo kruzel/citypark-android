@@ -49,7 +49,7 @@ public class ParkingHandler {
 		
 		Time curTime = new Time();
 		curTime.setToNow();
-		GeoPoint carPos = parking_manager.getLocation();
+		GeoPoint carPos = parking_manager.getGeoPoint();
 		int curDistFromCar = curPos.distanceTo(carPos);
 		//Toast.makeText(context, "curDistFromCar="+curDistFromCar, Toast.LENGTH_SHORT).show();
 		
