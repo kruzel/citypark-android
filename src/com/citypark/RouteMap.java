@@ -407,7 +407,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 		if (LoginTask.isLoggedIn()) {
 			if(lastAllOverlaysUpdateCenter==null || (lastAllOverlaysUpdateCenter!=null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)) {
-				showDialog(R.id.loading_info);
+				if(firstOverlayLoading)
+					showDialog(R.id.loading_info);
 				showAllParkings();
 			}
 		}
@@ -427,7 +428,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 		
-		showDialog(R.id.loading_info);
+		if(firstOverlayLoading)
+			showDialog(R.id.loading_info);
+		
 		showAllParkings();
 		app.doBindService();
 	}
@@ -1122,6 +1125,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		clearCarLocationFlag();
 		
 		if (LoginTask.isLoggedIn()) {
+			if(dialog.isShowing())
+				dialog.dismiss();
 			showDialog(R.id.awaiting_fix);
 			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
 				@Override
@@ -1137,10 +1142,10 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 								parking_manager.getGeoPoint().getLongitudeE6() / 1E6);
 						reportParkingReleaseTask.execute();
 						parking_manager.unPark();
+						//firstOverlayLoading = true;
+						LoginTask.setSessionId(null);
 						LoginTask.login(RouteMap.this); // renew session
 						RouteMap.this.hideStep();
-						// TODO make it work again
-						//carAlert.unsetAlert();
 					}
 				}
 			});
