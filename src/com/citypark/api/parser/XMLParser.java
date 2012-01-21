@@ -72,7 +72,7 @@ public class XMLParser {
 	        String contentEncoding = null;
 	        
 	        StatusLine statusLine = response.getStatusLine();
-	        if(statusLine.getStatusCode() == 401){
+	        if(statusLine.getStatusCode() == 500){ //TODO currently return 500, after server fix replace with 401
 	        	//re login
 	        	LoginTask.login(null);
 	        	return null;

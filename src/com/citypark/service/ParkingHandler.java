@@ -33,6 +33,8 @@ public class ParkingHandler {
 	private int lastDistFromCar = 0;
 	private Boolean approachedCar = false;
 	private Boolean speedhecked = false;
+	private Time lastLocationReport = new Time();
+	
 	private ParkingSessionManager parking_manager;
 	/** preferences file **/
 	protected SharedPreferences mPrefs = null;
@@ -40,6 +42,7 @@ public class ParkingHandler {
 	public ParkingHandler(CityParkApp app) {
 		super();		
 		parking_manager = new ParkingSessionManager(app.getApplicationContext());
+		lastLocationReport.setToNow();
 	}
 	
 	/* (non-Javadoc)
@@ -70,10 +73,11 @@ public class ParkingHandler {
 			timediff = curTime.toMillis(true) - lastTime.toMillis(true);
 			
 			//update citypark server on location
-			if ((distDiff > 20.0) || (timediff > 30000)) { 
+			if ((distDiff > 20.0) || (curTime.toMillis(true)-lastLocationReport.toMillis(true) > 30000)) { 
 				if(LoginTask.isLoggedIn()) { 
 					locTask = new ReportLocationTask(context, LoginTask.getSessionId(), curPos.getLatitudeE6()/1E6, curPos.getLongitudeE6()/1E6);
 					locTask.execute();
+					lastLocationReport.setToNow();
 				}
 			} 	
 			
