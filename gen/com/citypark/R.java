@@ -30,7 +30,7 @@ public final class R {
         public static final int criple=0x7f020006;
         public static final int criple_g=0x7f020007;
         public static final int direction_arrow=0x7f020008;
-        public static final int flag_red=0x7f020009;
+        public static final int flag=0x7f020009;
         public static final int garage=0x7f02000a;
         public static final int garage_g=0x7f02000b;
         public static final int green_dot=0x7f02000c;

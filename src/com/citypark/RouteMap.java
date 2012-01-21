@@ -107,6 +107,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	private AllOverlayFetchTask overlayTask;
 	private ReleasesOverlayFetchTask releasesOverlayTask;
 	private LiveGarageMarkers garageMarkers;
+	private Boolean firstOverlayLoading = true;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;
 	/** Travelled route overlay. **/
@@ -191,8 +192,28 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			if(dialog!=null && dialog.isShowing())
 				dialog.dismiss();
 			
-			//default assume user is parking
-			unpark();
+			//don't assume, avoid fault positive
+			//unpark();
+			
+			if (finishOnPark) {
+				setResult(1);
+				finish();
+			}
+		}
+	};
+	
+	private Runnable mParkDialogTimer = new Runnable() {
+		public void run() {
+			if(dialog!=null && dialog.isShowing())
+				dialog.dismiss();
+			
+			//don't assume, avoid fault positive
+			//park();
+			
+			if (finishOnPark) {
+				setResult(1);
+				finish();
+			}
 		}
 	};
 
@@ -301,7 +322,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			//carAlert.setCarAlert(parking_manager.getLocation());
 		}
 		if (intent.getBooleanExtra(getString(R.string.unpark), false)) {
-			alarmRing();
+			playNotification();
 			showDialog(R.id.unpark);
 		}
 		// check if got back from PaymentActivity
@@ -352,7 +373,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 		// check if awaken by location receiver
 		if (getIntent().getBooleanExtra(getString(R.string.unpark), false)) {
-			alarmRing();
+			playNotification();
 			showDialog(R.id.unpark);
 		}
 		// check if got back from PaymentActivity
@@ -481,10 +502,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			mHandler.postDelayed(mUnparkDialogTimer, 30000);
 			break;
 		case R.id.park:
+			playNotification();
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage("Have you parked?")
 					.setCancelable(false)
-					.setPositiveButton("Yes, Exit",
+					.setPositiveButton("Yes",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -496,31 +518,27 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 									}
 								}
 							})
-					.setNeutralButton("Yes, Pay",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int id) {
-							park();
-							dialog.cancel();
-							Intent intent;
-							if (payMethod.contains("Pango")) {
-								intent = new Intent(RouteMap.this, PaymentPangoActivity.class);
-								startActivity(intent);
-							} else if (payMethod.contains("CelOpark")) {
-								intent = new Intent(RouteMap.this, PaymentCelOParkActivity.class);
-								startActivity(intent);
-							} else {
-								intent = new Intent(RouteMap.this, PaymentActivity.class);
-								startActivity(intent);
-								//Toast.makeText(this, "Payment provider no set !",
-								//		Toast.LENGTH_LONG).show();
-							}
-//							if (finishOnPark) {
-//								setResult(1);
-//								finish();
+//					.setNeutralButton("Yes, Pay",
+//					new DialogInterface.OnClickListener() {
+//						public void onClick(DialogInterface dialog,
+//								int id) {
+//							park();
+//							dialog.cancel();
+//							Intent intent;
+//							if (payMethod.contains("Pango")) {
+//								intent = new Intent(RouteMap.this, PaymentPangoActivity.class);
+//								startActivity(intent);
+//							} else if (payMethod.contains("CelOpark")) {
+//								intent = new Intent(RouteMap.this, PaymentCelOParkActivity.class);
+//								startActivity(intent);
+//							} else {
+//								intent = new Intent(RouteMap.this, PaymentActivity.class);
+//								startActivity(intent);
+//								//Toast.makeText(this, "Payment provider no set !",
+//								//		Toast.LENGTH_LONG).show();
 //							}
-						}
-					})
+//						}
+//					})
 					.setNegativeButton("No",
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
@@ -534,6 +552,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 								}
 							});
 			dialog = builder.create();
+			mHandler.postDelayed(mParkDialogTimer, 30000);
 			break;
 		case R.id.awaiting_fix:
 			pDialog = new ProgressDialog(this);
@@ -712,7 +731,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			break;
 		case R.id.park:
 			park();
-		
+			if(dialog.isShowing())
+				dialog.dismiss();
+			
 			if (payMethod.contains("Pango")) {
 				intent = new Intent(this, PaymentPangoActivity.class);
 				startActivity(intent);
@@ -1073,8 +1094,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		});
 		
 		stopNavigation();
-		
-		dismissDialog(R.id.awaiting_fix);
 	}
 
 	public void unpark() {
@@ -1108,7 +1127,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 				@Override
 				public void run() {
 					if (RouteMap.this.dialog.isShowing())
-						RouteMap.this.dismissDialog(R.id.awaiting_fix);
+						RouteMap.this.dialog.dismiss();
 
 					if (parking_manager.isParking()) {
 						reportParkingReleaseTask = new ReportParkingReleaseTask(
@@ -1142,11 +1161,13 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (success)
 			mOsmv.invalidate();
 		
-		if(dialog!=null && dialog.isShowing())
+		if(LoginTask.isLoggedIn() && firstOverlayLoading && dialog!=null && dialog.isShowing()) {
+			firstOverlayLoading = false;
 			dialog.dismiss();
+		}
 	}
 	
-	private void alarmRing() {
+	private void playNotification() {
 		// send off alarm sound
 		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		if (alert == null) {
@@ -1194,7 +1215,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		
 		OverlayItem parkedCarFlag = new OverlayItem("", "", p);
 		parkedCarOverlayItems.add(parkedCarFlag);
-		parkedCarOverlay = new ItemizedIconOverlay<OverlayItem>(parkedCarOverlayItems, getResources().getDrawable(R.drawable.flag_red), null, mResourceProxy);
+		parkedCarOverlay = new ItemizedIconOverlay<OverlayItem>(parkedCarOverlayItems, getResources().getDrawable(R.drawable.flag), null, mResourceProxy);
 		parkedCarOverlay.addItem(parkedCarFlag);
 		mOsmv.getOverlays().add(parkedCarOverlay);
 	}
