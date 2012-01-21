@@ -172,9 +172,25 @@ public class PaymentActivity extends Activity {
 	
 	public void OnRemind(View view) {
 		        
-		if(!parking_manager.isReminderActive()){
+		if(parking_manager.isReminderActive()){
+			// And cancel the alarm.
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal)); 
+			tgBtnRemind.setText(getResources().getString(R.string.reminder_button));
+			parking_manager.stopReminder();
+			
+            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.cancel(sender);
+            if(mMediaPlayer!=null){
+            	mMediaPlayer.stop();
+            	mMediaPlayer=null;
+            }
+            
+        	//we can report that we are not parking anymore (no reminder and no payment active
+            resultCode = true;
+		} else {
 			//start reminder service
 			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_pressed)); 
+			tgBtnRemind.setText(getResources().getString(R.string.reminder_button_unset));
 			
 			Intent intent = new Intent(this, TimeLimitAlertListener.class);
 			intent.putExtra(getString(R.string.payment_method), getPaymentMethod());
@@ -193,21 +209,7 @@ public class PaymentActivity extends Activity {
     		now.setToNow();
     		parking_manager.setReminder(now);
             
-		} else {
-            // And cancel the alarm.
-			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal)); 
-			
-            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-            am.cancel(sender);
-            if(mMediaPlayer!=null){
-            	mMediaPlayer.stop();
-            	mMediaPlayer=null;
-            }
-            parking_manager.stopReminder();
-            
-        	//we can report that we are not parking anymore (no reminder and no payment active
-            resultCode = true;
-		}
+		} 
 	}
 
 	public void PaymentComplete(Boolean success) {
@@ -270,47 +272,50 @@ public class PaymentActivity extends Activity {
 	}
 	
 	private void alarmRing() {
-		// send off alarm sound
-		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		if (alert == null) {
-			// alert is null, using backup
-			alert = RingtoneManager
-					.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-			if (alert == null) { // I can't see this ever being null (as always
-									// have a default notification) but just in
-									// case
-				// alert backup is null, using 2nd backup
+		if(parking_manager.isReminderActive()) {
+			// send off alarm sound
+			Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			if (alert == null) {
+				// alert is null, using backup
 				alert = RingtoneManager
-						.getDefaultUri(RingtoneManager.TYPE_ALARM);
+						.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+				if (alert == null) { // I can't see this ever being null (as always
+										// have a default notification) but just in
+										// case
+					// alert backup is null, using 2nd backup
+					alert = RingtoneManager
+							.getDefaultUri(RingtoneManager.TYPE_ALARM);
+				}
 			}
-		}
-
-		mMediaPlayer = new MediaPlayer();
-		try {
-			parking_manager.stopReminder();
-			mMediaPlayer.setDataSource(this, alert);
-
-			final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-			if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-				mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-				mMediaPlayer.prepare();
-				mMediaPlayer.start();
+	
+			mMediaPlayer = new MediaPlayer();
+			try {
+				mMediaPlayer.setDataSource(this, alert);
+	
+				final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+				if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+					mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+					mMediaPlayer.prepare();
+					mMediaPlayer.start();
+				}
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
+		parking_manager.stopReminder();
 		tgBtnRemind.setChecked(false);
+		tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal)); 
 	}
 	
 }

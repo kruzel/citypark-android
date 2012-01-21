@@ -89,6 +89,7 @@
 <string name="payment_method">Payment Method</string>
 
 <string name="reminder_button">Set Reminder</string>
+<string name="reminder_button_unset">Unset Reminder</string>
 <string name="start_payment">Start Payment</string>
 <string name="payment_progress">Payment in progress</string>
 <string name="payment_succeeded">Payment succeeded</string>

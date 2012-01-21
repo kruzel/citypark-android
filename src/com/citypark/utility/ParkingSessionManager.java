@@ -52,8 +52,6 @@ public class ParkingSessionManager {
 	private final SharedPreferences settings;
 	/** Preferences mEditor. **/
 	private final SharedPreferences.Editor editor;
-
-	private Boolean approachedCar = false;
 	
 	public ParkingSessionManager(final Context context) {
 		settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -153,7 +151,7 @@ public class ParkingSessionManager {
 
 	public final void stopReminder() {
 		editor.remove(ALARM_TIME);
-		Boolean res = editor.commit();
+		editor.commit();
 	}
 
 	/**
@@ -165,14 +163,5 @@ public class ParkingSessionManager {
 	public final boolean isReminderActive() {
 		return settings.contains(ALARM_TIME);
 	}
-
-	public Boolean getApproachedCar() {
-		return approachedCar;
-	}
-
-	public void setApproachedCar(Boolean approachedCar) {
-		this.approachedCar = approachedCar;
-	}
-	
 	
 }
