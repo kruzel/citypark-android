@@ -416,7 +416,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (LoginTask.isLoggedIn()) {
 			if(!parking_manager.isParking()) {
 				if(lastAllOverlaysUpdateCenter==null || (lastAllOverlaysUpdateCenter!=null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)) {
-					//showAllParkings(true);
+					showAllParkings(true);
 					mHandler.removeCallbacks(mUpdateOverlaysTask);
 					mHandler.postDelayed(mUpdateOverlaysTask,
 							CityParkConsts.OVERLAY_UPDATE_INTERVAL);
@@ -1014,7 +1014,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		
 		if(showProgDialog) {
 			firstOverlayLoading = true;
-			if(!dialog.isShowing())
+			if(dialog==null || (dialog!=null && !dialog.isShowing()))
 				showDialog(R.id.loading_info);
 		}		
 

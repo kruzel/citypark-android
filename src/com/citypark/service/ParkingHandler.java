@@ -83,7 +83,7 @@ public class ParkingHandler {
 				}
 			} 	
 			
-			if(parking_manager.isParking() && location.hasAccuracy() && location.getAccuracy()<20){ 
+			if(parking_manager.isParking()) { // && location.hasAccuracy() && location.getAccuracy()<20){ 
 				//if parking and started driving, close session, and free parking in parking_manager (app in background)
 				if(location.hasAccuracy() && location.getAccuracy()<15 && location.hasSpeed()) //prefer to work with sensors derived speed value
 					speed = location.getSpeed();
