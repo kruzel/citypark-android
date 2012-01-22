@@ -83,13 +83,11 @@ public class ParkingHandler {
 				}
 			} 	
 			
-			//TODO consider running this code only is accuracy < 15 meters
-			//		(currently Atrix does not hasAccuracy)
-			if(parking_manager.isParking()){ 
+			if(parking_manager.isParking() && location.hasAccuracy() && location.getAccuracy()<20){ 
 				//if parking and started driving, close session, and free parking in parking_manager (app in background)
 				if(location.hasAccuracy() && location.getAccuracy()<15 && location.hasSpeed()) //prefer to work with sensors derived speed value
 					speed = location.getSpeed();
-				if(curPos.distanceTo(lastSpeedPos)>40 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) { //otherwise calcualte 
+				if(curPos.distanceTo(lastSpeedPos)>40 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) { //otherwise calculate 
 					speed = distDiff / 1000f / timediff * 3600000f; //kmph
 					lastSpeedPos = curPos;
 					lastSpeedTime = curTime;
