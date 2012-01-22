@@ -437,7 +437,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				setResult(1);
 				finish();
 			} else {
-				showAllParkings();
+				showAllParkings(false);
 			}
 		}
 	}
@@ -468,7 +468,7 @@ public class LiveRouteMap extends SpeechRouteMap implements RouteListener {
 				traverse(app.getSegment().startPoint());
 
 				// show parking around destination
-				showAllParkings();
+				showAllParkings(true);
 
 				arrived = false;
 				if (directionsVisible) {

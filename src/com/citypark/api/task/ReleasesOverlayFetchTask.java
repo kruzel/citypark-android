@@ -19,11 +19,11 @@ public class ReleasesOverlayFetchTask {
 	private LiveGarageMarkers garageMarkers;
 	private Boolean res = false;
 
-	public ReleasesOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveGarageMarkers garageMarkers) {
+	public ReleasesOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveGarageMarkers garageMarkers, LiveStreetReleasesMarkers releasesMarkers) {
 		super();
 		this.listener = listener;
 		
-		releasesMarkers = new LiveStreetReleasesMarkers(osmv, context);
+		this.releasesMarkers = releasesMarkers;
 		this.garageMarkers = garageMarkers;
 	}
 

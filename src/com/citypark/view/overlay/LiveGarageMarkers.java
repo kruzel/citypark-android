@@ -78,14 +78,18 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	
 	public void updateMap() {
 		if(markers != null) {
-			if (mv.getOverlays().contains(iOverlay)) {
-				mv.getOverlays().remove(iOverlay);
-			}
+			clearFromMap();
 			mOverlays.clear();
 			mOverlays.addAll(markers);
 			iOverlay = new ItemizedGaragesOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveGarageMarkers.this, mv.getResourceProxy());
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
+		}
+	}
+	
+	public void clearFromMap() {
+		if (mv.getOverlays().contains(iOverlay)) {
+			mv.getOverlays().remove(iOverlay);
 		}
 	}
 

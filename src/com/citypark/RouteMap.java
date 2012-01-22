@@ -72,6 +72,8 @@ import com.citypark.utility.route.PGeoPoint;
 import com.citypark.utility.route.Route;
 import com.citypark.utility.route.Segment;
 import com.citypark.view.overlay.LiveGarageMarkers;
+import com.citypark.view.overlay.LiveStreetLinesMarkers;
+import com.citypark.view.overlay.LiveStreetReleasesMarkers;
 import com.citypark.view.overlay.RouteOverlay;
 
 /**
@@ -107,6 +109,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	private AllOverlayFetchTask overlayTask;
 	private ReleasesOverlayFetchTask releasesOverlayTask;
 	private LiveGarageMarkers garageMarkers;
+	private LiveStreetReleasesMarkers releasesMarkers;
+	private LiveStreetLinesMarkers linesMarkers;
+	
 	private Boolean firstOverlayLoading = true;
 	/** Route overlay. **/
 	protected PathOverlay routeOverlay;
@@ -168,9 +173,12 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	// map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
+			if(parking_manager.isParking())
+				return;
+			
 			if ((lastAllOverlaysUpdateCenter != null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250) ||
 					(mOsmv.getZoomLevel() > lastZoomLevel) && mOsmv.getZoomLevel() ==15) {
-				showAllParkings();
+				showAllParkings(false);
 			} else {
 				Time curTime = new Time();
 				curTime.setToNow();
@@ -279,8 +287,11 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 		// init live marker updaters
 		garageMarkers = new LiveGarageMarkers(mOsmv, this);
-		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers);
-		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this, garageMarkers);
+		linesMarkers = new LiveStreetLinesMarkers(mOsmv, this);
+		releasesMarkers = new LiveStreetReleasesMarkers(mOsmv, this);
+		
+		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers, releasesMarkers, linesMarkers);
+		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this, garageMarkers, releasesMarkers);
 		
 		parkedCarOverlayItems = new ArrayList<OverlayItem>(1);
 		
@@ -360,10 +371,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (mSettings.getBoolean("keepAwake", false)) {
 			wl.acquire();
 		}
-
-		mHandler.removeCallbacks(mUpdateOverlaysTask);
-		mHandler.postDelayed(mUpdateOverlaysTask,
-				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+		
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 		lastZoomLevel = mOsmv.getZoomLevel();
 
@@ -406,10 +414,14 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		if (LoginTask.isLoggedIn()) {
-			if(lastAllOverlaysUpdateCenter==null || (lastAllOverlaysUpdateCenter!=null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)) {
-				if(firstOverlayLoading)
-					showDialog(R.id.loading_info);
-				showAllParkings();
+			if(!parking_manager.isParking()) {
+				if(lastAllOverlaysUpdateCenter==null || (lastAllOverlaysUpdateCenter!=null && lastAllOverlaysUpdateCenter.distanceTo(mOsmv.getMapCenter()) > 250)) {
+					//showAllParkings(true);
+					mHandler.removeCallbacks(mUpdateOverlaysTask);
+					mHandler.postDelayed(mUpdateOverlaysTask,
+							CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+
+				}
 			}
 		}
 		else {
@@ -428,10 +440,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 		
-		if(firstOverlayLoading)
-			showDialog(R.id.loading_info);
+		showAllParkings(true);
 		
-		showAllParkings();
 		app.doBindService();
 	}
 
@@ -475,14 +485,16 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	@Override
 	public Dialog onCreateDialog(final int id) {
+		if(dialog!=null && dialog.isShowing())
+				dialog.dismiss();
 		AlertDialog.Builder builder;
 		ProgressDialog pDialog;
 		switch (id) {
 		case R.id.unpark:
 			builder = new AlertDialog.Builder(this);
-			builder.setMessage("Unpark?")
+			builder.setMessage(getString(R.string.unpark_ack))
 					.setCancelable(false)
-					.setPositiveButton("Yes",
+					.setPositiveButton(getString(R.string.yes),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(
@@ -492,7 +504,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 									dialog.dismiss();
 								}
 							})
-					.setNegativeButton("No",
+					.setNegativeButton(getString(R.string.no),
 							new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(
@@ -507,9 +519,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		case R.id.park:
 			playNotification();
 			builder = new AlertDialog.Builder(this);
-			builder.setMessage("Have you parked?")
+			builder.setMessage(getString(R.string.park_ack))
 					.setCancelable(false)
-					.setPositiveButton("Yes",
+					.setPositiveButton(getString(R.string.yes),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -521,28 +533,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 									}
 								}
 							})
-//					.setNeutralButton("Yes, Pay",
-//					new DialogInterface.OnClickListener() {
-//						public void onClick(DialogInterface dialog,
-//								int id) {
-//							park();
-//							dialog.cancel();
-//							Intent intent;
-//							if (payMethod.contains("Pango")) {
-//								intent = new Intent(RouteMap.this, PaymentPangoActivity.class);
-//								startActivity(intent);
-//							} else if (payMethod.contains("CelOpark")) {
-//								intent = new Intent(RouteMap.this, PaymentCelOParkActivity.class);
-//								startActivity(intent);
-//							} else {
-//								intent = new Intent(RouteMap.this, PaymentActivity.class);
-//								startActivity(intent);
-//								//Toast.makeText(this, "Payment provider no set !",
-//								//		Toast.LENGTH_LONG).show();
-//							}
-//						}
-//					})
-					.setNegativeButton("No",
+					.setNegativeButton(getString(R.string.no),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -591,7 +582,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			pDialog.setOnDismissListener(new OnDismissListener() {
 				@Override
 				public void onDismiss(DialogInterface arg0) {
-					RouteMap.this.removeDialog(R.id.awaiting_login);
+					RouteMap.this.removeDialog(R.id.loading_info);
 				}
 			});
 			dialog = pDialog;
@@ -708,12 +699,12 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			break;
 		case R.id.center:
 			RouteMap.this.mLocationOverlay.followLocation(true);
-			showAllParkings();
+			showAllParkings(false);
 			break;
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
 					Toast.LENGTH_LONG).show();
-			showAllParkings();
+			showAllParkings(true);
 			return true;
 		case R.id.garagelist:
 			intent = new Intent(this, GarageListActivity.class);
@@ -1011,12 +1002,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		}
 	}
 
-	public void showAllParkings() {
+	public void showAllParkings(Boolean showProgDialog) {
 		if (!LoginTask.isLoggedIn())
 			return;
 		
 		if(mOsmv.getZoomLevel()<15)
 			return;
+		
+		if(parking_manager.isParking())
+			return;
+		
+		if(showProgDialog) {
+			firstOverlayLoading = true;
+			if(!dialog.isShowing())
+				showDialog(R.id.loading_info);
+		}		
 
 		Route route = app.getRoute();
 
@@ -1125,8 +1125,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		clearCarLocationFlag();
 		
 		if (LoginTask.isLoggedIn()) {
-			if(dialog.isShowing())
-				dialog.dismiss();
 			showDialog(R.id.awaiting_fix);
 			RouteMap.this.mLocationOverlay.runOnFirstFix(new Runnable() {
 				@Override
@@ -1156,7 +1154,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO this code is called only once - MapView bug?
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			showAllParkings();
+			showAllParkings(false);
 		}
 		return false;
 	}
@@ -1166,9 +1164,15 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if (success)
 			mOsmv.invalidate();
 		
-		if(LoginTask.isLoggedIn() && firstOverlayLoading && dialog!=null && dialog.isShowing()) {
+		if(LoginTask.isLoggedIn() && firstOverlayLoading) {
 			firstOverlayLoading = false;
-			dialog.dismiss();
+			
+			if(dialog!=null && dialog.isShowing())
+				dialog.dismiss();
+			
+			mHandler.removeCallbacks(mUpdateOverlaysTask);
+			mHandler.postDelayed(mUpdateOverlaysTask,
+					CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		}
 	}
 	
@@ -1212,11 +1216,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 
 	protected void setCarLocationFlag(GeoPoint p) {
-		clearCarLocationFlag();
+		//stop overlays updates
+		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		
+		garageMarkers.clearFromMap();
+		releasesMarkers.clearFromMap();
+		linesMarkers.clearFromMap();
+		
+		//clear car location flag if exist
+		if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
+			mOsmv.getOverlays().remove(parkedCarOverlay);
+		}
+		parkedCarOverlayItems.clear();
 		
 		OverlayItem parkedCarFlag = new OverlayItem("", "", p);
 		parkedCarOverlayItems.add(parkedCarFlag);
@@ -1226,6 +1240,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	}
 	
 	protected void clearCarLocationFlag() {
+		
 		if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
 			mOsmv.getOverlays().remove(parkedCarOverlay);
 		}

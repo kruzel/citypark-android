@@ -7,6 +7,8 @@
 <string name="load_stands_msg">טוען רשימת חניונים</string>
 <string name="planfail_msg">!תכנון מסלול נכשל</string>
 <string name="ok">אשר</string>
+<string name="yes">כן</string>
+<string name="no">לא</string>
 <string name="arg_error_msg">ערך לא חוקי</string>
 <string name="io_error_msg">התקשרות לשירות ניווט נכשלה</string>
 <string name="result_error_msg">כתובת לא נמצאה</string>
@@ -72,7 +74,7 @@
 <string name="tts_msg">הוראות דיבור דורשות התקנה, אנא אשר</string>
 <string name="tts_msg_title">טקסט לדיבור</string>
 
-<string name="email_hint">user@domain</string>
+<string name="email_hint">דוא"ל</string>
 <string name="password">סיסמא</string>
 <string name="last_name">שם משפחה</string>
 <string name="first_name">שם פרטי</string>
@@ -81,9 +83,10 @@
 <string name="registration_succeeded">הרשמה הצליחה</string>
 <string name="registration_failed">הרשמה נכשלה</string>
 <string name="registration_missing_fields">ערך חסר</string>
-<string name="payment_method">שיטת תשלום</string>
 
+<string name="payment_method_not_defined">ספק תשלום לא מוגדר</string>
 <string name="reminder_button">תזכורת</string>
+<string name="reminder_button_unset">בטל תזכורת</string>
 <string name="start_payment">התחל תשלום</string>
 <string name="payment_progress">...תשלום בביצוע</string>
 <string name="payment_succeeded">תשלום הצליח</string>
@@ -91,10 +94,19 @@
 <string name="skip_payment">דלג</string>
 <string name="stop_payment">סיים תשלום</string>
 <string name="time_limit_reached">מגבלת זמן הגיעה</string>
-<string name="login_failed">כניסה נכשלה</string>
+<string name="awaiting_login">מתחבר</string>
+<string name="login_failed">התחברות נכשלה</string>
 <string name="phone_number">מספר טלפון</string>
 <string name="city">עיר</string>
 <string name="parking_zone">אזור חניה</string>
+<string name="currency">ש"ח</string>
+<string name="unpark">unpark</string>
+<string name="reminder_intent">reminder_intent</string>
+
+<string name="park_ack">האם חנית?</string>
+<string name="unpark_ack">האם פינית חניה?</string>
+
+<string name="first_hour">שעה ראשונה</string>
+<string name="garage_name">שם חניון</string>
     
-<string name="currency">שקל </string>
 </resources>

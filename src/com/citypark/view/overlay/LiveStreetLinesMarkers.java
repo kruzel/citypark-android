@@ -126,4 +126,8 @@ public class LiveStreetLinesMarkers {
 			mOldSegmentsOverlays.addAll(mSegmentsOverlays);
 		}
 	}
+	
+	public void clearFromMap() {
+		clearSegments(mSegmentsOverlays);
+	}
 }
