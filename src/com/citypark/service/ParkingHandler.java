@@ -5,10 +5,10 @@ package com.citypark.service;
 
 import org.osmdroid.util.GeoPoint;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.text.format.Time;
 import android.widget.Toast;
 
@@ -48,7 +48,9 @@ public class ParkingHandler {
 	/* (non-Javadoc)
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
 	 */
-	public void run(Context context, PGeoPoint curPos) {
+	public void run(Context context, Location location) {			
+		
+		PGeoPoint curPos = new PGeoPoint(location);
 		
 		Time curTime = new Time();
 		curTime.setToNow();
@@ -81,9 +83,13 @@ public class ParkingHandler {
 				}
 			} 	
 			
+			//TODO consider running this code only is accuracy < 15 meters
+			//		(currently Atrix does not hasAccuracy)
 			if(parking_manager.isParking()){ 
 				//if parking and started driving, close session, and free parking in parking_manager (app in background)
-				if(curPos.distanceTo(lastSpeedPos)>40 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) {
+				if(location.hasAccuracy() && location.getAccuracy()<15 && location.hasSpeed()) //prefer to work with sensors derived speed value
+					speed = location.getSpeed();
+				if(curPos.distanceTo(lastSpeedPos)>40 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) { //otherwise calcualte 
 					speed = distDiff / 1000f / timediff * 3600000f; //kmph
 					lastSpeedPos = curPos;
 					lastSpeedTime = curTime;

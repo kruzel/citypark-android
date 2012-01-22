@@ -176,7 +176,7 @@ public class LocationService extends Service implements LocationListener {
 //    		shutdown();
     	}
     	
-    	mLocationReceiver.run(app,self);
+    	mLocationReceiver.run(app,location);
 	}
     
     private void shutdown() {
