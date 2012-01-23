@@ -436,6 +436,14 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	}
 
 	@Override
+	protected void onStop() {
+		if(!parking_manager.isParking())
+			LoginTask.setSessionId(null);
+		
+		super.onStop();
+	}
+
+	@Override
 	public void loginComplete(String sessionId) {
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
