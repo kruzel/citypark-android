@@ -103,7 +103,7 @@ public class ParkingHandler {
 				}
 					
 				//1. detect user getting far away from the parking car
-				if(curDistFromCar>30 && approachedCar==false) 
+				if(curDistFromCar>50 && approachedCar==false) 
 					lastDistFromCar = curDistFromCar; 
 				
 				//2. detect user approaching parking car

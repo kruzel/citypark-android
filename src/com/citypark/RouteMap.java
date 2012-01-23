@@ -647,6 +647,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			unPark.setVisible(false);
 		}
 		garageList.setVisible(true);// Ran
+		csShare.setVisible(true);
 		if (app.getRoute() != null) {
 			save.setVisible(true);
 			// steps.setVisible(true);
@@ -679,8 +680,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		switch (item.getItemId()) {
 		case R.id.share:
 			Intent target = new Intent(Intent.ACTION_SEND);
-			target.putExtra(Intent.EXTRA_TEXT, getString(R.string.cs_jump)
-					+ app.getRoute().getItineraryId());
+			target.putExtra(Intent.EXTRA_SUBJECT, "CityPark");
+			target.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_citypark)+ " " + getString(R.string.citypark_website));
 			target.setType("text/plain");
 			intent = Intent.createChooser(target,
 					getString(R.string.share_chooser_title));

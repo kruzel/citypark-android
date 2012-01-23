@@ -65,12 +65,12 @@ public class Preferences extends PreferenceActivity {
         
         @Override
     	public final boolean onPrepareOptionsMenu(final Menu menu) {
-    		final MenuItem steps = menu.findItem(R.id.directions);
-
-    		steps.setVisible(false);
-    		if (((CityParkApp)getApplication()).getRoute() != null) {
-    			steps.setVisible(true);
-    		}
+//    		final MenuItem steps = menu.findItem(R.id.directions);
+//
+//    		steps.setVisible(false);
+//    		if (((CityParkApp)getApplication()).getRoute() != null) {
+//    			steps.setVisible(true);
+//    		}
     		return super.onPrepareOptionsMenu(menu);
     	}
         

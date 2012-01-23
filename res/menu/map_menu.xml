@@ -18,6 +18,16 @@
           android:icon="@drawable/ic_menu_navigate">
     </item>
     
+    <item android:id="@+id/share" android:title="Share" android:visible="true" android:icon="@drawable/ic_menu_share"></item>
+    
+    <item android:id="@+id/sharing" android:visible="false" android:title="@string/sharing_title">
+		<menu>
+		<item android:id="@+id/share" android:title="Share app" android:visible="true"></item>
+		<item android:title="@string/export_title" android:id="@+id/export"></item>
+		<item android:id="@+id/export_gpx" android:title="@string/export_gpx_title"></item>
+		</menu>
+	</item>
+    
     <item android:id="@+id/map"
     android:title="@string/map_title"
     android:icon="@drawable/ic_menu_map" android:visible="false"></item>
@@ -42,13 +52,8 @@
 
 <group android:id="@+id/cyclestreets" android:visible="false">
 <item android:id="@+id/feedback" android:title="@string/feedback_title"></item>
-</group><item android:id="@+id/sharing" android:visible="false" android:title="@string/sharing_title">
-<menu>
-<item android:id="@+id/share" android:title="Share Route" android:visible="false"></item>
-<item android:title="@string/export_title" android:id="@+id/export"></item>
-<item android:id="@+id/export_gpx" android:title="@string/export_gpx_title"></item>
-</menu>
-</item><item android:id="@+id/save" android:title="@string/save_title" android:visible="false"></item><item android:id="@+id/about" android:icon="@drawable/ic_menu_info_details" android:title="@string/about_menu"></item>
+</group>
+<item android:id="@+id/save" android:title="@string/save_title" android:visible="false"></item><item android:id="@+id/about" android:icon="@drawable/ic_menu_info_details" android:title="@string/about_menu"></item>
 
 
 </menu>

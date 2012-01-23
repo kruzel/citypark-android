@@ -49,7 +49,7 @@
 <string name="stop_nav_title">Exit</string>
 <string name="arrived_speech">You have reached your destination.</string>
 <string name="jump_intent">jump</string>
-<string name="share_chooser_title">Share Route Using</string>
+<string name="share_chooser_title">Share Using</string>
 <string name="cs_jump">http://cycle.st/j</string>
 <string name="thanks_message">Thanks for your feedback!</string>
 <string name="feedback_fail_message">Apologies, your feedback could not be submitted.</string>
@@ -113,5 +113,8 @@
 
 <string name="first_hour">First Hour</string>
 <string name="garage_name">Name</string>
+
+<string name="share_citypark">Checkout this great parking app - </string>
+<string name="citypark_website">http://cityparkmobile.wordpress.com</string>
 
 </resources>

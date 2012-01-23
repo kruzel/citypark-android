@@ -109,4 +109,7 @@
 <string name="first_hour">שעה ראשונה</string>
 <string name="garage_name">שם חניון</string>
     
+<string name="share_citypark">נסה את אפליקצית החניה הזאת - </string>
+<string name="citypark_website">http://cityparkmobile.wordpress.com</string>
+
 </resources>
