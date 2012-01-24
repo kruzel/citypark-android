@@ -71,10 +71,7 @@ public class CityParkApp extends Application {
 	
 	/** Navigation service. **/
 	private LocationService mBoundService;
-	
-//	/** Receiver for navigation updates. **/
-//	private ParkingHandler mLocationReceiver = null;
-	
+		
 	/** Connection to location service. **/
 	private ServiceConnection mConnection = new ServiceConnection() {
 	    @Override
@@ -118,10 +115,7 @@ public class CityParkApp extends Application {
 	
 	public void finishAllAppObjecs(){
 		doUnbindService();
-//		if(mLocationReceiver!=null){
-//		    unregisterReceiver(mLocationReceiver);
-//		    mLocationReceiver = null;
-//		}
+		LoginTask.setSessionId(null);
 	}
 	
 	/**
@@ -130,12 +124,6 @@ public class CityParkApp extends Application {
 	 */
 	
 	public void doBindService() {
-//		if (mLocationReceiver == null) {
-//			mLocationReceiver = new ParkingHandler(this);
-//			registerReceiver(mLocationReceiver, new IntentFilter(
-//					getString(R.string.navigation_intent)));
-//		}
-		
 		if (!mIsBound) {
 			bindService(new Intent(CityParkApp.this, LocationService.class), mConnection, Context.BIND_AUTO_CREATE);
 			mIsBound = true;

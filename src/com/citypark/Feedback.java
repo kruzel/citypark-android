@@ -8,6 +8,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.AsyncTask;
@@ -20,6 +22,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.citypark.api.task.LoginTask;
 import com.citypark.utility.MyHttpClient;
 import com.citypark.R;
 
@@ -56,7 +59,6 @@ import java.util.regex.Pattern;
 public class Feedback extends Activity {
 	private CityParkApp app;
 	private TextView nameField;
-	private TextView emailField;
 	private TextView commentField;
 	private Button submit;
 	private SubmitHandler submitHandler;
@@ -70,7 +72,6 @@ public class Feedback extends Activity {
 	setFeatureDrawableResource(Window.FEATURE_RIGHT_ICON, R.drawable.logo);
 	
 	nameField = (TextView) findViewById(R.id.name_input);
-	emailField = (TextView) findViewById(R.id.email_input);
 	commentField = (TextView) findViewById(R.id.comment_input);
 	submit = (Button) findViewById(R.id.submit_button);
 	
@@ -78,13 +79,17 @@ public class Feedback extends Activity {
 	final Object[] data = (Object[]) getLastNonConfigurationInstance();
 	if (data != null) {
 		nameField.setText((CharSequence) data[0]);
-		emailField.setText((CharSequence) data[1]);
-		commentField.setText((CharSequence) data[2]);
+		commentField.setText((CharSequence) data[1]);
 	}
+	
+	if(nameField.getText().length()==0) {
+		SharedPreferences mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
+		nameField.setText(mPrefs.getString("first_name", null) +" " + mPrefs.getString("last_name", null));
+	}
+	
 	//Input validation
 	final Validate watcher = new Validate();
 	nameField.addTextChangedListener(watcher);
-	emailField.addTextChangedListener(watcher);
 	commentField.addTextChangedListener(watcher);
 	
 	//Form submit handler
@@ -96,8 +101,7 @@ public class Feedback extends Activity {
 	public Object onRetainNonConfigurationInstance() {
 		Object[] objs = new Object[3];
 		objs[0] = nameField.getText();
-		objs[1] = emailField.getText();
-		objs[2] = commentField.getText();
+		objs[1] = commentField.getText();
 	    return objs;
 	}
 	
@@ -185,17 +189,19 @@ public class Feedback extends Activity {
 		 * @param email
 		 * @param comment
 		 */
-		private int doSubmit(final int itineraryId, final String name, final String email,
+		private int doSubmit(final String sessionId, final String name,
 				final String comment) {
 			int result = OK;
-			String reqString = getString(R.string.feedback_api);
-			reqString += "itinerary=" + itineraryId;
-			reqString += "&comments=" + URLEncoder.encode(comment);
-			reqString += "&name=" + URLEncoder.encode(name);
-			reqString += "&email=" + URLEncoder.encode(email);
-			HttpUriRequest request = new HttpPut(reqString);
-	        try {
-				final HttpResponse response = new MyHttpClient(Feedback.this).execute(request);
+			
+			try {
+				String[] recipients = new String[]{"support@citypark.co.il", "",};
+				Intent target = new Intent(Intent.ACTION_SEND);
+				target.putExtra(Intent.EXTRA_EMAIL, recipients );
+				target.putExtra(Intent.EXTRA_SUBJECT, "CityPark Android feedback");
+				target.putExtra(Intent.EXTRA_TEXT, "My name is " + name + ", sessionId: " + sessionId + ", and my feedback: " + comment);
+				target.setType("text/plain");
+				Intent intent = Intent.createChooser(target,"Select email app to use");
+				startActivity(intent);
 			} catch (Exception e) {
 				result = -1;
 			}
@@ -207,8 +213,8 @@ public class Feedback extends Activity {
 		 */
 		@Override
 		protected Integer doInBackground(Void... arg0) {
-			return doSubmit(app.getRoute().getItineraryId(), nameField.getText().toString(), 
-					emailField.getText().toString(), commentField.getText().toString());
+			return doSubmit(LoginTask.getSessionId(), nameField.getText().toString(), 
+					commentField.getText().toString());
 		}
 		
 		@Override
@@ -239,7 +245,7 @@ public class Feedback extends Activity {
 		 */
 		@Override
 		public void afterTextChanged(Editable arg0) {
-			if ((commentField.getText().length() != 0) && isValid(emailField.getText())) {
+			if ((commentField.getText().length() != 0)) {
 				submit.setEnabled(true);
 			} else {
 				submit.setEnabled(false);

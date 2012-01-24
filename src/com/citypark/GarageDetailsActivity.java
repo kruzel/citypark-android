@@ -168,12 +168,16 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		}
 		
 		//prices table
-		fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
-		firstHourWeekend.setText("0");
-		extraQuaterMidWeek.setText(Double.toString(garageDetails.getExtraQuarterPrice()));
-		extraQuaterWeekend.setText("0");
-		allDayMidWeek.setText(Double.toString(garageDetails.getAllDayPrice()));
-		allDayWeekend.setText("0");
+		if(garageDetails.getFirstHourPrice()!=0)
+			fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
+		if(garageDetails.getExtraQuarterPrice()!=0)
+			firstHourWeekend.setText("-");
+		if(garageDetails.getExtraQuarterPrice()!=0)
+			extraQuaterMidWeek.setText(Double.toString(garageDetails.getExtraQuarterPrice()));
+		extraQuaterWeekend.setText("-");
+		if(garageDetails.getAllDayPrice()!=0)
+			allDayMidWeek.setText(Double.toString(garageDetails.getAllDayPrice()));
+		allDayWeekend.setText("-");
 	
 		//coupon
 		couponText.setText(garageDetails.getCouponText());

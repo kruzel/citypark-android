@@ -13,7 +13,7 @@
 <string name="prefs_title">Preferences</string>
 <string name="nearparking_title">Nearest Parking</string>
 <string name="contacts_title">Navigate to Contact</string>
-<string name="feedback_title">Feedback on this route</string>
+<string name="feedback_title">Feedback</string>
 <string name="save_title">Save</string>
 <string name="favourites">Favourites</string>
 </resources>

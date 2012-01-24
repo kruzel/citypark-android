@@ -403,8 +403,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		}
 		app.setZoom(mOsmv.getZoomLevel());
 
-		mHandler.removeCallbacks(mUpdateOverlaysTask);
-
 	}
 
 	@Override
@@ -437,8 +435,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	@Override
 	protected void onStop() {
-		if(!parking_manager.isParking())
-			LoginTask.setSessionId(null);
 		
 		super.onStop();
 	}

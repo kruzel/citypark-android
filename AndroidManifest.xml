@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.citypark" android:versionCode="34" android:versionName="Alpha 34">
+    package="com.citypark" android:versionCode="36" android:versionName="1.1 beta">
     
     <uses-sdk android:minSdkVersion="7" />
 
@@ -25,6 +25,7 @@
 	    	<intent-filter>
 	        	<action android:name="android.intent.action.MAIN" />
 	        	<category android:name="android.intent.category.LAUNCHER" />
+	        	<category android:name="android.intent.category.CATEGORY_APP_MAPS"/>
 	        </intent-filter>
 	        <intent-filter>
 	        	<action android:name="android.intent.action.VIEW" />
