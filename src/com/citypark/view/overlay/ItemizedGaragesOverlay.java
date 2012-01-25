@@ -25,7 +25,7 @@ import android.text.TextPaint;
  *
  */
 public class ItemizedGaragesOverlay extends ItemizedIconOverlay<OverlayItem> {
-	private static final int FONT_SIZE = 14;
+	private static final int FONT_SIZE = 24;
     private static final int TITLE_MARGIN = 3;
     private int markerHeight;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
@@ -64,7 +64,7 @@ public class ItemizedGaragesOverlay extends ItemizedIconOverlay<OverlayItem> {
 	            paintText.getTextBounds(item.getTitle(), 0, item.getTitle().length(), rect);
 	
 	            rect.inset(TITLE_MARGIN, TITLE_MARGIN);
-	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight - rect.height()); 
+	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight ); 
 	
 	            paintText.setTextAlign(Paint.Align.CENTER);
 	            paintText.setTextSize(FONT_SIZE);

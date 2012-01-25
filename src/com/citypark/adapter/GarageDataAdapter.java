@@ -37,7 +37,8 @@ public class GarageDataAdapter extends ArrayAdapter<GarageData> {
 			if (tt != null) {
 				tt.setText(context.getString(R.string.garage_name)+": "+garageData.getName());                            }
 			if(bt != null){
-				bt.setText(context.getString(R.string.first_hour)+": "+ garageData.getFirstHourPrice());
+				if(garageData.getFirstHourPrice()!=0)
+					bt.setText(context.getString(R.string.first_hour)+": "+ garageData.getFirstHourPrice());
 			}
 
 			if(garageData.getImageDrawable()!=null){
