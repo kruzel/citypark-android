@@ -59,37 +59,43 @@ public class CityParkGaragesParser extends XMLParser {
 	public List<GaragePoint> parse() {
 			final GaragePoint p = new GaragePoint();
 
-			final RootElement root = new RootElement(XMLNS,"ArrayOfParking");
+			final RootElement root = new RootElement(XMLNS,"ArrayOfParkingPoint");
 			final List<GaragePoint> marks = new ArrayList<GaragePoint>();
-			final Element node = root.getChild(XMLNS,"Parking");
+			final Element node = root.getChild(XMLNS,"ParkingPoint");
 			// Listen for start of tag, get attributes and set them
 			// on current marker.
-			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!
-			node.getChild(XMLNS,"ParkingId").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {				
-					p.setId(Integer.parseInt(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"Name").setEndTextElementListener(new EndTextElementListener() {
+			//Please note that the order should stay longitude and after latitude as they appear in the XML!!!!			
+			node.getChild(XMLNS,"name").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setName(body);
 				}
 			});
-			
-			node.getChild(XMLNS,"Longitude").setEndTextElementListener(new EndTextElementListener() {
-				public void end(String body) {				
-					p.setLongitude(Double.parseDouble(body));
-				}
-			});
-			
-			node.getChild(XMLNS,"Latitude").setEndTextElementListener(new EndTextElementListener() {
+						
+			node.getChild(XMLNS,"latitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					p.setLatitude(Double.parseDouble(body));
 				}
 			});
 			
-			node.getChild(XMLNS,"Current_Pnuyot").setEndTextElementListener(new EndTextElementListener() {
+			node.getChild(XMLNS,"longitude").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {				
+					p.setLongitude(Double.parseDouble(body));
+				}
+			});
+			
+			node.getChild(XMLNS,"parkingId").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {				
+					p.setId(Integer.parseInt(body));
+				}
+			});
+			
+			node.getChild(XMLNS,"owner").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {	
+					p.setOwner(body);
+				}
+			});
+			
+			node.getChild(XMLNS,"availability").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {	
 					try{
 						int currentFree = Integer.parseInt(body);
@@ -100,7 +106,7 @@ public class CityParkGaragesParser extends XMLParser {
 				}
 			});
 			
-			node.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
+			node.getChild(XMLNS,"firstHourPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
 					
 					try  

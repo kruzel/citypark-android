@@ -62,6 +62,19 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.garage_detailes);
 		
+		init();
+	}
+
+	@Override
+	protected void onResume() {
+		init();
+		
+		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, LoginTask.getSessionId(), garageId);
+		task.execute((Void[])null);
+		super.onResume();
+	}
+	
+	private void init() {
 		if (!LoginTask.isLoggedIn())
 			return;
 		
@@ -96,13 +109,6 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		//coupon
 		couponText = (TextView)findViewById(R.id.textViewCouponText);
 	}
-
-	@Override
-	protected void onResume() {
-		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this, LoginTask.getSessionId(), garageId);
-		task.execute((Void[])null);
-		super.onResume();
-	}
 	
 
 	@Override
@@ -113,9 +119,13 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 			return;
 		}
 		
-		garageName.setText(garageDetails.getName());
-		garageAddress.setText(garageDetails.getStreetName() + " " + garageDetails.getHouseNumber() + ", " + garageDetails.getCity());
-		garagePaymentMthod.setText("On Exit, Visa, Cash");
+		if(garageDetails.getName()!=null && garageDetails.getName().length()>0) {
+			garageName.setText(garageDetails.getName());
+			if(garageDetails.getStreetName()!=null && garageDetails.getCity()!=null )
+				garageAddress.setText(garageDetails.getStreetName() + " " + garageDetails.getHouseNumber() + ", " + garageDetails.getCity());
+		}
+		//TODO garagePaymentMthod
+		//garagePaymentMthod.setText("On Exit, Visa, Cash");
 		//images
 		if(garageDetails.getCriple())
 			criple.setImageDrawable(getResources().getDrawable(R.drawable.criple));
@@ -180,7 +190,8 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		allDayWeekend.setText("-");
 	
 		//coupon
-		couponText.setText(garageDetails.getCouponText());
+		if(garageDetails.getCouponText()!=null)
+			couponText.setText(garageDetails.getCouponText());
 		
 		if(dialog!=null && dialog.isShowing())
 			dialog.dismiss();

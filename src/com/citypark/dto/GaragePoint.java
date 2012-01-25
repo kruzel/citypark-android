@@ -4,12 +4,13 @@ import com.citypark.constants.GarageAvailability;
 import com.citypark.utility.route.PGeoPoint;
 
 public class GaragePoint{
-	int id;
-	double latitude;
-	double longitude;
-	double price;
-	String name;
-	GarageAvailability availability;
+	private int id;
+	private double latitude;
+	private double longitude;
+	private double price;
+	private String name;
+	private String owner;
+	private GarageAvailability availability;
 	
 	public GaragePoint() {
 		// TODO Auto-generated constructor stub
@@ -42,6 +43,7 @@ public class GaragePoint{
 		this.price = p.price;
 		this.name = p.name;
 		this.availability = p.availability;
+		this.owner = p.owner;
 	}
 	public double getLatitude() {
 		return latitude;
@@ -70,4 +72,11 @@ public class GaragePoint{
 	public String getName(){
 		return name;
 	}
+	public String getOwner() {
+		return owner;
+	}
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+	
 }

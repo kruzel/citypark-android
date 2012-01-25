@@ -110,11 +110,13 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			OverlayItem item) {
 		
 		int garageId = Integer.parseInt(item.mDescription);
-		Intent intent = new Intent(context,GarageDetailsActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
-		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
-		context.startActivity(intent);
+		if(garageId!=0) {
+			Intent intent = new Intent(context,GarageDetailsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
+			context.startActivity(intent);
+		}
 		
 		return true;
 	}

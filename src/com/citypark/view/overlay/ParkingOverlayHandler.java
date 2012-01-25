@@ -93,18 +93,34 @@ public final class ParkingOverlayHandler {
 
 			// Parse XML to overlayitems (cycle stands)
 			for (GaragePoint garagePoint : garageList) {
-				switch (garagePoint.getAvailability()) {
-				case UNKNOWN:
-					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage);
-					break;
-				case BUSY:
-					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage_red);
-					break;
-				default:
-					markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage_green);
-					break;
+				//TODO move images selection logic to server - for multiple owners support
+				//TODO add images caching
+				if (garagePoint.getOwner().contains("ahuzot")) {
+					switch (garagePoint.getAvailability()) {
+					case UNKNOWN:
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ahuzat_hof_yellow);
+						break;
+					case BUSY:
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ahuzat_hof_red);
+						break;
+					default:
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ahuzat_hof_green);
+						break;
+					}
+				} else {
+					switch (garagePoint.getAvailability()) {
+					case UNKNOWN:
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage);
+						break;
+					case BUSY:
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage_red);
+						break;
+					default:
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ic_marker_garage_green);
+						break;
+					}
 				}
-				
+					
 				OverlayItem marker;
 				if (garagePoint.getPrice()>0)
 					marker = new OverlayItem(Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString(), garagePoint.getPGeoPoint()); //mAct.getResources().getString(R.string.currency) +
