@@ -121,8 +121,16 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		
 		if(garageDetails.getName()!=null && garageDetails.getName().length()>0) {
 			garageName.setText(garageDetails.getName());
-			if(garageDetails.getStreetName()!=null && garageDetails.getCity()!=null )
-				garageAddress.setText(garageDetails.getStreetName() + " " + garageDetails.getHouseNumber() + ", " + garageDetails.getCity());
+			String address = "";
+			if(garageDetails.getStreetName()!=null) {
+				address += garageDetails.getStreetName();
+				if(garageDetails.getHouseNumber()!=0)
+					address += " " + garageDetails.getHouseNumber();
+			}
+				if(garageDetails.getCity()!=null )
+					address += " " + garageDetails.getCity();
+					
+			garageAddress.setText(address);
 		}
 		//TODO garagePaymentMthod
 		//garagePaymentMthod.setText("On Exit, Visa, Cash");

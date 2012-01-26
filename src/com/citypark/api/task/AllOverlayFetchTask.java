@@ -61,12 +61,6 @@ public class AllOverlayFetchTask {
 	private final Handler messageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
-			if(res) {
-				lineMarkers.updateMap();
-				releasesMarkers.updateMap();
-				garageMarkers.updateMap();
-			}
-				
 			listener.overlayFetchComplete(res);
 		}
 	};

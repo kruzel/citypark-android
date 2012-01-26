@@ -1166,18 +1166,27 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 
 	@Override
 	public void overlayFetchComplete(Boolean success) {
-		if (success)
-			mOsmv.invalidate();
-		
-		if(LoginTask.isLoggedIn() && firstOverlayLoading) {
-			firstOverlayLoading = false;
+	
+		if(LoginTask.isLoggedIn()) {
+			if(!parking_manager.isParking()) {
+				if (success) {
+					garageMarkers.updateMap();
+					linesMarkers.updateMap();
+					releasesMarkers.updateMap();
+					mOsmv.invalidate();
+				}
+				
+				mHandler.removeCallbacks(mUpdateOverlaysTask);
+				mHandler.postDelayed(mUpdateOverlaysTask,
+						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+			}
 			
-			if(dialog!=null && dialog.isShowing())
-				dialog.dismiss();
-			
-			mHandler.removeCallbacks(mUpdateOverlaysTask);
-			mHandler.postDelayed(mUpdateOverlaysTask,
-					CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+			if(firstOverlayLoading) {
+				firstOverlayLoading = false;
+				
+				if(dialog!=null && dialog.isShowing())
+					dialog.dismiss();
+			}
 		}
 	}
 	

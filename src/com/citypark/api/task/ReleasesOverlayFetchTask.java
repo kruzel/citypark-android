@@ -50,11 +50,6 @@ public class ReleasesOverlayFetchTask {
 	private final Handler messageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
-			if(res) {
-				releasesMarkers.updateMap();
-				garageMarkers.updateMap(); //keep garage markers on top
-			}
-				
 			listener.overlayFetchComplete(res);
 		}
 	};
