@@ -94,14 +94,16 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 			
 			node.getChild(XMLNS,"FirstHourPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
-					
 					try  
 					{  
-						gd.setFirstHourPrice(Integer.parseInt(body));  
+						if(body.length()==0)
+							gd.setFirstHourPrice(-1);
+						else
+							gd.setFirstHourPrice(Integer.parseInt(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	gd.setFirstHourPrice(0);
+				    	gd.setFirstHourPrice(-1);
 				    } 
 						
 					gdList.add(new GarageData(gd));

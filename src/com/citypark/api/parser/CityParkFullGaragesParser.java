@@ -99,7 +99,10 @@ public class CityParkFullGaragesParser extends XMLParser {
 					
 					try  
 					{  
-						p.setFirstHourPrice(Double.parseDouble(body));  
+						if(body.length()==0)
+							p.setFirstHourPrice(-1);
+						else
+							p.setFirstHourPrice(Double.parseDouble(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  

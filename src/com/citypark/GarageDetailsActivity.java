@@ -186,15 +186,25 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		}
 		
 		//prices table
-		if(garageDetails.getFirstHourPrice()!=0)
+		if(garageDetails.getFirstHourPrice()==0)
+			fisrtHourMidWeek.setText(getString(R.string.parking_free));
+		if(garageDetails.getFirstHourPrice()>0)
 			fisrtHourMidWeek.setText(Double.toString(garageDetails.getFirstHourPrice()));
-		if(garageDetails.getExtraQuarterPrice()!=0)
-			firstHourWeekend.setText("-");
-		if(garageDetails.getExtraQuarterPrice()!=0)
+				
+		if(garageDetails.getFirstHourPrice()==0 && garageDetails.getExtraQuarterPrice()==0)
+			extraQuaterMidWeek.setText(getString(R.string.parking_free));
+		else if(garageDetails.getExtraQuarterPrice()>0)
 			extraQuaterMidWeek.setText(Double.toString(garageDetails.getExtraQuarterPrice()));
-		extraQuaterWeekend.setText("-");
-		if(garageDetails.getAllDayPrice()!=0)
+		
+		
+		if(garageDetails.getAllDayPrice()==0)
+			allDayMidWeek.setText(getString(R.string.parking_free));
+		if(garageDetails.getAllDayPrice()>0)
 			allDayMidWeek.setText(Double.toString(garageDetails.getAllDayPrice()));
+		
+		//TODO get values from server
+		firstHourWeekend.setText("-");
+		extraQuaterWeekend.setText("-");
 		allDayWeekend.setText("-");
 	
 		//coupon

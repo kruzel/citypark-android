@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.citypark.R;
 import com.citypark.constants.GarageAvailability;
+import com.citypark.dto.GarageData;
 import com.citypark.utility.route.PGeoPoint;
 
 /**
@@ -165,27 +166,31 @@ public class CityParkGaragesByIdParser extends XMLParser {
 
 			root.getChild(XMLNS,"AllDayPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
-					
 					try  
 					{  
-						p.setAllDayPrice(Double.parseDouble(body));  
+						if(body.length()==0)
+							p.setAllDayPrice(-1);
+						else
+							p.setAllDayPrice(Integer.parseInt(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	p.setAllDayPrice(0);
+				    	p.setAllDayPrice(-1);
 				    } 
 				}
 			});
 			root.getChild(XMLNS,"ExtraQuarterPrice").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {
-					
 					try  
 					{  
-						p.setExtraQuarterPrice(Double.parseDouble(body));  
+						if(body.length()==0)
+							p.setExtraQuarterPrice(-1);
+						else
+							p.setExtraQuarterPrice(Integer.parseInt(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	p.setExtraQuarterPrice(0);
+				    	p.setExtraQuarterPrice(-1);
 				    } 
 				}
 			});
@@ -193,11 +198,14 @@ public class CityParkGaragesByIdParser extends XMLParser {
 				public void end(String body) {
 					try  
 					{  
-						p.setFirstHourPrice(Double.parseDouble(body));  
+						if(body.length()==0)
+							p.setFirstHourPrice(-1);
+						else
+							p.setFirstHourPrice(Integer.parseInt(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	p.setFirstHourPrice(0);
+				    	p.setFirstHourPrice(-1);
 				    } 
 				}
 			});

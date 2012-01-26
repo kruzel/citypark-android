@@ -322,6 +322,7 @@ public final class R {
         public static final int osmarender=0x7f060028;
         public static final int park_ack=0x7f060091;
         public static final int park_title=0x7f060011;
+        public static final int parking_free=0x7f060097;
         public static final int parking_zone=0x7f06008d;
         public static final int password=0x7f060076;
         public static final int payment_failes=0x7f060085;

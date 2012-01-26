@@ -111,11 +111,14 @@ public class CityParkGaragesParser extends XMLParser {
 					
 					try  
 					{  
-						p.setPrice(Double.parseDouble(body));  
+						if(body.length()==0)
+							p.setPrice(-1);
+						else
+							p.setPrice(Double.parseDouble(body));  
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	p.setPrice(0);
+				    	p.setPrice(-1);
 				    } 
 						
 					marks.add(new GaragePoint(p));
