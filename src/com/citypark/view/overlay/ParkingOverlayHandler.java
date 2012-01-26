@@ -98,7 +98,7 @@ public final class ParkingOverlayHandler {
 				if (garagePoint.getOwner().contains("ahuzot")) {
 					switch (garagePoint.getAvailability()) {
 					case UNKNOWN:
-						markerIcon = mAct.getResources().getDrawable(R.drawable.ahuzat_hof_yellow);
+						markerIcon = mAct.getResources().getDrawable(R.drawable.ahuzat_hof_grey);
 						break;
 					case BUSY:
 						markerIcon = mAct.getResources().getDrawable(R.drawable.ahuzat_hof_red);

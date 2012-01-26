@@ -1170,9 +1170,9 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		if(LoginTask.isLoggedIn()) {
 			if(!parking_manager.isParking()) {
 				if (success) {
-					garageMarkers.updateMap();
 					linesMarkers.updateMap();
 					releasesMarkers.updateMap();
+					garageMarkers.updateMap();
 					mOsmv.invalidate();
 				}
 				
