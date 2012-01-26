@@ -74,6 +74,8 @@ public class LiveStreetLinesMarkers {
 			List<StreetSegment> linesList = parser.parse();
 			if (linesList == null)
 				return null;
+			if(linesList.size()==0)
+				return null;
 			
 			// Parse XML to street segments
 			// and add each street segment as a separate overlay with color according to street segment wait time

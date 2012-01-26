@@ -50,7 +50,7 @@ public class ReleasesOverlayFetchTask {
 	private final Handler messageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
-			listener.overlayFetchComplete(res);
+			listener.overlayFetchComplete(false,res,false);
 		}
 	};
 

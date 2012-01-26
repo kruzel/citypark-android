@@ -17,8 +17,10 @@ public class AllOverlayFetchTask {
 	private LiveStreetLinesMarkers lineMarkers;
 	private LiveStreetReleasesMarkers releasesMarkers;
 	private LiveGarageMarkers garageMarkers;
-	
-	private Boolean res = false;
+
+	private Boolean garagesRes;
+	private Boolean releasesRes;
+	private Boolean linesRes;
 
 	public AllOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveGarageMarkers garageMarkers, LiveStreetReleasesMarkers releasesMarkers, LiveStreetLinesMarkers linesMarkers) {
 		super();
@@ -39,12 +41,9 @@ public class AllOverlayFetchTask {
 			private static final int MSG = 0;
 			@Override
 			public void run() {
-			
-				res = lineMarkers.fetch(p);
-				if(res==true) 
-					res = releasesMarkers.fetch(p);
-				if(res==true) 
-					res = garageMarkers.fetch(p);
+				linesRes = lineMarkers.fetch(p);
+				releasesRes = releasesMarkers.fetch(p);
+				garagesRes = garageMarkers.fetch(p);
 				
 				AllOverlayFetchTask.this.messageHandler.sendEmptyMessage(MSG);
 			}
@@ -61,7 +60,7 @@ public class AllOverlayFetchTask {
 	private final Handler messageHandler = new Handler() {
 		@Override
 		public void handleMessage(final Message msg) {
-			listener.overlayFetchComplete(res);
+			listener.overlayFetchComplete(garagesRes,releasesRes,linesRes);
 		}
 	};
 

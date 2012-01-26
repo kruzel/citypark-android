@@ -184,8 +184,8 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 				curTime.setToNow();
 				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) { 
 					// refresh only releases points
-					if(mOsmv.getZoomLevel()>=15) {
-						releasesOverlayTask.refresh(mOsmv.getMapCenter());
+					if(mOsmv.getZoomLevel()>=15 && lastAllOverlaysUpdateCenter!=null) {
+						releasesOverlayTask.refresh(lastAllOverlaysUpdateCenter);
 						lastMapUpdateTime.setToNow();
 					}
 				}
@@ -704,7 +704,7 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			break;
 		case R.id.center:
 			RouteMap.this.mLocationOverlay.followLocation(true);
-			showAllParkings(false);
+			//showAllParkings(false);
 			break;
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
@@ -1158,23 +1158,21 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO this code is called only once - MapView bug?
-		if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			showAllParkings(false);
-		}
+		
 		return false;
 	}
 
 	@Override
-	public void overlayFetchComplete(Boolean success) {
+	public void overlayFetchComplete(final Boolean garagesRes, final Boolean releasesRes, final Boolean linesRes) {
 	
 		if(LoginTask.isLoggedIn()) {
-			if(!parking_manager.isParking()) {
-				if (success) {
+			if(!parking_manager.isParking()) {				
+				if(linesRes)
 					linesMarkers.updateMap();
+				if(releasesRes)
 					releasesMarkers.updateMap();
+				if(garagesRes)
 					garageMarkers.updateMap();
-					mOsmv.invalidate();
-				}
 				
 				mHandler.removeCallbacks(mUpdateOverlaysTask);
 				mHandler.postDelayed(mUpdateOverlaysTask,
