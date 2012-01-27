@@ -79,6 +79,7 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 	@Override
 	public void GarageDetailsFetchComplete(List<GarageData> gdList) {
 		if(gdList!=null){
+			m_garage.clear();
 			m_garage.addAll(gdList);
 			m_adapter.notifyDataSetChanged();
 		}
