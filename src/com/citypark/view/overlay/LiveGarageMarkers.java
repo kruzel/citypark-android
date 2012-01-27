@@ -20,6 +20,7 @@ import com.citypark.GarageDetailsActivity;
 import com.citypark.R;
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
+import com.citypark.dto.AreaParkings;
 
 /**
  * This file is part of CityPark.
@@ -55,6 +56,8 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
 	private static ItemizedGaragesOverlay iOverlay;
+	/** summary of fetched parkings **/ 
+	AreaParkings areaParking = new AreaParkings();
 
 	public LiveGarageMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
@@ -92,6 +95,12 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			mv.getOverlays().remove(iOverlay);
 		}
 	}
+	
+	public AreaParkings getAreaParkings() {
+		
+		return areaParking;
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.andnav.osm.views.overlay.OpenStreetMapViewItemizedOverlay.OnItemGestureListener#onItemLongPress(int, java.lang.Object)

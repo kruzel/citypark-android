@@ -35,24 +35,24 @@ public class GarageDataAdapter extends ArrayAdapter<GarageData> {
 			TextView tt = (TextView) v.findViewById(R.id.toptext);
 			TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 			if (tt != null) {
-				tt.setText(context.getString(R.string.garage_name)+": "+garageData.getName());                            }
+				tt.setText(context.getString(R.string.garage_name)+": "+garageData.getName());                            
+			}
 			if(bt != null){
 				if(garageData.getFirstHourPrice()==0)
 					bt.setText(context.getString(R.string.first_hour)+": "+ context.getString(R.string.parking_free));
 				else if(garageData.getFirstHourPrice()>0)
 					bt.setText(context.getString(R.string.first_hour)+": "+ garageData.getFirstHourPrice());
+				else
+					bt.setText("");
 			}
 
+			ImageView imgView = (ImageView)v.findViewById(R.id.icon);
+			
 			if(garageData.getImageDrawable()!=null){
-				//use image from server
-				ImageView imgView = new ImageView(getContext());
-				imgView = (ImageView)v.findViewById(R.id.icon);
+				//use image from server	
 				imgView.setImageDrawable(garageData.getImageDrawable());	
 			}else{
-				ImageView imag = (ImageView)v.findViewById(R.drawable.icon);
-				ImageView imgView = new ImageView(getContext());
-				imgView = (ImageView)v.findViewById(R.id.icon);
-				imgView = imag;
+				imgView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon));
 			}
 
 		}

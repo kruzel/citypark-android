@@ -71,19 +71,22 @@ public final class R {
         public static final int nis_g=0x7f02002f;
         public static final int nolimit=0x7f020030;
         public static final int nolimit_g=0x7f020031;
-        public static final int person=0x7f020032;
-        public static final int previous=0x7f020033;
-        public static final int reminder_button=0x7f020034;
-        public static final int reminder_button_pressed=0x7f020035;
-        public static final int roof=0x7f020036;
-        public static final int roof_g=0x7f020037;
-        public static final int splash=0x7f020038;
-        public static final int underground=0x7f020039;
-        public static final int underground_g=0x7f02003a;
-        public static final int withlock=0x7f02003b;
-        public static final int withlock_g=0x7f02003c;
-        public static final int zoom_in=0x7f02003d;
-        public static final int zoom_out=0x7f02003e;
+        public static final int parking_count_green=0x7f020032;
+        public static final int parking_count_grey=0x7f020033;
+        public static final int parking_count_red=0x7f020034;
+        public static final int person=0x7f020035;
+        public static final int previous=0x7f020036;
+        public static final int reminder_button=0x7f020037;
+        public static final int reminder_button_pressed=0x7f020038;
+        public static final int roof=0x7f020039;
+        public static final int roof_g=0x7f02003a;
+        public static final int splash=0x7f02003b;
+        public static final int underground=0x7f02003c;
+        public static final int underground_g=0x7f02003d;
+        public static final int withlock=0x7f02003e;
+        public static final int withlock_g=0x7f02003f;
+        public static final int zoom_in=0x7f020040;
+        public static final int zoom_out=0x7f020041;
     }
     public static final class id {
         public static final int about=0x7f08000c;

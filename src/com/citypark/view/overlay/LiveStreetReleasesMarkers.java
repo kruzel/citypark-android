@@ -17,6 +17,7 @@ import com.citypark.CityParkApp;
 import com.citypark.R;
 import com.citypark.api.parser.CityParkParkingReleasesParser;
 import com.citypark.api.task.LoginTask;
+import com.citypark.dto.AreaParkings;
 import com.citypark.dto.StreetParkingPoint;
 
 /**
@@ -55,6 +56,8 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
 	private static ItemizedReleasesOverlay iOverlay;
+	/** summary of fetched parkings **/ 
+	AreaParkings areaParking = new AreaParkings();
 
 	public LiveStreetReleasesMarkers(final MapView mOsmv, final Context ctxt) {
 		mv = mOsmv;
@@ -91,6 +94,11 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 		if (mv.getOverlays().contains(iOverlay)) {
 			mv.getOverlays().remove(iOverlay);
 		}
+	}
+	
+	public AreaParkings getAreaParkings() {
+		
+		return areaParking;
 	}
 
 	/* (non-Javadoc)

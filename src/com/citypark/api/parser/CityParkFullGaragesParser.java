@@ -106,7 +106,7 @@ public class CityParkFullGaragesParser extends XMLParser {
 				    }  
 				    catch( NumberFormatException e )  
 				    {  
-				    	p.setFirstHourPrice(0);
+				    	p.setFirstHourPrice(-1);
 				    } 
 						
 					marks.add(new GarageDetailes(p));
