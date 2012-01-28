@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -46,6 +47,9 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
+        
+		// TODO proper rotation handling while avoiding re-fetch of all overlays
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
      // Restore preferences
         mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);

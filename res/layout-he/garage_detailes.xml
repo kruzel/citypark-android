@@ -205,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:text="רבע שעה נוספת"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#D64700" android:layout_gravity="right"/>
+                android:textColor="#D64700" android:layout_gravity="right" android:layout_marginLeft="10dp"/>
                         
         </TableRow>
 

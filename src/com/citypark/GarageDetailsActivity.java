@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,10 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		// TODO proper rotation handling while avoiding re-fetch of all overlays
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.garage_detailes);
