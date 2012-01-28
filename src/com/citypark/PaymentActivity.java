@@ -217,6 +217,9 @@ public class PaymentActivity extends Activity {
 				 resultCode = true;
 				 parking_manager.setPaymentEnd();
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
+				 
+				 if(stopPayTask!=null)
+					 stopPayTask.cancel(true);
 				 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
 						 parking_manager.getGeoPoint().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				 stopPayTask.execute();
@@ -226,6 +229,8 @@ public class PaymentActivity extends Activity {
 	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
+	        	 if(payTask!=null)
+					 payTask.cancel(true);
 	        	 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
 						 parking_manager.getGeoPoint().getLongitudeE6()/1E6, "FAILED");
 				 stopPayTask.execute();
@@ -238,6 +243,8 @@ public class PaymentActivity extends Activity {
 				 Toast.makeText(this, R.string.payment_succeeded , Toast.LENGTH_LONG).show();
 				 
 				//TODO operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
+				 if(payTask!=null)
+					 payTask.cancel(true);
 				payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
 						parking_manager.getGeoPoint().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				payTask.execute();
@@ -247,6 +254,8 @@ public class PaymentActivity extends Activity {
 	        	 resultCode = false;
 	        	 Toast.makeText(this, R.string.payment_failes , Toast.LENGTH_LONG).show();
 	        	 
+	        	 if(payTask!=null)
+					 payTask.cancel(true);
 	        	 payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
 							parking_manager.getGeoPoint().getLongitudeE6()/1E6, "FAILED");
 					payTask.execute();

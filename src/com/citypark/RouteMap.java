@@ -315,6 +315,16 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 		}
 	}
 
+	@Override
+	protected void onDestroy() {
+		if(!parking_manager.isParking())
+			app.finishAllAppObjecs();
+		
+		super.onDestroy();
+	}
+
+
+
 	/**
 	 * Handle jump intents from directions view.
 	 */

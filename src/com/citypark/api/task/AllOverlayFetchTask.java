@@ -12,6 +12,7 @@ import com.citypark.view.overlay.LiveStreetLinesMarkers;
 import com.citypark.view.overlay.LiveStreetReleasesMarkers;
 
 public class AllOverlayFetchTask {
+	private Thread update;
 	
 	private OverlayListener listener;
 	private LiveStreetLinesMarkers lineMarkers;
@@ -37,7 +38,10 @@ public class AllOverlayFetchTask {
 	 */
 
 	public void refresh(final GeoPoint p) {
-		Thread update = new Thread() {
+		if(update!=null)
+			update.stop();
+		
+		update = new Thread() {
 			private static final int MSG = 0;
 			@Override
 			public void run() {

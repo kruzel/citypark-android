@@ -23,7 +23,8 @@ import com.citypark.api.task.RegistrationTask;
 import com.citypark.constants.CityParkConsts;
 
 public class RegisterActivity extends Activity implements RegisterationListener {
-
+	RegistrationTask regTask;
+	
 	SharedPreferences mPrefs = null;
     SharedPreferences.Editor mEditor = null;
     
@@ -97,7 +98,9 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         
         //spawn registration task
         //we finish only after receiving response from the server
-        RegistrationTask regTask = new RegistrationTask(this, this, txtEmail.getText().toString(), 
+        if(regTask!=null)
+        	regTask.cancel(false);
+        regTask = new RegistrationTask(this, this, txtEmail.getText().toString(), 
         		txtPassword.getText().toString(), txtFirstName.getText().toString(), 
         		txtLastName.getText().toString(), txtPhoneNumber.getText().toString(), txtLicensePlate.getText().toString(), strPaymentMethod);
         regTask.execute((Void[])null);
