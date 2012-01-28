@@ -112,6 +112,7 @@
 <string name="unpark_ack">Have you un-parked?</string>
 
 <string name="first_hour">First Hour</string>
+<string name="all_day">All day</string>
 <string name="garage_name">Name</string>
 
 <string name="share_citypark">Checkout this great parking app - </string>

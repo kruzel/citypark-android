@@ -244,6 +244,7 @@ public final class R {
         public static final int about=0x7f060045;
         public static final int about_menu=0x7f060047;
         public static final int about_message=0x7f060046;
+        public static final int all_day=0x7f060094;
         public static final int app_name=0x7f060033;
         public static final int app_name_itemizedoverlay=0x7f060040;
         public static final int arg_error_msg=0x7f06003a;
@@ -257,7 +258,7 @@ public final class R {
         public static final int city=0x7f06008c;
         public static final int citypark_api=0x7f060007;
         public static final int citypark_images_root=0x7f060008;
-        public static final int citypark_website=0x7f060096;
+        public static final int citypark_website=0x7f060097;
         public static final int cloudmade_small=0x7f06002f;
         public static final int cloudmade_standard=0x7f060030;
         public static final int comment=0x7f060010;
@@ -293,7 +294,7 @@ public final class R {
         public static final int first_name=0x7f060078;
         public static final int fix_msg=0x7f06003e;
         public static final int ft=0x7f060052;
-        public static final int garage_name=0x7f060094;
+        public static final int garage_name=0x7f060095;
         public static final int garagelist_title=0x7f060013;
         public static final int geocodeconnecterror=0x7f060072;
         public static final int geocodeerror=0x7f060071;
@@ -326,7 +327,7 @@ public final class R {
         public static final int osmarender=0x7f060028;
         public static final int park_ack=0x7f060091;
         public static final int park_title=0x7f060011;
-        public static final int parking_free=0x7f060097;
+        public static final int parking_free=0x7f060098;
         public static final int parking_zone=0x7f06008d;
         public static final int password=0x7f060076;
         public static final int payment_failes=0x7f060085;
@@ -368,7 +369,7 @@ public final class R {
         public static final int search=0x7f060009;
         public static final int send_msg=0x7f06003f;
         public static final int share_chooser_title=0x7f06005c;
-        public static final int share_citypark=0x7f060095;
+        public static final int share_citypark=0x7f060096;
         public static final int share_url_title=0x7f060061;
         public static final int sharing_title=0x7f060063;
         public static final int showparking_title=0x7f060017;

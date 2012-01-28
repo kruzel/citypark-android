@@ -42,7 +42,11 @@ public class GarageDataAdapter extends ArrayAdapter<GarageData> {
 					bt.setText(context.getString(R.string.first_hour)+": "+ context.getString(R.string.parking_free));
 				else if(garageData.getFirstHourPrice()>0)
 					bt.setText(context.getString(R.string.first_hour)+": "+ garageData.getFirstHourPrice());
-				else
+				else if (garageData.getAllDayPrice()==0) {
+					bt.setText("");
+				} else if(garageData.getAllDayPrice()>0) {
+					bt.setText(context.getString(R.string.all_day)+": "+ garageData.getAllDayPrice());
+				} else
 					bt.setText("");
 			}
 
