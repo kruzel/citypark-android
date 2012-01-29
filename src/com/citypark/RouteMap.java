@@ -1267,5 +1267,6 @@ public class RouteMap extends OpenStreetMapActivity implements LoginListener,
 			mOsmv.getOverlays().remove(parkedCarOverlay);
 		}
 		parkedCarOverlayItems.clear();
+		parkedCarOverlay = null;
 	}
 }
