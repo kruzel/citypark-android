@@ -4,19 +4,20 @@
 package com.citypark;
 
 import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.ParkingHandler;
 import com.citypark.service.LocationService;
 import com.citypark.utility.AddressDatabase;
 import com.citypark.utility.RouteDatabase;
@@ -44,17 +45,20 @@ import com.citypark.utility.route.Segment;
  * @author jono@nanosheep.net
  * @version Jul 2, 2010
  */
-//@ReportsCrashes(formKey = "dGF2OV9Cd3VsOWtLMjRnWG9FRG5mZEE6MQ",
-//	mode = ReportingInteractionMode.NOTIFICATION,
-//    resNotifTickerText = R.string.crash_notif_ticker_text,
-//    resNotifTitle = R.string.crash_notif_title,
-//    resNotifText = R.string.crash_notif_text,
-//    resDialogText = R.string.crash_dialog_text,
-//    resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
-//    resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
-//    resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. when defined, adds a user text field input with this text resource as a label
-//    resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
-//    )
+@ReportsCrashes(formKey = "dEdVNHJqQjJUem5UOHZjal9YNjItc0E6MQ",
+	customReportContent = { ReportField.APP_VERSION_NAME, ReportField.APP_VERSION_CODE, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT, ReportField.SHARED_PREFERENCES, ReportField.USER_EMAIL },
+	mode = ReportingInteractionMode.NOTIFICATION,
+    resNotifTickerText = R.string.crash_notif_ticker_text,
+    resNotifTitle = R.string.crash_notif_title,
+    resNotifText = R.string.crash_notif_text,
+    resDialogText = R.string.crash_dialog_text,
+    resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+    resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
+    resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. when defined, adds a user text field input with this text resource as a label
+    resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
+    )
+//TODO how to add specific value reports
+//ErrorReporter.getInstance().putCustomData("myVariable", myVariable);
 
 //TODO add common data structures and common images caching for all activities
 
