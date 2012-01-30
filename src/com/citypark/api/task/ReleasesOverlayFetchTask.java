@@ -12,9 +12,7 @@ import com.citypark.view.overlay.LiveGarageMarkers;
 import com.citypark.view.overlay.LiveStreetLinesMarkers;
 import com.citypark.view.overlay.LiveStreetReleasesMarkers;
 
-public class ReleasesOverlayFetchTask {
-	Thread update;
-	
+public class ReleasesOverlayFetchTask extends AsyncTask<GeoPoint, Void, Void> {
 	private OverlayListener listener;
 	private LiveStreetReleasesMarkers releasesMarkers;
 	private LiveGarageMarkers garageMarkers;
@@ -28,34 +26,18 @@ public class ReleasesOverlayFetchTask {
 		this.garageMarkers = garageMarkers;
 	}
 
-	public void refresh(final GeoPoint p) {
-		if(update!=null)
-			update.stop();
-		
-		update = new Thread() {
-			private static final int MSG = 0;
-			@Override
-			public void run() {
-			
-				res = releasesMarkers.fetch(p);
-			
-				ReleasesOverlayFetchTask.this.messageHandler.sendEmptyMessage(MSG);
-			}
-		};
-		update.start();
+	@Override
+	protected Void doInBackground(GeoPoint... p) {
+		res = false;
+		if(!isCancelled())
+			res = releasesMarkers.fetch(p[0]);
+		return null;
 	}
 	
-	/**
-	 * Handler for parking thread.
-	 * Remove the existing parking overlay if it exists and
-	 * replace it with the new one from the thread.
-	 */
-	
-	private final Handler messageHandler = new Handler() {
-		@Override
-		public void handleMessage(final Message msg) {
+	@Override
+	protected void onPostExecute(Void result) {
+		if(!isCancelled())
 			listener.overlayFetchComplete(false,res,false);
-		}
-	};
-
+		super.onPostExecute(result);
+	}
 }

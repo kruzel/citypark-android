@@ -79,16 +79,25 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         btnPaymentMethod.setText(strPaymentMethod);
     } 
    
-    public void onRegister(View view) {
-    	btnRegister.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_pressed));
+    public void onRegister(View view) {    	
+    	//remove trailing and leading spaces
+    	txtEmail.setText(txtEmail.getText().toString().trim());
+    	txtPassword.setText(txtPassword.getText().toString().trim());
+    	txtFirstName.setText(txtFirstName.getText().toString().trim());
+    	txtLastName.setText(txtLastName.getText().toString().trim());
     	
-    	showDialog(R.id.awaiting_register);
-    	
-    	if(txtEmail.getText().length() == 0 || txtPassword.getText().length() == 0) {
-    		Toast.makeText(this, R.string.registration_missing_fields, Toast.LENGTH_LONG).show();
+    	if(txtEmail.getText().length() == 0) {
+    		txtEmail.setError(getString(R.string.registration_missing_fields));
+    		return;
+    	}
+    	if(txtPassword.getText().length() == 0) {
+    		txtPassword.setError(getString(R.string.registration_missing_fields));
     		return;
     	}
     	
+    	btnRegister.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_pressed));
+    	
+    	showDialog(R.id.awaiting_register);
     	if(strPaymentMethod.contains("Payment Method"))
     		strPaymentMethod = "None";
     		
