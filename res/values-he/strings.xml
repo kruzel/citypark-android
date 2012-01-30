@@ -83,7 +83,7 @@
 <string name="registration_succeeded">הרשמה הצליחה</string>
 <string name="registration_failed">הרשמה נכשלה</string>
 <string name="registration_missing_fields">ערך חסר</string>
-
+<string name="email_invalid">מייל לא תקין</string>
 <string name="payment_method_not_defined">ספק תשלום לא מוגדר</string>
 <string name="reminder_button">תזכורת</string>
 <string name="reminder_button_unset">בטל תזכורת</string>

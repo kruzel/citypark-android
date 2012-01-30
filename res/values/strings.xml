@@ -88,6 +88,7 @@
 <string name="registration_succeeded">Registration Succeeded</string>
 <string name="registration_failed">Registration Failed</string>
 <string name="registration_missing_fields">Required parameters</string>
+<string name="email_invalid">Invalid email</string>
 <string name="payment_method">Payment Method</string>
 <string name="payment_method_not_defined">Payment Method not set</string>
 <string name="reminder_button">Set Reminder</string>

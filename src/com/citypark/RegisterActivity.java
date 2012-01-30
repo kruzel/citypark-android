@@ -1,14 +1,16 @@
 package com.citypark;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -24,6 +26,17 @@ import com.citypark.api.task.RegistrationTask;
 import com.citypark.constants.CityParkConsts;
 
 public class RegisterActivity extends Activity implements RegisterationListener {
+	public final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
+	          "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+	          "\\@" +
+	          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+	          "(" +
+	          "\\." +
+	          "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+	          ")+"
+	      );
+
+	
 	RegistrationTask regTask;
 	
 	SharedPreferences mPrefs = null;
@@ -90,6 +103,18 @@ public class RegisterActivity extends Activity implements RegisterationListener 
     		txtEmail.setError(getString(R.string.registration_missing_fields));
     		return;
     	}
+    	
+    	try {
+    		if(!EMAIL_ADDRESS_PATTERN.matcher(txtEmail.getText().toString()).matches()) {
+    			txtEmail.setError(getString(R.string.email_invalid));
+    			return;
+    		}
+        }
+        catch( NullPointerException exception ) {
+            return;
+        }
+
+    	
     	if(txtPassword.getText().length() == 0) {
     		txtPassword.setError(getString(R.string.registration_missing_fields));
     		return;
