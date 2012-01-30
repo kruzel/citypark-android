@@ -4,7 +4,7 @@
 package com.citypark;
 
 import org.acra.ACRA;
-import org.acra.ReportField;
+import org.acra.ErrorReporter;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
@@ -46,7 +46,6 @@ import com.citypark.utility.route.Segment;
  * @version Jul 2, 2010
  */
 @ReportsCrashes(formKey = "dEdVNHJqQjJUem5UOHZjal9YNjItc0E6MQ",
-	customReportContent = { ReportField.APP_VERSION_NAME, ReportField.APP_VERSION_CODE, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT, ReportField.SHARED_PREFERENCES, ReportField.USER_EMAIL },
 	mode = ReportingInteractionMode.NOTIFICATION,
     resNotifTickerText = R.string.crash_notif_ticker_text,
     resNotifTitle = R.string.crash_notif_title,
@@ -110,6 +109,13 @@ public class CityParkApp extends Application {
 		t.start();
 		ACRA.init(this);
 		LoginTask.init(this);		
+		
+		SharedPreferences mPrefs = getSharedPreferences(getString(R.string.prefs_name), Context.MODE_PRIVATE);
+		String email = mPrefs.getString("email", "no email");
+		String name = mPrefs.getString("first_name", " ") + " " + mPrefs.getString("last_name", " ");
+		
+		ErrorReporter.getInstance().putCustomData("email", email);
+		ErrorReporter.getInstance().putCustomData("name", name);
 		
 		super.onCreate();
 	}
