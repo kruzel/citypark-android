@@ -23,15 +23,31 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:textColor="#D64700"
-        />
-        <TextView
+        android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutPriceAndDistance"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" 
-            android:id="@+id/bottomtext"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:textColor="#D64700"
-        />
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/bottomtext"
+                android:layout_width="104dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="bottom"
+                android:gravity="fill_horizontal"
+                android:textColor="#D64700" android:paddingTop="8dp"/>
+
+            <TextView
+                android:id="@+id/bottomdistance"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="bottom"
+                android:gravity="fill_horizontal"
+                android:textColor="#D64700" android:paddingTop="8dp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

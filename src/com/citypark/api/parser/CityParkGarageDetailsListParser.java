@@ -62,6 +62,20 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 				}
 			});
 			
+			node.getChild(XMLNS,"Distance").setEndTextElementListener(new EndTextElementListener() {
+				public void end(String body) {
+					try  
+					{  
+						gd.setDistance(Integer.parseInt(body));  
+				    }  
+				    catch( NumberFormatException e )  
+				    {  
+				    	Log.e(e.getMessage(),"Error on creating GarageData.");
+				    	gd.setDistance(0);
+				    } 						
+				}
+			});
+			
 			node.getChild(XMLNS,"Longitude").setEndTextElementListener(new EndTextElementListener() {
 				public void end(String body) {				
 					gd.setLongitude(Double.parseDouble(body));
@@ -109,6 +123,7 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 					gdList.add(new GarageData(gd));
 				}
 			});
+			
 			
 			try {
 				Xml.parse(this.getInputStream(), Xml.Encoding.UTF_8, root

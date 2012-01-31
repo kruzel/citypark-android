@@ -34,8 +34,12 @@ public class GarageDataAdapter extends ArrayAdapter<GarageData> {
 		if (garageData != null) {
 			TextView tt = (TextView) v.findViewById(R.id.toptext);
 			TextView bt = (TextView) v.findViewById(R.id.bottomtext);
+			TextView bd = (TextView) v.findViewById(R.id.bottomdistance);
 			if (tt != null) {
 				tt.setText(context.getString(R.string.garage_name)+": "+garageData.getName());                            
+			}
+			if(bd != null){
+				bd.setText(context.getString(R.string.distance)+": "+garageData.getDistance());
 			}
 			if(bt != null){
 				if(garageData.getFirstHourPrice()==0)

@@ -39,6 +39,8 @@ public class GarageData {
 	
 	Drawable imageDrawable;
 	
+	private int distance;
+	
 	public GarageData() {
 		
 	}
@@ -298,6 +300,16 @@ public class GarageData {
 
 	public void setImageDrawable(Drawable image) {
 		this.imageDrawable = image;
+	}
+	
+	
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+		
 	}
 	
 }
