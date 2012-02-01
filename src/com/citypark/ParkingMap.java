@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,13 +42,11 @@ import com.citypark.api.task.ReportParkingTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.dialog.DialogFactory;
-import com.citypark.utility.route.PGeoPoint;
 import com.citypark.view.overlay.ItemizedIconOverlay;
 import com.citypark.view.overlay.LiveGarageMarkers;
 import com.citypark.view.overlay.LiveStreetLinesMarkers;
 import com.citypark.view.overlay.LiveStreetReleasesMarkers;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
@@ -215,9 +212,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		
 		/* Get Preferences. */
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-		/* Get location manager. */
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
+		
 		payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 
 		// Get wake lock
@@ -244,6 +239,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			mOsmv.scrollTo(x,y);
 		
 		mOsmv.setBuiltInZoomControls(true);
+		
+		/* Get location manager. */
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		//mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationHandler(mOsmv.getController()));
 
 		// Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
@@ -615,7 +614,20 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			unpark();
 			break;
 		case R.id.center:
-			//RouteMap.this.mLocationOverlay.followLocation(true);
+			Location self = mLocationOverlay.getLastFix();
+
+			if (self == null) {
+				self = mLocationManager
+						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			}
+			if (self == null) {
+				self = mLocationManager
+						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			}
+			if (self != null) {
+				GeoPoint p = new GeoPoint((int)(self.getLatitude()*1E6),(int)(self.getLongitude()*1E6));
+				mOsmv.getController().setCenter(p);
+			}
 			// showAllParkings(false);
 			break;
 		case R.id.showparking:
