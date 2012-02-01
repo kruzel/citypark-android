@@ -1,6 +1,6 @@
 package com.citypark.dto;
 
-import com.citypark.utility.route.PGeoPoint;
+import com.google.android.maps.GeoPoint;
 
 public class StreetParkingPoint{
 	double latitude;
@@ -26,8 +26,8 @@ public class StreetParkingPoint{
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	public PGeoPoint getPGeoPoint(){
-		return new PGeoPoint(latitude,longitude);
+	public GeoPoint getGeoPoint(){
+		return new GeoPoint((int)(latitude*1E6),(int)(longitude*1E6));
 	}
 
 }

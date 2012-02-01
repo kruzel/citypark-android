@@ -3,8 +3,6 @@
  */
 package com.citypark.service;
 
-import org.osmdroid.util.GeoPoint;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,12 +11,13 @@ import android.text.format.Time;
 import android.widget.Toast;
 
 import com.citypark.CityParkApp;
-import com.citypark.LiveRouteMap;
 import com.citypark.R;
+import com.citypark.ParkingMap;
 import com.citypark.api.task.LoginTask;
 import com.citypark.api.task.ReportLocationTask;
 import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.route.PGeoPoint;
+import com.google.android.maps.GeoPoint;
 
 /**
  * @author TQJ764
@@ -30,7 +29,7 @@ public class ParkingHandler {
 	private Time lastTime = null;
 	private PGeoPoint lastSpeedPos = null;
 	private Time lastSpeedTime = null;
-	private int lastDistFromCar = 0;
+	private float lastDistFromCar = 0;
 	private Boolean approachedCar = false;
 	private Boolean speedhecked = false;
 	private Time lastLocationReport = new Time();
@@ -55,8 +54,12 @@ public class ParkingHandler {
 		Time curTime = new Time();
 		curTime.setToNow();
 		GeoPoint carPos = parking_manager.getGeoPoint();
-		int curDistFromCar = curPos.distanceTo(carPos);
-		//Toast.makeText(context, "curDistFromCar="+curDistFromCar, Toast.LENGTH_SHORT).show();
+		float curDistFromCar=0;
+		float[] results = new float[3];
+		if(carPos!=null) {
+			Location.distanceBetween(carPos.getLatitudeE6()/1E6, carPos.getLongitudeE6()/1E6, curPos.getLatitudeE6()/1E6, curPos.getLongitudeE6()/1E6, results);
+			curDistFromCar = results[0];
+		}
 
 		//initialize values
 		if(lastPos==null || lastTime==null) {
@@ -135,7 +138,7 @@ public class ParkingHandler {
 		lastDistFromCar = 0;
 		Toast.makeText(context, "unpark called", Toast.LENGTH_SHORT).show();
 
-		Intent intent = new Intent(context,LiveRouteMap.class);
+		Intent intent = new Intent(context,ParkingMap.class);
 		intent.putExtra(context.getString(R.string.unpark), true);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

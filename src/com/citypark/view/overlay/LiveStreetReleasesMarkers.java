@@ -3,22 +3,17 @@ package com.citypark.view.overlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
-import org.osmdroid.views.overlay.OverlayItem;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Message;
 
-import com.citypark.CityParkApp;
 import com.citypark.R;
 import com.citypark.api.parser.CityParkParkingReleasesParser;
 import com.citypark.api.task.LoginTask;
 import com.citypark.dto.AreaParkings;
 import com.citypark.dto.StreetParkingPoint;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 
 /**
  * This file is part of BikeRoute.
@@ -44,7 +39,7 @@ import com.citypark.dto.StreetParkingPoint;
  * @version Jun 21, 2010
  */
 
-public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayItem> {
+public class LiveStreetReleasesMarkers {
 	/** Reference to map view to draw markers over. **/
 	private final MapView mv;
 	/** Markers list for use by thread. **/
@@ -55,7 +50,7 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
-	private static ItemizedReleasesOverlay iOverlay;
+	private static ItemizedIconOverlay iOverlay;
 	/** summary of fetched parkings **/ 
 	AreaParkings areaParking = new AreaParkings();
 
@@ -84,8 +79,9 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			clearFromMap();
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedReleasesOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveStreetReleasesMarkers.this, mv.getResourceProxy());;
-			iOverlay.addAllOverlays(mOverlays);
+			iOverlay = new ItemizedIconOverlay(context, context.getResources().getDrawable(R.drawable.ic_marker_garage));
+			iOverlay.addAllItems(mOverlays);
+			iOverlay.addAllItems(mOverlays);
 			mv.getOverlays().add(iOverlay);
 		}
 	}
@@ -99,25 +95,6 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 	public AreaParkings getAreaParkings() {
 		
 		return areaParking;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.andnav.osm.views.overlay.OpenStreetMapViewItemizedOverlay.OnItemGestureListener#onItemLongPress(int, java.lang.Object)
-	 */
-	@Override
-	public boolean onItemLongPress(int index, OverlayItem item) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.andnav.osm.views.overlay.OpenStreetMapViewItemizedOverlay.OnItemGestureListener#onItemSingleTapUp(int, java.lang.Object)
-	 */
-	@Override
-	public boolean onItemSingleTapUp(int index,
-			OverlayItem item) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 	/**
@@ -145,9 +122,8 @@ public class LiveStreetReleasesMarkers implements OnItemGestureListener<OverlayI
 			for (StreetParkingPoint parkingPoint : releasesList) {	
 				markerIcon = mAct.getResources().getDrawable(R.drawable.green_dot);
 				
-				OverlayItem marker = new OverlayItem(null, null, parkingPoint.getPGeoPoint());
+				OverlayItem marker = new OverlayItem(parkingPoint.getGeoPoint(), null, null);
 				marker.setMarker(markerIcon);
-				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
 				markers.add(marker);
 			}
 		}

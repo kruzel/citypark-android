@@ -1,16 +1,11 @@
 package com.citypark;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import org.osmdroid.ResourceProxy;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.MyLocationOverlay;
-
-import com.citypark.utility.ResourceProxyImpl;
-import com.citypark.R;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 
 /**
  * Based on osmdroid default map view activity.
@@ -37,7 +32,7 @@ import com.citypark.R;
  * @author Manuel Stahl
  *
  */
-public class OpenStreetMapActivity extends Activity {
+public class CityParkMapActivity extends MapActivity {
 
         // ===========================================================
         // Fields
@@ -46,7 +41,6 @@ public class OpenStreetMapActivity extends Activity {
         protected SharedPreferences mPrefs;
         protected MapView mOsmv;
         protected MyLocationOverlay mLocationOverlay;
-        protected ResourceProxy mResourceProxy;
 
         // ===========================================================
         // Constructors
@@ -57,16 +51,12 @@ public class OpenStreetMapActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mResourceProxy = new ResourceProxyImpl(getApplicationContext());
-
         mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
 
     }
 
     @Override
 		protected void onDestroy() {
-    		mOsmv.getTileProvider().clearTileCache();
 	    	System.gc();
     	
 			super.onDestroy();
@@ -79,7 +69,7 @@ public class OpenStreetMapActivity extends Activity {
         edit.putInt(getString(R.string.prefs_scrolly), mOsmv.getScrollY());
         edit.putInt(getString(R.string.prefs_zoomlevel), mOsmv.getZoomLevel());
         edit.putBoolean(getString(R.string.prefs_showlocation), mLocationOverlay.isMyLocationEnabled());
-        edit.putBoolean(getString(R.string.prefs_followlocation), mLocationOverlay.isFollowLocationEnabled());
+//        edit.putBoolean(getString(R.string.prefs_followlocation), mLocationOverlay.isFollowLocationEnabled());
         edit.commit();
 
         this.mLocationOverlay.disableMyLocation();
@@ -93,11 +83,11 @@ public class OpenStreetMapActivity extends Activity {
         if(mPrefs.getBoolean(getString(R.string.prefs_showlocation), false)) {
                 this.mLocationOverlay.enableMyLocation();
         }
-        if(mPrefs.getBoolean(getString(R.string.prefs_followlocation), true)) {
-        	this.mLocationOverlay.enableFollowLocation();
-        } else {
-        	this.mLocationOverlay.disableFollowLocation();
-        }
+//        if(mPrefs.getBoolean(getString(R.string.prefs_followlocation), true)) {
+//        	this.mLocationOverlay.enableFollowLocation();
+//        } else {
+//        	this.mLocationOverlay.disableFollowLocation();
+//        }
         super.onResume();
     }
 
@@ -109,9 +99,15 @@ public class OpenStreetMapActivity extends Activity {
     
     @Override
 	public boolean onTouchEvent(final MotionEvent event) {
-			if (event.getAction() == MotionEvent.ACTION_MOVE) {
-				this.mLocationOverlay.disableFollowLocation();
-			}
+//			if (event.getAction() == MotionEvent.ACTION_MOVE) {
+//				this.mLocationOverlay.disableFollowLocation();
+//			}
 	        return super.onTouchEvent(event);
+	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

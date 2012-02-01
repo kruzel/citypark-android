@@ -1,7 +1,7 @@
 package com.citypark.dto;
 
 import com.citypark.constants.GarageAvailability;
-import com.citypark.utility.route.PGeoPoint;
+import com.google.android.maps.GeoPoint;
 
 public class GaragePoint{
 	private int id;
@@ -57,8 +57,8 @@ public class GaragePoint{
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	public PGeoPoint getPGeoPoint(){
-		return new PGeoPoint(latitude,longitude);
+	public GeoPoint getGeoPoint(){
+		return new GeoPoint((int)(latitude*1E6),(int)(longitude*1E6));
 	}
 	public void setPrice(double price) {
 		this.price = price;

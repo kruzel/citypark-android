@@ -3,8 +3,9 @@
  */
 package com.citypark.service;
 
+import java.util.List;
+
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -19,12 +20,10 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.citypark.CityParkApp;
-import com.citypark.LiveRouteMap;
+import com.citypark.R;
+import com.citypark.ParkingMap;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.route.PGeoPoint;
-import com.citypark.R;
-
-import java.util.List;
 
 /**
  * Service providing live navigation using GPS and notification updates
@@ -100,7 +99,7 @@ public class LocationService extends Service implements LocationListener {
 
         notification = new Notification(icon, tickerText, when);
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        Intent notificationIntent = new Intent(this, LiveRouteMap.class);
+        Intent notificationIntent = new Intent(this, ParkingMap.class);
         notificationIntent.putExtra(getString(R.string.jump_intent), true);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -136,46 +135,7 @@ public class LocationService extends Service implements LocationListener {
      */
     
     @Override
-	public void onLocationChanged(Location location) {
-    	
-    	Intent update = new Intent((String) getText(R.string.navigation_intent));
-    	//Find the nearest points and unless it is far, assume we're there
-		PGeoPoint self = new PGeoPoint(location);
-		
-    	if (app.getRoute() != null) {
-    		
-    		List<PGeoPoint> near = app.getRoute().nearest(self, 2);
-    		if(near.size() > 1) {
-	    		double range = range(self, near.get(0), near.get(1)) - 50;
-	    		double accuracy = location.getAccuracy();
-	    		
-	    		//Check we're still on the route.
-	    		
-	    		/*if (range > accuracy) {
-	    			update.putExtra((String) getText(R.string.replan), true);
-	    			String logMsg = "Range=" + range + ",Self="+self+",near points:" + near + ",near points dist=" + near.get(0).distanceTo(near.get(1)) + ",accuracy=" + accuracy;
-	    			Log.e("Replanned", logMsg);
-	    			notification.setLatestEventInfo(app, getText(R.string.notify_title), 
-	    					getText(R.string.replanning), contentIntent);    	        
-	    		} else*/ if (near.get(0).equals(app.getRoute().getEndPoint())) { //If we've arrived, shutdown and signal.
-	    			update.putExtra((String) getText(R.string.arrived), true);
-	    			//notification.setLatestEventInfo(app, getText(R.string.notify_title), 
-	    			//		getText(R.string.arrived), contentIntent);
-	    		}	else {
-	    			update.putExtra(getString(R.string.point), (Parcelable)near.get(0));
-	    			app.setSegment(app.getRoute().getSegment(near.get(0)));
-	    			//notification.setLatestEventInfo(app, getText(R.string.notify_title),
-	        		//		app.getSegment().getInstruction(), contentIntent);
-	    		}
-	    		sendBroadcast(update);
-	    		
-	    		//mNM.notify(R.id.notifier, notification);
-    		}
-    	} else {
-//    		stopSelf();
-//    		shutdown();
-    	}
-    	
+	public void onLocationChanged(Location location) {   	
     	mLocationReceiver.run(app,location);
 	}
     

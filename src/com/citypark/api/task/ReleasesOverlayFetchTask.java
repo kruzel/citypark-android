@@ -1,16 +1,12 @@
 package com.citypark.api.task;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
 
 import com.citypark.view.overlay.LiveGarageMarkers;
-import com.citypark.view.overlay.LiveStreetLinesMarkers;
 import com.citypark.view.overlay.LiveStreetReleasesMarkers;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
 
 public class ReleasesOverlayFetchTask extends AsyncTask<GeoPoint, Void, Void> {
 	private OverlayListener listener;

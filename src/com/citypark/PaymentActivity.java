@@ -22,8 +22,6 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -33,7 +31,6 @@ import com.citypark.api.parser.CityParkParkingZoneParser.LocationData;
 import com.citypark.api.task.LoginTask;
 import com.citypark.api.task.StartPaymentTask;
 import com.citypark.api.task.StopPaymentTask;
-import com.citypark.constants.CityParkConsts;
 import com.citypark.service.TimeLimitAlertListener;
 import com.citypark.utility.ParkingSessionManager;
 
@@ -157,7 +154,7 @@ public class PaymentActivity extends Activity {
 
 	@Override
 	public void finish() {
-		Intent intent = new Intent(this,LiveRouteMap.class);
+		Intent intent = new Intent(this,ParkingMap.class);
 		intent.putExtra("PaymentActivityResult", resultCode);
 		startActivity(intent);
 		super.finish();

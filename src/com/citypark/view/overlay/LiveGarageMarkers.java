@@ -3,24 +3,17 @@ package com.citypark.view.overlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
-import org.osmdroid.views.overlay.ItemizedOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 
-import com.citypark.CityParkApp;
 import com.citypark.GarageDetailsActivity;
 import com.citypark.R;
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.AreaParkings;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 
 /**
  * This file is part of CityPark.
@@ -46,7 +39,7 @@ import com.citypark.dto.AreaParkings;
  * @version Dec 21, 2011
  */
 
-public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
+public class LiveGarageMarkers  {
 	/** Reference to map view to draw markers over. **/
 	private final MapView mv;
 	/** Markers list for use by thread. **/
@@ -84,7 +77,7 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 			clearFromMap();
 			mOverlays.clear();
 			mOverlays.addAll(markers);
-			iOverlay = new ItemizedGaragesOverlay(mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage), LiveGarageMarkers.this, mv.getResourceProxy());
+			iOverlay = new ItemizedGaragesOverlay(context, mOverlays,context.getResources().getDrawable(R.drawable.ic_marker_garage));
 			iOverlay.addAllOverlays(mOverlays);
 			mv.getOverlays().add(iOverlay);
 		}
@@ -101,33 +94,5 @@ public class LiveGarageMarkers implements OnItemGestureListener<OverlayItem> {
 		return areaParking;
 	}
 	
-
-	/* (non-Javadoc)
-	 * @see org.andnav.osm.views.overlay.OpenStreetMapViewItemizedOverlay.OnItemGestureListener#onItemLongPress(int, java.lang.Object)
-	 */
-	@Override
-	public boolean onItemLongPress(int index, OverlayItem item) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.andnav.osm.views.overlay.OpenStreetMapViewItemizedOverlay.OnItemGestureListener#onItemSingleTapUp(int, java.lang.Object)
-	 */
-	@Override
-	public boolean onItemSingleTapUp(int index,
-			OverlayItem item) {
-		
-		int garageId = Integer.parseInt(item.mDescription);
-		if(garageId!=0) {
-			Intent intent = new Intent(context,GarageDetailsActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
-			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
-			context.startActivity(intent);
-		}
-		
-		return true;
-	}
 
 }

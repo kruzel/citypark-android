@@ -3,14 +3,14 @@
 android:layout_width="fill_parent"
 android:layout_height="fill_parent">
   
-<org.osmdroid.views.MapView
+<com.google.android.maps.MapView
 android:id="@+id/mapview"
 android:layout_width="fill_parent" 
 android:layout_height="fill_parent"
 android:enabled="true"
 android:clickable="true"
+android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw"
 />
-
 
 <ImageView
     android:id="@+id/imageViewLogo"

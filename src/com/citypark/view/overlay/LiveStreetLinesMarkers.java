@@ -3,27 +3,21 @@ package com.citypark.view.overlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.PathOverlay;
-
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Message;
 
-import com.citypark.CityParkApp;
 import com.citypark.api.parser.CityParkStreetLinesParser;
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.ParkingSessionManager;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapView;
 
 public class LiveStreetLinesMarkers {
 	private final Context context;
 	
 	/** street segments overlay **/
-	protected List<PathOverlay> mSegmentsOverlays = null;
-	protected List<PathOverlay> mOldSegmentsOverlays = new ArrayList<PathOverlay>();
+	protected List<SegmentOverlay> mSegmentsOverlays = null;
+	protected List<SegmentOverlay> mOldSegmentsOverlays = new ArrayList<SegmentOverlay>();
 	
 	/** OSM MapView reference **/
 	protected MapView mOsmv;
@@ -35,17 +29,17 @@ public class LiveStreetLinesMarkers {
 		context = ctxt.getApplicationContext();	
 	}
 	
-	public void clearSegments(final List<PathOverlay> segmentsOverlays){
+	public void clearSegments(final List<SegmentOverlay> segmentsOverlays){
 		if(segmentsOverlays != null){
-			for ( PathOverlay overlay : segmentsOverlays) {
+			for ( SegmentOverlay overlay : segmentsOverlays) {
 				mOsmv.getOverlays().remove(overlay);
 			}
 		}
 	}
 	
-	public void setSegments(final List<PathOverlay> newSegmentsOverlays){
+	public void setSegments(final List<SegmentOverlay> newSegmentsOverlays){
 		if(newSegmentsOverlays != null) {
-			for ( PathOverlay overlay : newSegmentsOverlays) {
+			for ( SegmentOverlay overlay : newSegmentsOverlays) {
 				mOsmv.getOverlays().add(overlay);
 			}
 			
@@ -60,14 +54,14 @@ public class LiveStreetLinesMarkers {
 	 * @return an arraylist of street segments corresponding to streets in range.
 	 */
 
-	public List<PathOverlay> getSegments(final GeoPoint p,
+	public List<SegmentOverlay> getSegments(final GeoPoint p,
 			final int distance, final Context mAct) {
 		
-		final List<PathOverlay> segments = new ArrayList<PathOverlay>();
+		final List<SegmentOverlay> segments = new ArrayList<SegmentOverlay>();
 		
 		//use CityPark to find street segments
 		String cpSessionId = LoginTask.getSessionId();
-		PathOverlay overlay;
+		SegmentOverlay overlay;
 		int color = Color.TRANSPARENT;
 		if (cpSessionId != null) {
 			final CityParkStreetLinesParser parser = new CityParkStreetLinesParser(mAct,cpSessionId,p.getLatitudeE6(),p.getLongitudeE6(),distance);
@@ -89,15 +83,15 @@ public class LiveStreetLinesMarkers {
 				else 
 					color = Color.RED;
 				
-				overlay = new PathOverlay(color, context);
+				overlay = new SegmentOverlay(color);
 				
-				GeoPoint point1 = new GeoPoint(streetSegment.getStart_latitude(),streetSegment.getStart_longitude());
-				overlay.addPoint(point1);
-				GeoPoint point2 = new GeoPoint(streetSegment.getEnd_latitude(),streetSegment.getEnd_longitude());
-				overlay.addPoint(point2);
-				overlay.setEnabled(true);
-				overlay.getPaint().setStrokeWidth(10.0f);
-				overlay.getPaint().setAlpha(100);
+				GeoPoint point1 = new GeoPoint((int)(streetSegment.getStart_latitude()*1E6),(int)(streetSegment.getStart_longitude()*1E6));
+				overlay.setStartPoint(point1);
+				GeoPoint point2 = new GeoPoint((int)(streetSegment.getEnd_latitude()*1E6),(int)(streetSegment.getEnd_longitude()*1E6));
+				overlay.setEndPoint(point2);
+				
+				overlay.setWidth(10.0f);
+				overlay.setAlpha(100);
 				
 				segments.add(overlay);
 			}

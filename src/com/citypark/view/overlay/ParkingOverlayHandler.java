@@ -3,9 +3,6 @@ package com.citypark.view.overlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.overlay.OverlayItem;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -15,6 +12,8 @@ import com.citypark.api.parser.CityParkGaragesParser;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.dto.GaragePoint;
 import com.citypark.utility.Convert;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.OverlayItem;
 
 /**
  * Utility class for querying garages api based on gis data.
@@ -42,34 +41,6 @@ import com.citypark.utility.Convert;
 
 public final class ParkingOverlayHandler {
 		
-	/**
-	 * Find the nearest cycle stand to the point given, or
-	 * return null if there's not one in a mile.
-	 * @param point GeoPoint to search near
-	 * @return a GeoPoint representing the cycle stand position or null.
-	 */
-	
-	public static GeoPoint getNearest(final GeoPoint point, final Context mAct, final String cpSessionId) {
-		GeoPoint closest = null;
-		double best = 9999999;
-		double dist;
-		
-		for (OverlayItem o : getMarkers(point, 1, mAct, cpSessionId)) {
-			dist = point.distanceTo(o.mGeoPoint);
-		
-			if (best > dist) {
-				best = dist;
-				closest = o.mGeoPoint;
-			}	
-		}
-		return closest;
-	}
-	
-	public static GeoPoint getNearest(final Address address, final Context mAct, final String cpSessionId) {
-		return getNearest(new GeoPoint(Convert.asMicroDegrees(address.getLatitude()),
-				Convert.asMicroDegrees(address.getLongitude())), mAct, cpSessionId);
-	}
-
 	/**
 	 * Get markers from the api.
 	 * 
@@ -123,13 +94,12 @@ public final class ParkingOverlayHandler {
 					
 				OverlayItem marker;
 				if (garagePoint.getPrice()==0)
-					marker = new OverlayItem(mAct.getString(R.string.parking_free), garagePoint.getIdString(), garagePoint.getPGeoPoint());
+					marker = new OverlayItem(garagePoint.getGeoPoint(), mAct.getString(R.string.parking_free), garagePoint.getIdString());
 				else if (garagePoint.getPrice()>0)
-					marker = new OverlayItem(Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString(), garagePoint.getPGeoPoint()); //mAct.getResources().getString(R.string.currency) +
+					marker = new OverlayItem(garagePoint.getGeoPoint(), Integer.toString((int)garagePoint.getPrice()), garagePoint.getIdString()); //mAct.getResources().getString(R.string.currency) +
 				else
-					marker = new OverlayItem("", garagePoint.getIdString(), garagePoint.getPGeoPoint());
+					marker = new OverlayItem(garagePoint.getGeoPoint(),"", garagePoint.getIdString());
 				marker.setMarker(markerIcon);
-				marker.setMarkerHotspot(OverlayItem.HotspotPlace.BOTTOM_CENTER);
 				markers.add(marker);
 			}
 		}

@@ -6,35 +6,39 @@ package com.citypark.view.overlay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osmdroid.ResourceProxy;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
+
+import com.citypark.GarageDetailsActivity;
+import com.citypark.constants.CityParkConsts;
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
+import com.google.android.maps.MapView;
+import com.google.android.maps.OverlayItem;
 
 /**
  * @author TQJ764
  *
  */
-public class ItemizedGaragesOverlay extends ItemizedIconOverlay<OverlayItem> {
+public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final int FONT_SIZE = 24;
     private static final int TITLE_MARGIN = 3;
     private int markerHeight;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+	private Context context;
 	
-	public ItemizedGaragesOverlay(List<OverlayItem> pList, Drawable pDefaultMarker,
-			OnItemGestureListener mOnItemGestureListener, ResourceProxy pResourceProxy) {
-		super(pList, pDefaultMarker, mOnItemGestureListener, pResourceProxy);
-		
+	public ItemizedGaragesOverlay(Context context,List<OverlayItem> pList, Drawable pDefaultMarker) {
+		super(boundCenterBottom(pDefaultMarker));
+		this.context = context;
 		markerHeight = ((BitmapDrawable) pDefaultMarker).getBitmap().getHeight();
+		mOverlays.addAll(pList);
+		populate();
 	}
 	
 	@Override
@@ -108,4 +112,19 @@ public class ItemizedGaragesOverlay extends ItemizedIconOverlay<OverlayItem> {
 			return mOverlays.size();
 	}
 
+	@Override
+	protected boolean onTap(int index) {
+		int garageId = Integer.parseInt(mOverlays.get(index).getSnippet());
+		if(garageId!=0) {
+			Intent intent = new Intent(context,GarageDetailsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
+			context.startActivity(intent);
+		}
+		
+		return super.onTap(index);
+	}
+
+	
 }

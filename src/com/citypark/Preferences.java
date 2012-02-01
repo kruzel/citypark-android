@@ -94,16 +94,8 @@ public class Preferences extends PreferenceActivity {
     	public boolean onOptionsItemSelected(final MenuItem item) {
     		Intent intent;
     		switch(item.getItemId()) {
-    		case R.id.navigate:
-    			intent = new Intent(this, Navigate.class);
-    			startActivityForResult(intent, R.id.trace);
-    			break;
-    		case R.id.directions:
-    			intent = new Intent(this, DirectionsView.class);
-    			startActivityForResult(intent, R.id.trace);
-    			break;
     		case R.id.map:
-    			intent = new Intent(this, LiveRouteMap.class);
+    			intent = new Intent(this, ParkingMap.class);
     			//intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
     			startActivityForResult(intent, R.id.trace);
     			break;

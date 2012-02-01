@@ -1,12 +1,10 @@
 package com.citypark.utility;
 
-import org.osmdroid.util.GeoPoint;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.format.Time;
 
-import com.citypark.constants.CityParkConsts;
+import com.google.android.maps.GeoPoint;
 
 /**
  * A class to handle parking a car.
@@ -105,6 +103,9 @@ public class ParkingSessionManager {
 	public final GeoPoint getGeoPoint() {
 		final int lat = settings.getInt(LAT, -1);
 		final int lng = settings.getInt(LNG, -1);
+		if(lat==-1 || lng==-1)
+			return null;
+		
 		return new GeoPoint(lat, lng);
 	}
 	

@@ -169,7 +169,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 		
 		if(mEditor.commit()){
 			LoginTask.reload();
-			this.startActivity(new Intent(this, LiveRouteMap.class));
+			this.startActivity(new Intent(this, ParkingMap.class));
         	finish();
         } else {
         	Log.e("onRegister", "registration failed");
