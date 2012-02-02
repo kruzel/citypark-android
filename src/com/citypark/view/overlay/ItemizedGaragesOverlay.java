@@ -121,9 +121,6 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 			intent.putExtra(CityParkConsts.GARAGE_ID, garageId);
 			context.startActivity(intent);
 		}
-		
-		return super.onTap(index);
-	}
-
-	
+		return true;
+	}	
 }
