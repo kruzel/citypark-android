@@ -227,6 +227,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		this.mLocationOverlay = new MyLocationOverlay(
 				this.getApplicationContext(), this.mOsmv);
 		this.mLocationOverlay.enableCompass();
+		this.mLocationOverlay.enableMyLocation();
 		
 		this.mOsmv.displayZoomControls(false);
 		this.mOsmv.getOverlays().add(this.mLocationOverlay);
@@ -243,7 +244,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		//mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationHandler(mOsmv.getController()));
 		centerMap();
 		
 		// Directions overlay
@@ -617,6 +617,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			break;
 		case R.id.center:
 			centerMap();
+			this.mLocationOverlay.enableMyLocation();
 			break;
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
