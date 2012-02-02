@@ -139,6 +139,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
 			checkAndUpdateOverlays();
+			mHandler.postDelayed(mUpdateOverlaysTask, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		}
 	};
 
@@ -259,8 +260,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers,
 				releasesMarkers, linesMarkers);
-		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this,
-				garageMarkers, releasesMarkers);
+		releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, this, this, releasesMarkers);
 
 		parkedCarOverlayItems = new ArrayList<OverlayItem>(1);
 
@@ -274,7 +274,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (!parking_manager.isParking())
 			app.finishAllAppObjecs();
 
-		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		stopMapCenterListener();
 
 		super.onDestroy();
 	}
@@ -652,17 +652,14 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	}
 
 	public void showAllParkings(Boolean showProgDialog) {
-		if (!LoginTask.isLoggedIn())
+		if (!LoginTask.isLoggedIn() || parking_manager.isParking())
 			return;
 		
-		mOsmv.setOnTouchListener(touchListener);
 		startMapCenterListener();
-
-		if (mOsmv.getZoomLevel() <= 16)
+		
+		if( mOsmv.getZoomLevel() <= 16){
 			return;
-
-		if (parking_manager.isParking())
-			return;
+		}
 
 		if (showProgDialog) {
 			firstOverlayLoading = true;
@@ -804,12 +801,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					linesMarkers.updateMap();
 				if (releasesRes)
 					releasesMarkers.updateMap();
-				if (garagesRes)
+				if (garagesRes || releasesRes)
 					garageMarkers.updateMap();
 				if(linesRes || releasesRes || garagesRes)
 					mOsmv.invalidate();
-				
-				startMapCenterListener();
 			}
 
 			if (firstOverlayLoading) {
@@ -917,6 +912,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
 		mHandler.postDelayed(mUpdateOverlaysTask,
 				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+		mOsmv.setOnTouchListener(touchListener);
+	}
+	
+	protected void stopMapCenterListener() {
+		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		mOsmv.setOnTouchListener(null);
 	}
 	
 	protected void checkAndUpdateOverlays() {
@@ -939,16 +940,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
 					// refresh only releases points
 					releasesOverlayTask.cancel(true);
-					releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
-							garageMarkers, releasesMarkers);
-					releasesOverlayTask
-							.execute(lastAllOverlaysUpdateCenter);
+					releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,	releasesMarkers);
+					releasesOverlayTask.execute(lastAllOverlaysUpdateCenter);
 					lastMapUpdateTime.setToNow();
 				}
 			}
 		}
-		
-		startMapCenterListener();
 	}
 	
 	private Boolean overlaysVisible() {

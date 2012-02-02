@@ -11,15 +11,13 @@ import com.google.android.maps.MapView;
 public class ReleasesOverlayFetchTask extends AsyncTask<GeoPoint, Void, Void> {
 	private OverlayListener listener;
 	private LiveStreetReleasesMarkers releasesMarkers;
-	private LiveGarageMarkers garageMarkers;
 	private Boolean res = false;
 
-	public ReleasesOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveGarageMarkers garageMarkers, LiveStreetReleasesMarkers releasesMarkers) {
+	public ReleasesOverlayFetchTask(final MapView osmv, Context context, OverlayListener listener, LiveStreetReleasesMarkers releasesMarkers) {
 		super();
 		this.listener = listener;
 		
 		this.releasesMarkers = releasesMarkers;
-		this.garageMarkers = garageMarkers;
 	}
 
 	@Override
