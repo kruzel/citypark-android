@@ -64,7 +64,9 @@ public class ItemizedIconOverlay extends ItemizedOverlay<OverlayItem> {
 		// go through all OverlayItems and draw title for each of them
         for (OverlayItem item:mOverlays)
         {
-        	boundCenterBottom(item.getMarker(0));
+        	Drawable dr = item.getMarker(0);
+    		if(dr!=null) 
+    			boundCenterBottom(dr);
         }
 		super.draw(canvas, mapView, shadow);
 	}

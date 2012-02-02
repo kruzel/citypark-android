@@ -54,24 +54,27 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	             * As we have called boundCenterBottom() in constructor, so these coordinates
 	             * will be of the bottom center position of the displayed marker.
 	             */
-        		Bitmap markerBitmap = ((BitmapDrawable) boundCenterBottom(item.getMarker(0))).getBitmap();
-        		int markerHeight = markerBitmap.getHeight();
-        		
-	            GeoPoint point = item.getPoint();
-	            Point markerBottomCenterCoords = new Point();
-	            mapView.getProjection().toPixels(point, markerBottomCenterCoords);
-	
-	            /* Find the width and height of the title*/
-	            TextPaint paintText = new TextPaint();
-	            Paint paintRect = new Paint();
-	
-	            paintText.setTextAlign(Paint.Align.CENTER);
-	            paintText.setTextSize(FONT_SIZE);
-	            paintText.setFakeBoldText(true);
-	            paintText.setARGB(255, 0, 0, 0);
-	          
-	            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight/2  ,
-	                     paintText);
+        		Drawable dr = item.getMarker(0);
+        		if(dr!=null) {
+	        		Bitmap markerBitmap = ((BitmapDrawable) boundCenterBottom(dr)).getBitmap();
+	        		int markerHeight = markerBitmap.getHeight();
+	        		
+		            GeoPoint point = item.getPoint();
+		            Point markerBottomCenterCoords = new Point();
+		            mapView.getProjection().toPixels(point, markerBottomCenterCoords);
+		
+		            /* Find the width and height of the title*/
+		            TextPaint paintText = new TextPaint();
+		            Paint paintRect = new Paint();
+		
+		            paintText.setTextAlign(Paint.Align.CENTER);
+		            paintText.setTextSize(FONT_SIZE);
+		            paintText.setFakeBoldText(true);
+		            paintText.setARGB(255, 0, 0, 0);
+		          
+		            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight/2  ,
+		                     paintText);
+        		}
         	}
         }
      
