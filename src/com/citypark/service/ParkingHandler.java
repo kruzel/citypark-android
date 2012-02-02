@@ -15,6 +15,7 @@ import com.citypark.R;
 import com.citypark.ParkingMap;
 import com.citypark.api.task.LoginTask;
 import com.citypark.api.task.ReportLocationTask;
+import com.citypark.utility.Distance;
 import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.route.PGeoPoint;
 import com.google.android.maps.GeoPoint;
@@ -74,7 +75,7 @@ public class ParkingHandler {
 		int distDiff = 0; //meters
 		float speed = 0; //kmph
 
-		distDiff = lastPos.distanceTo(curPos);
+		distDiff = (int) (Distance.calculateDistance(lastPos,curPos, Distance.KILOMETERS)*1000);
 		timediff = curTime.toMillis(true) - lastTime.toMillis(true);
 
 		//update citypark server on location
@@ -90,7 +91,7 @@ public class ParkingHandler {
 			//if parking and started driving, close session, and free parking in parking_manager (app in background)
 			if(location.hasAccuracy() && location.getAccuracy()<20 && location.hasSpeed()) //prefer to work with sensors derived speed value
 				speed = location.getSpeed();
-			if(curPos.distanceTo(lastSpeedPos)>40 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) { //otherwise calculate 
+			if(Distance.calculateDistance(curPos, lastSpeedPos, Distance.KILOMETERS)>0.040 || (curTime.toMillis(true)-lastSpeedTime.toMillis(true))>5000) { //otherwise calculate 
 				speed = distDiff / 1000f / timediff * 3600000f; //kmph
 				lastSpeedPos = curPos;
 				lastSpeedTime = curTime;

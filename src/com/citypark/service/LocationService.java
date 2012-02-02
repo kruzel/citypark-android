@@ -178,13 +178,13 @@ public class LocationService extends Service implements LocationListener {
 	 * @param p2 end point of line.
 	 * @return the distance from p0 to the path in meters as a double.
 	 */
-	
+	/*
 	private double range(final PGeoPoint p0, final PGeoPoint p1, final PGeoPoint p2) {
 		double dist = Math.asin(Math.sin(p1.distanceTo(p0)/CityParkConsts.EARTH_RADIUS) * 
 				Math.sin(p1.bearingTo(p0) - p1.bearingTo(p2))) * 
 				CityParkConsts.EARTH_RADIUS;
 		
 		return Math.abs(dist);
-	}
+	}*/
 
 }
