@@ -218,6 +218,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		// Get wake lock
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "Navigating");
+		wl.acquire();
 
 		// Initialize map, view & controller
 		setContentView(R.layout.main);

@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -32,11 +33,13 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
     private int markerHeight;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context context;
+	private Bitmap markerBitmap;
 	
 	public ItemizedGaragesOverlay(Context context,List<OverlayItem> pList, Drawable pDefaultMarker) {
 		super(boundCenterBottom(pDefaultMarker));
 		this.context = context;
-		markerHeight = ((BitmapDrawable) pDefaultMarker).getBitmap().getHeight();
+		markerBitmap = ((BitmapDrawable) pDefaultMarker).getBitmap();
+		markerHeight = markerBitmap.getHeight();
 		mOverlays.addAll(pList);
 		populate();
 	}
@@ -44,7 +47,6 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	@Override
 	public void draw(android.graphics.Canvas canvas, MapView mapView,
             boolean shadow) {
-		super.draw(canvas, mapView, shadow);
 		
 		// go through all OverlayItems and draw title for each of them
         for (OverlayItem item:mOverlays)
@@ -76,11 +78,14 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	            paintText.setARGB(255, 0, 0, 0);
 	            //paintRect.setARGB(255, 255, 255, 255);
 	
+	            canvas.drawBitmap(markerBitmap, markerBottomCenterCoords.x, markerBottomCenterCoords.y, null);
 	            //canvas.drawRoundRect( new RectF(rect), 2, 2, paintRect);
 	            canvas.drawText(item.getTitle(), rect.left + rect.width() / 2,
 	                    rect.bottom , paintText);
         	}
         }
+        
+        super.draw(canvas, mapView, shadow);
 	}
 
 	public void addOverlay(OverlayItem overlay) {
