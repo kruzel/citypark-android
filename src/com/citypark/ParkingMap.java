@@ -246,7 +246,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		//todo:if this code works move the overlay also to requestLocationUpdates
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, new MapCenterHandler(mOsmv.getController()));
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, new MapCenterHandler(mOsmv.getController()));
 		centerMap();
 		
 		// Directions overlay
