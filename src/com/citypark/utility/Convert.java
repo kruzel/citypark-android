@@ -3,8 +3,8 @@
  */
 package com.citypark.utility;
 
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
+/*import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;*/
 
 /**
  * Utility class for converting units.
@@ -90,7 +90,7 @@ public final class Convert {
 		return meters + "m";
 	}
 	
-	public static XYMultipleSeriesDataset asImperial(final XYMultipleSeriesDataset input) {
+	/*public static XYMultipleSeriesDataset asImperial(final XYMultipleSeriesDataset input) {
 		final XYMultipleSeriesDataset output = new XYMultipleSeriesDataset();
 		final XYSeries metric = input.getSeriesAt(0);
 		final XYSeries imperial = new XYSeries(metric.getTitle());
@@ -99,7 +99,7 @@ public final class Convert {
 		}
 		output.addSeries(imperial);
 		return output;
-	}
+	}*/
 	
 	/**
 	 * Convert degrees to microdegrees.

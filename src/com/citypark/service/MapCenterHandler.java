@@ -7,11 +7,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 
-public class LocationHandler implements LocationListener {
+public class MapCenterHandler implements LocationListener {
 	
 	private MapController mapController;
 	
-	public LocationHandler(MapController controller) {
+	public MapCenterHandler(MapController controller) {
 		mapController = controller;
 	}
 

@@ -3,15 +3,17 @@
  */
 package com.citypark;
 
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,39 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.citypark.api.task.LoginTask;
-import com.citypark.utility.MyHttpClient;
-import com.citypark.R;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
-
-import java.net.URLEncoder;
-import java.util.regex.Pattern;
-
-/**
- * Activity for sending feedback on a route to CycleStreets.net.
- * 
- * This file is part of BikeRoute.
- * 
- * Copyright (C) 2011  Jonathan Gray
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * @author jono@nanosheep.net
- * @version Nov 11, 2010
- */
 public class Feedback extends Activity {
 	private CityParkApp app;
 	private TextView nameField;

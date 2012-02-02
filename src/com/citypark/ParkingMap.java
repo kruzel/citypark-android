@@ -40,7 +40,7 @@ import com.citypark.api.task.ReleasesOverlayFetchTask;
 import com.citypark.api.task.ReportParkingReleaseTask;
 import com.citypark.api.task.ReportParkingTask;
 import com.citypark.constants.CityParkConsts;
-import com.citypark.service.LocationHandler;
+import com.citypark.service.MapCenterHandler;
 import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.view.overlay.ItemizedIconOverlay;
@@ -246,7 +246,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		//todo:if this code works move the overlay also to requestLocationUpdates
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 50, new LocationHandler(mOsmv.getController()));
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, new MapCenterHandler(mOsmv.getController()));
 		centerMap();
 		
 		// Directions overlay
