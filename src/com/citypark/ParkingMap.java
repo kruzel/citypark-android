@@ -130,7 +130,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	// map all overlays update handler
 	private GeoPoint lastAllOverlaysUpdateCenter = null;
 	private Time lastAllOverlaysUpdateTime = new Time();
-	private int lastZoomLevel = 0;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -139,33 +138,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	// map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
-			if (parking_manager.isParking())
-				return;
-			
-			float[] results = new float[3];
-			if(lastAllOverlaysUpdateCenter!=null)
-				Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
-
-			if ((lastAllOverlaysUpdateCenter != null && results[0] > 250)
-					|| (mOsmv.getZoomLevel() > lastZoomLevel)
-					&& mOsmv.getZoomLevel() == 15) {
-				showAllParkings(false);
-			} else {
-				Time curTime = new Time();
-				curTime.setToNow();
-				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
-					// refresh only releases points
-					if (mOsmv.getZoomLevel() >= 15
-							&& lastAllOverlaysUpdateCenter != null) {
-						releasesOverlayTask.cancel(true);
-						releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
-								garageMarkers, releasesMarkers);
-						releasesOverlayTask
-								.execute(lastAllOverlaysUpdateCenter);
-						lastMapUpdateTime.setToNow();
-					}
-				}
-			}
+			checkAndUpdateOverlays();
 
 			mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		}
@@ -317,7 +290,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		}
 
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
-		lastZoomLevel = mOsmv.getZoomLevel();
 
 		mOsmv.setOnTouchListener(this);
 
@@ -366,10 +338,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				if (lastAllOverlaysUpdateCenter == null
 						|| (lastAllOverlaysUpdateCenter != null &&  results[0] > 250)) {
 					showAllParkings(true);
-					mHandler.removeCallbacks(mUpdateOverlaysTask);
-					mHandler.postDelayed(mUpdateOverlaysTask,
-							CityParkConsts.OVERLAY_UPDATE_INTERVAL);
-
+					startMapCenterListener();
 				}
 			}
 		} else {
@@ -677,7 +646,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (!LoginTask.isLoggedIn())
 			return;
 
-		if (mOsmv.getZoomLevel() < 15)
+		if (mOsmv.getZoomLevel() <= 16)
 			return;
 
 		if (parking_manager.isParking())
@@ -696,7 +665,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
-		lastZoomLevel = mOsmv.getZoomLevel();
+	}
+	
+	public void clearAllParkings() {
+		garageMarkers.clearFromMap();
+		releasesMarkers.clearFromMap();
+		linesMarkers.clearFromMap();
 	}
 
 	public void stopNavigation() {
@@ -823,9 +797,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				if(linesRes || releasesRes || garagesRes)
 					mOsmv.invalidate();
 				
-				mHandler.removeCallbacks(mUpdateOverlaysTask);
-				mHandler.postDelayed(mUpdateOverlaysTask,
-						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+				startMapCenterListener();
 			}
 
 			if (firstOverlayLoading) {
@@ -928,4 +900,69 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			mOsmv.getController().animateTo(p);
 		}
 	}
+	
+	protected void startMapCenterListener() {
+		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		mHandler.postDelayed(mUpdateOverlaysTask,
+				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+		
+		mOsmv.setOnTouchListener(new OnTouchListener() {
+
+		    public boolean onTouch(View v, MotionEvent event) {
+		        switch (event.getAction()) {
+		        case MotionEvent.ACTION_UP:
+		            // The user took their finger off the map, 
+		            // they probably just moved it to a new place.
+		            break;
+		            case MotionEvent.ACTION_MOVE:     
+		            	// The user is probably moving the map.
+			            float[] results = new float[3];
+						Location.distanceBetween(mLocationOverlay.getLastFix().getLatitude(), mLocationOverlay.getLastFix().getLongitude(), mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
+			            if(results[0] > 250)
+			            	mLocationOverlay.disableMyLocation();
+			            
+			            checkAndUpdateOverlays();
+		            break;
+		        }
+
+		        // Return false so that the map still moves.
+		        return false;
+		    }
+		});
+	}
+	
+	protected void checkAndUpdateOverlays() {
+		if (parking_manager.isParking())
+			return;			
+
+		if (mOsmv.getZoomLevel() > 16 && lastAllOverlaysUpdateCenter != null) {
+			float[] results = new float[3];
+			Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
+			
+			if (results[0] > 250 || !overlaysVisible()) {
+				showAllParkings(false);				
+			} else {
+				Time curTime = new Time();
+				curTime.setToNow();
+				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
+					// refresh only releases points
+					releasesOverlayTask.cancel(true);
+					releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
+							garageMarkers, releasesMarkers);
+					releasesOverlayTask
+							.execute(lastAllOverlaysUpdateCenter);
+					lastMapUpdateTime.setToNow();
+				}
+			}
+		}
+		
+		if(overlaysVisible() && mOsmv.getZoomLevel() <= 16) {
+			clearAllParkings();
+		}
+	}
+	
+	private Boolean overlaysVisible() {
+		return (garageMarkers.visible() || releasesMarkers.visible() || linesMarkers.visible());
+	}
+
 }
