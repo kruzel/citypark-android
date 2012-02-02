@@ -86,7 +86,7 @@ public class CityParkApp extends Application {
 
 	@Override
 	public void onCreate() {
-		//ACRA.init(this);
+		ACRA.init(this);
 		LoginTask.init(this);		
 		
 		SharedPreferences mPrefs = getSharedPreferences(getString(R.string.prefs_name), Context.MODE_PRIVATE);
