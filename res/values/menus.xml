@@ -2,7 +2,7 @@
 <resources>
 <string name="park_title">Park</string>
 <string name="unpark_title">Unpark</string>
-<string name="garagelist_title">Garage List</string>
+<string name="garagelist_title">Parking Lot List</string>
 <string name="center_title">My Location</string>
 <string name="navigate_title">Navigate</string>
 <string name="back_title">Back to bike</string>

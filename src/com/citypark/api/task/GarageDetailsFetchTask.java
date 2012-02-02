@@ -1,11 +1,10 @@
 package com.citypark.api.task;
 
-import com.citypark.api.parser.CityParkGaragesByIdParser;
-import com.citypark.api.parser.CityParkReportLocationParser;
-import com.citypark.api.parser.GarageDetailes;
-
 import android.content.Context;
 import android.os.AsyncTask;
+
+import com.citypark.api.parser.CityParkGaragesByIdParser;
+import com.citypark.api.parser.GarageDetailes;
 
 public class GarageDetailsFetchTask extends AsyncTask<Void, Void, Void> {
 	
