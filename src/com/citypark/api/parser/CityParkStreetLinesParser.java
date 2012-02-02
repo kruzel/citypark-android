@@ -20,7 +20,7 @@ import android.util.Xml;
 import android.widget.Toast;
 
 import com.citypark.R;
-import com.citypark.view.overlay.StreetSegment;
+import com.citypark.dto.StreetSegment;
 
 /**
  * This file is part of CityPark.

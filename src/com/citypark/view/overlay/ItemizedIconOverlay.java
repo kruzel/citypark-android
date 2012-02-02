@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -57,5 +58,17 @@ public class ItemizedIconOverlay extends ItemizedOverlay<OverlayItem> {
 		else
 			return mOverlays.size();
 	}
+
+	@Override
+	public void draw(Canvas canvas, MapView mapView, boolean shadow) {
+		// go through all OverlayItems and draw title for each of them
+        for (OverlayItem item:mOverlays)
+        {
+        	boundCenterBottom(item.getMarker(0));
+        }
+		super.draw(canvas, mapView, shadow);
+	}
+	
+	
 
 }

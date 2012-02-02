@@ -9,6 +9,7 @@ import android.graphics.Color;
 import com.citypark.api.parser.CityParkStreetLinesParser;
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
+import com.citypark.dto.StreetSegment;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 

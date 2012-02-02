@@ -28,7 +28,7 @@ import com.google.android.maps.OverlayItem;
  *
  */
 public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
-	private static final int FONT_SIZE = 24;
+	private static final int FONT_SIZE = 20;
     private static final int TITLE_MARGIN = 3;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context context;
@@ -52,7 +52,7 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	             * As we have called boundCenterBottom() in constructor, so these coordinates
 	             * will be of the bottom center position of the displayed marker.
 	             */
-        		Bitmap markerBitmap = ((BitmapDrawable) item.getMarker(0)).getBitmap();
+        		Bitmap markerBitmap = ((BitmapDrawable) boundCenterBottom(item.getMarker(0))).getBitmap();
         		int markerHeight = markerBitmap.getHeight();
         		
 	            GeoPoint point = item.getPoint();
@@ -63,24 +63,13 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	            TextPaint paintText = new TextPaint();
 	            Paint paintRect = new Paint();
 	
-	            Rect rect = new Rect();
-	            paintText.setTextSize(14.0f);
-	            paintText.setFakeBoldText(true);
-	            paintText.getTextBounds(item.getTitle(), 0, item.getTitle().length(), rect);
-	
-	            rect.inset(TITLE_MARGIN, TITLE_MARGIN);
-	            rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight ); 
-	
 	            paintText.setTextAlign(Paint.Align.CENTER);
 	            paintText.setTextSize(FONT_SIZE);
-	            //paintText.setARGB(255, 255, 255, 255);
+	            paintText.setFakeBoldText(true);
 	            paintText.setARGB(255, 0, 0, 0);
-	            //paintRect.setARGB(255, 255, 255, 255);
-	
-	            canvas.drawBitmap(markerBitmap, markerBottomCenterCoords.x, markerBottomCenterCoords.y, null);
-	            //canvas.drawRoundRect( new RectF(rect), 2, 2, paintRect);
-	            canvas.drawText(item.getTitle(), rect.left + rect.width() / 2,
-	                    rect.bottom , paintText);
+	          
+	            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight + FONT_SIZE/2 ,
+	                     paintText);
         	}
         }
         

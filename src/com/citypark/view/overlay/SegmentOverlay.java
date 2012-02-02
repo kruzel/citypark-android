@@ -78,10 +78,10 @@ public class SegmentOverlay extends Overlay {
 		Point projectedPoint0 = pj.toPixels(startPoint, null);
 		Point projectedPoint1 = pj.toPixels(endPoint, null);
 
-		final Rect lineBounds = new Rect(); // bounding rectangle for the current line segment.
-		lineBounds.set(projectedPoint0.x, projectedPoint0.y, projectedPoint1.x, projectedPoint1.y);
-		canvas.drawLine(projectedPoint0.x, projectedPoint0.y, projectedPoint0.x,
-					projectedPoint0.y, this.mPaint);
+//		final Rect lineBounds = new Rect(); // bounding rectangle for the current line segment.
+//		lineBounds.set(projectedPoint0.x, projectedPoint0.y, projectedPoint1.x, projectedPoint1.y);
+		canvas.drawLine(projectedPoint0.x, projectedPoint0.y, projectedPoint1.x,
+					projectedPoint1.y, this.mPaint);
 
 		super.draw(canvas, mapView, shadow);
 		
