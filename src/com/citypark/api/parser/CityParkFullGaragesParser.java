@@ -4,8 +4,6 @@
 package com.citypark.api.parser;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +15,6 @@ import android.sax.EndTextElementListener;
 import android.sax.RootElement;
 import android.util.Log;
 import android.util.Xml;
-import android.widget.Toast;
 
 import com.citypark.R;
 import com.citypark.constants.GarageAvailability;
