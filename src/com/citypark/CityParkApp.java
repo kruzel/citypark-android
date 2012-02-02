@@ -3,6 +3,7 @@
  */
 package com.citypark;
 
+import org.acra.ACRA;
 import org.acra.ErrorReporter;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
