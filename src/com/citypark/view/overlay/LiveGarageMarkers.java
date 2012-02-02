@@ -86,6 +86,9 @@ public class LiveGarageMarkers  {
 	public void clearFromMap() {
 		if (mv.getOverlays().contains(iOverlay)) {
 			mv.getOverlays().remove(iOverlay);
+			
+			mOverlays.clear();
+			iOverlay = null;
 		}
 	}
 	
@@ -94,5 +97,7 @@ public class LiveGarageMarkers  {
 		return areaParking;
 	}
 	
-
+	public Boolean visible() {
+		return !(mOverlays.size() == 0);
+	}
 }

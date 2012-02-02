@@ -35,6 +35,7 @@ public class LiveStreetLinesMarkers {
 			for ( SegmentOverlay overlay : segmentsOverlays) {
 				mOsmv.getOverlays().remove(overlay);
 			}
+			segmentsOverlays.clear();
 		}
 	}
 	
@@ -126,5 +127,9 @@ public class LiveStreetLinesMarkers {
 	
 	public void clearFromMap() {
 		clearSegments(mSegmentsOverlays);
+	}
+	
+	public Boolean visible() {
+		return !(mSegmentsOverlays.size() == 0);
 	}
 }
