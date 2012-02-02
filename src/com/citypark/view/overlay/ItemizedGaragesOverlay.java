@@ -30,16 +30,12 @@ import com.google.android.maps.OverlayItem;
 public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	private static final int FONT_SIZE = 24;
     private static final int TITLE_MARGIN = 3;
-    private int markerHeight;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 	private Context context;
-	private Bitmap markerBitmap;
 	
 	public ItemizedGaragesOverlay(Context context,List<OverlayItem> pList, Drawable pDefaultMarker) {
 		super(boundCenterBottom(pDefaultMarker));
 		this.context = context;
-		markerBitmap = ((BitmapDrawable) pDefaultMarker).getBitmap();
-		markerHeight = markerBitmap.getHeight();
 		mOverlays.addAll(pList);
 		populate();
 	}
@@ -56,6 +52,9 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	             * As we have called boundCenterBottom() in constructor, so these coordinates
 	             * will be of the bottom center position of the displayed marker.
 	             */
+        		Bitmap markerBitmap = ((BitmapDrawable) item.getMarker(0)).getBitmap();
+        		int markerHeight = markerBitmap.getHeight();
+        		
 	            GeoPoint point = item.getPoint();
 	            Point markerBottomCenterCoords = new Point();
 	            mapView.getProjection().toPixels(point, markerBottomCenterCoords);
