@@ -829,7 +829,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					releasesMarkers.updateMap();
 				if (garagesRes)
 					garageMarkers.updateMap();
-
+				if(linesRes || releasesRes || garagesRes)
+					mOsmv.invalidate();
+				
 				mHandler.removeCallbacks(mUpdateOverlaysTask);
 				mHandler.postDelayed(mUpdateOverlaysTask,
 						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
