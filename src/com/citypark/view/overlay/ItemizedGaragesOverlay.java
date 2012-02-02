@@ -44,6 +44,8 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	public void draw(android.graphics.Canvas canvas, MapView mapView,
             boolean shadow) {
 		
+		super.draw(canvas, mapView, shadow);
+		
 		// go through all OverlayItems and draw title for each of them
         for (OverlayItem item:mOverlays)
         {
@@ -68,12 +70,11 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 	            paintText.setFakeBoldText(true);
 	            paintText.setARGB(255, 0, 0, 0);
 	          
-	            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight + FONT_SIZE/2 ,
+	            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight/2  ,
 	                     paintText);
         	}
         }
-        
-        super.draw(canvas, mapView, shadow);
+     
 	}
 
 	public void addOverlay(OverlayItem overlay) {
