@@ -244,7 +244,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		//mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationHandler(mOsmv.getController()));
-
+		centerMap();
+		
 		// Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
 		overlay.setVisibility(View.INVISIBLE);
@@ -615,21 +616,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			unpark();
 			break;
 		case R.id.center:
-			Location self = mLocationOverlay.getLastFix();
-
-			if (self == null) {
-				self = mLocationManager
-						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			}
-			if (self == null) {
-				self = mLocationManager
-						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			}
-			if (self != null) {
-				GeoPoint p = new GeoPoint((int)(self.getLatitude()*1E6),(int)(self.getLongitude()*1E6));
-				mOsmv.getController().setCenter(p);
-			}
-			// showAllParkings(false);
+			centerMap();
 			break;
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
@@ -919,5 +906,22 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		}
 		parkedCarOverlayItems.clear();
 		parkedCarOverlay = null;
+	}
+	
+	protected void centerMap() {
+		Location self = mLocationOverlay.getLastFix();
+
+		if (self == null) {
+			self = mLocationManager
+					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		}
+		if (self == null) {
+			self = mLocationManager
+					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		}
+		if (self != null) {
+			GeoPoint p = new GeoPoint((int)(self.getLatitude()*1E6),(int)(self.getLongitude()*1E6));
+			mOsmv.getController().animateTo(p);
+		}
 	}
 }
