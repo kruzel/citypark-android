@@ -49,32 +49,34 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 		// go through all OverlayItems and draw title for each of them
         for (OverlayItem item:mOverlays)
         {
+        	int markerHeight = 0;
+        	Drawable dr = item.getMarker(0);
+    		if(dr!=null) {
+        		Bitmap markerBitmap = ((BitmapDrawable) boundCenterBottom(dr)).getBitmap();
+        		markerHeight = markerBitmap.getHeight();
+    		}
+        		
         	if(item.getTitle()!= null && item.getTitle().length() > 0 ) {
 	            /* Converts latitude & longitude of this overlay item to coordinates on screen.
 	             * As we have called boundCenterBottom() in constructor, so these coordinates
 	             * will be of the bottom center position of the displayed marker.
-	             */
-        		Drawable dr = item.getMarker(0);
-        		if(dr!=null) {
-	        		Bitmap markerBitmap = ((BitmapDrawable) boundCenterBottom(dr)).getBitmap();
-	        		int markerHeight = markerBitmap.getHeight();
-	        		
-		            GeoPoint point = item.getPoint();
-		            Point markerBottomCenterCoords = new Point();
-		            mapView.getProjection().toPixels(point, markerBottomCenterCoords);
-		
-		            /* Find the width and height of the title*/
-		            TextPaint paintText = new TextPaint();
-		            Paint paintRect = new Paint();
-		
-		            paintText.setTextAlign(Paint.Align.CENTER);
-		            paintText.setTextSize(FONT_SIZE);
-		            paintText.setFakeBoldText(true);
-		            paintText.setARGB(255, 0, 0, 0);
-		          
-		            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight/2  ,
-		                     paintText);
-        		}
+	             */	
+	            GeoPoint point = item.getPoint();
+	            Point markerBottomCenterCoords = new Point();
+	            mapView.getProjection().toPixels(point, markerBottomCenterCoords);
+	
+	            /* Find the width and height of the title*/
+	            TextPaint paintText = new TextPaint();
+	            Paint paintRect = new Paint();
+	
+	            paintText.setTextAlign(Paint.Align.CENTER);
+	            paintText.setTextSize(FONT_SIZE);
+	            paintText.setFakeBoldText(true);
+	            paintText.setARGB(255, 0, 0, 0);
+	          
+	            canvas.drawText(item.getTitle(), markerBottomCenterCoords.x, markerBottomCenterCoords.y - markerHeight/2  ,
+	                     paintText);
+        		
         	}
         }
      
