@@ -135,7 +135,7 @@ public class LiveStreetReleasesMarkers {
 	}
 	
 	public Boolean visible() {
-		return !(mOverlays.size() == 0);
+		return !(mOverlays==null || mOverlays.size() == 0);
 	}
 
 }

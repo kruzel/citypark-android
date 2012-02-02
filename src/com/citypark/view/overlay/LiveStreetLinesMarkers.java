@@ -130,6 +130,6 @@ public class LiveStreetLinesMarkers {
 	}
 	
 	public Boolean visible() {
-		return !(mSegmentsOverlays.size() == 0);
+		return !(mSegmentsOverlays==null || mSegmentsOverlays.size() == 0);
 	}
 }

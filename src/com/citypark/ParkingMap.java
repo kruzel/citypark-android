@@ -139,8 +139,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
 			checkAndUpdateOverlays();
-
-			mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		}
 	};
 
@@ -338,7 +336,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				if (lastAllOverlaysUpdateCenter == null
 						|| (lastAllOverlaysUpdateCenter != null &&  results[0] > 250)) {
 					showAllParkings(true);
-					startMapCenterListener();
 				}
 			}
 		} else {
@@ -665,6 +662,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
+		
+		startMapCenterListener();
 	}
 	
 	public void clearAllParkings() {
@@ -959,6 +958,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if(overlaysVisible() && mOsmv.getZoomLevel() <= 16) {
 			clearAllParkings();
 		}
+		
+		startMapCenterListener();
 	}
 	
 	private Boolean overlaysVisible() {
