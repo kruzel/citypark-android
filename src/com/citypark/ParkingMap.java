@@ -171,6 +171,30 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			}
 		}
 	};
+	
+	private OnTouchListener touchListener = new OnTouchListener() {
+
+	    public boolean onTouch(View v, MotionEvent event) {
+	        switch (event.getAction()) {
+	        case MotionEvent.ACTION_UP:
+	            // The user took their finger off the map, 
+	            // they probably just moved it to a new place.
+	            break;
+	            case MotionEvent.ACTION_MOVE:     
+	            	// The user is probably moving the map.
+		            float[] results = new float[3];
+					Location.distanceBetween(mLocationOverlay.getLastFix().getLatitude(), mLocationOverlay.getLastFix().getLongitude(), mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
+		            if(results[0] > 250)
+		            	mLocationOverlay.disableMyLocation();
+		            
+		            checkAndUpdateOverlays();
+	            break;
+	        }
+
+	        // Return false so that the map still moves.
+	        return false;
+	    }
+	};
 
 	@Override
 	public void onCreate(final Bundle savedState) {
@@ -287,10 +311,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			wl.acquire();
 		}
 
-		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
-
-		mOsmv.setOnTouchListener(this);
-
 		payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 
 		// check if awaken by location receiver
@@ -326,17 +346,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
-		float[] results = new float[3];
-		if(lastAllOverlaysUpdateCenter!=null) {
-			Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
-		}
-		
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
-				if (lastAllOverlaysUpdateCenter == null
-						|| (lastAllOverlaysUpdateCenter != null &&  results[0] > 250)) {
 					showAllParkings(true);
-				}
 			}
 		} else {
 			if (LoginTask.isRegistered()) {
@@ -418,7 +430,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			mHandler.postDelayed(mUnparkDialogTimer, 30000);
 			break;
 		case R.id.park:
-			playNotification();
+			//playNotification();
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage(getString(R.string.park_ack))
 					.setCancelable(false)
@@ -642,6 +654,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	public void showAllParkings(Boolean showProgDialog) {
 		if (!LoginTask.isLoggedIn())
 			return;
+		
+		mOsmv.setOnTouchListener(touchListener);
+		startMapCenterListener();
 
 		if (mOsmv.getZoomLevel() <= 16)
 			return;
@@ -662,8 +677,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
-		
-		startMapCenterListener();
 	}
 	
 	public void clearAllParkings() {
@@ -904,37 +917,17 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
 		mHandler.postDelayed(mUpdateOverlaysTask,
 				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
-		
-		mOsmv.setOnTouchListener(new OnTouchListener() {
-
-		    public boolean onTouch(View v, MotionEvent event) {
-		        switch (event.getAction()) {
-		        case MotionEvent.ACTION_UP:
-		            // The user took their finger off the map, 
-		            // they probably just moved it to a new place.
-		            break;
-		            case MotionEvent.ACTION_MOVE:     
-		            	// The user is probably moving the map.
-			            float[] results = new float[3];
-						Location.distanceBetween(mLocationOverlay.getLastFix().getLatitude(), mLocationOverlay.getLastFix().getLongitude(), mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
-			            if(results[0] > 250)
-			            	mLocationOverlay.disableMyLocation();
-			            
-			            checkAndUpdateOverlays();
-		            break;
-		        }
-
-		        // Return false so that the map still moves.
-		        return false;
-		    }
-		});
 	}
 	
 	protected void checkAndUpdateOverlays() {
 		if (parking_manager.isParking())
 			return;			
 
-		if (mOsmv.getZoomLevel() > 16 && lastAllOverlaysUpdateCenter != null) {
+		if (mOsmv.getZoomLevel() > 16 && !overlaysVisible()) {
+			showAllParkings(false);	
+		} else if(overlaysVisible() && mOsmv.getZoomLevel() <= 16) {
+			clearAllParkings();
+		} else if (mOsmv.getZoomLevel() > 16 && lastAllOverlaysUpdateCenter != null) {
 			float[] results = new float[3];
 			Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
 			
@@ -953,10 +946,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					lastMapUpdateTime.setToNow();
 				}
 			}
-		}
-		
-		if(overlaysVisible() && mOsmv.getZoomLevel() <= 16) {
-			clearAllParkings();
 		}
 		
 		startMapCenterListener();
