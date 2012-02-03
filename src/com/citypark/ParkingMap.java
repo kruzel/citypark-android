@@ -165,7 +165,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 						}
 					}
 				} else {
-					if(linesMarkers.haveItems() && garageMarkers.haveItems() && releasesMarkers.haveItems()) 
+					if(linesMarkers.haveItems() || garageMarkers.haveItems() || releasesMarkers.haveItems()) 
 						showExistingAllParkings();
 					else
 						updateAllParkings(false);
@@ -358,19 +358,14 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
-				showExistingAllParkings();
-				
-				float[] results = new float[3];
-				if(lastAllOverlaysUpdateCenter!=null) {
-					Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
-				}
-
-				if (lastAllOverlaysUpdateCenter == null	|| results[0] > 250) {
+				if(garageMarkers.haveItems() || linesMarkers.haveItems() || releasesMarkers.haveItems())
+					showExistingAllParkings();
+				else
 					updateAllParkings(true);
-					mHandler.removeCallbacks(mUpdateOverlaysTask);
-					mHandler.postDelayed(mUpdateOverlaysTask,
-							CityParkConsts.OVERLAY_UPDATE_INTERVAL);
-				}
+				
+				mHandler.removeCallbacks(mUpdateOverlaysTask);
+				mHandler.postDelayed(mUpdateOverlaysTask,
+						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 			}
 		} else {
 			if (LoginTask.isRegistered()) {
@@ -394,11 +389,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 
-		updateAllParkings(true);
-//		mHandler.removeCallbacks(mUpdateOverlaysTask);
-//		mHandler.postDelayed(mUpdateOverlaysTask,
-//				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
-
+		// if updateAllParkings fails we won't get overlayFetchComplete, so need to start overlay handler here
+		if(!updateAllParkings(true)) {
+			mHandler.removeCallbacks(mUpdateOverlaysTask);
+			mHandler.postDelayed(mUpdateOverlaysTask,
+					CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+		}
 		app.doBindService();
 	}
 
@@ -676,15 +672,15 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		return true;
 	}
 
-	public void updateAllParkings(Boolean showProgDialog) {
+	public Boolean updateAllParkings(Boolean showProgDialog) {
 		if (!LoginTask.isLoggedIn())
-			return;
+			return false;
 
 		if (mOsmv.getZoomLevel() < CityParkConsts.ZOOM_THRESHOLD)
-			return;
+			return false;
 
 		if (parking_manager.isParking())
-			return;
+			return false;
 
 		if (showProgDialog) {
 			firstOverlayLoading = true;
@@ -701,6 +697,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 		lastZoomLevel = mOsmv.getZoomLevel();
+		
+		return true;
 	}
 	
 	public void showExistingAllParkings() {
