@@ -18,7 +18,7 @@ public class LiveStreetLinesMarkers {
 	
 	/** street segments overlay **/
 	protected List<SegmentOverlay> mSegmentsOverlays = null;
-	protected List<SegmentOverlay> mOldSegmentsOverlays = new ArrayList<SegmentOverlay>();
+	protected List<SegmentOverlay> mOldSegmentsOverlays = null;
 	
 	/** OSM MapView reference **/
 	protected MapView mOsmv;
@@ -117,10 +117,11 @@ public class LiveStreetLinesMarkers {
 	public void updateMap() {
 		if (mSegmentsOverlays != null){
 			setSegments(mSegmentsOverlays);
-			clearSegments(mOldSegmentsOverlays);
 			
-			mOldSegmentsOverlays.clear();
-			mOldSegmentsOverlays.addAll(mSegmentsOverlays);
+			if(mOldSegmentsOverlays!=mSegmentsOverlays)
+				clearSegments(mOldSegmentsOverlays);
+			
+			mOldSegmentsOverlays = mSegmentsOverlays;
 		}
 	}
 	
