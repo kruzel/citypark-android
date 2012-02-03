@@ -148,14 +148,14 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 			if ((lastAllOverlaysUpdateCenter != null && results[0] > 250)
 					|| (mOsmv.getZoomLevel() > lastZoomLevel)
-					&& mOsmv.getZoomLevel() == 15) {
+					&& mOsmv.getZoomLevel() == 16) {
 				showAllParkings(false);
 			} else {
 				Time curTime = new Time();
 				curTime.setToNow();
 				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
 					// refresh only releases points
-					if (mOsmv.getZoomLevel() >= 15
+					if (mOsmv.getZoomLevel() >= 16
 							&& lastAllOverlaysUpdateCenter != null) {
 						releasesOverlayTask.cancel(true);
 						releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
@@ -452,7 +452,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			mHandler.postDelayed(mUnparkDialogTimer, 30000);
 			break;
 		case R.id.park:
-			playNotification();
+			//playNotification();
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage(getString(R.string.park_ack))
 					.setCancelable(false)
