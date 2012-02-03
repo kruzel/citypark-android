@@ -71,11 +71,7 @@ public class GarageData {
 		this.image1 = gd.image1;
 		this.image2 = gd.image2;
 		this.imageDrawable = gd.imageDrawable;
-<<<<<<< HEAD
 		this.distance = gd.distance;
-=======
-		this.distance = gd.getDistance();
->>>>>>> 791b672a7de97598a9c60e9003d70d7d74b5aab4
 	}
 
 
