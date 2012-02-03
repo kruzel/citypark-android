@@ -679,7 +679,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (!LoginTask.isLoggedIn())
 			return;
 
-		if (mOsmv.getZoomLevel() < 15)
+		if (mOsmv.getZoomLevel() < 16)
 			return;
 
 		if (parking_manager.isParking())
