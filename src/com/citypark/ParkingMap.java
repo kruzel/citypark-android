@@ -323,11 +323,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			wl.acquire();
 		}
 
-//		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
-//		lastZoomLevel = mOsmv.getZoomLevel();
-
-//		mOsmv.setOnTouchListener(this);
-
 		payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 
 		// check if awaken by location receiver
@@ -359,12 +354,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 	@Override
 	protected void onStart() {
-		// RouteMap.this.mLocationOverlay.followLocation(true);
-
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
+				showExistingAllParkings();
+				
 				float[] results = new float[3];
 				if(lastAllOverlaysUpdateCenter!=null) {
 					Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
@@ -375,7 +370,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					mHandler.removeCallbacks(mUpdateOverlaysTask);
 					mHandler.postDelayed(mUpdateOverlaysTask,
 							CityParkConsts.OVERLAY_UPDATE_INTERVAL);
-
 				}
 			}
 		} else {
@@ -401,9 +395,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			dialog.dismiss();
 
 		updateAllParkings(true);
-		mHandler.removeCallbacks(mUpdateOverlaysTask);
-		mHandler.postDelayed(mUpdateOverlaysTask,
-				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
+//		mHandler.removeCallbacks(mUpdateOverlaysTask);
+//		mHandler.postDelayed(mUpdateOverlaysTask,
+//				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 
 		app.doBindService();
 	}
