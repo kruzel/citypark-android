@@ -146,25 +146,28 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			if(lastAllOverlaysUpdateCenter!=null)
 				Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
 
-			if ((lastAllOverlaysUpdateCenter != null && results[0] > 250)
-					|| (mOsmv.getZoomLevel() > lastZoomLevel)
-					&& mOsmv.getZoomLevel() == 16) {
-				showAllParkings(false);
-			} else {
-				Time curTime = new Time();
-				curTime.setToNow();
-				if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
-					// refresh only releases points
-					if (mOsmv.getZoomLevel() >= 16
-							&& lastAllOverlaysUpdateCenter != null) {
-						releasesOverlayTask.cancel(true);
-						releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
-								garageMarkers, releasesMarkers);
-						releasesOverlayTask
-								.execute(lastAllOverlaysUpdateCenter);
-						lastMapUpdateTime.setToNow();
+			if (mOsmv.getZoomLevel() >= 16) {
+				if(lastAllOverlaysUpdateCenter != null) {
+					if (results[0] > 250 || mOsmv.getZoomLevel() > lastZoomLevel) {
+						showAllParkings(false);
+					} else {
+						Time curTime = new Time();
+						curTime.setToNow();
+						if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
+							// refresh only releases points
+							
+								releasesOverlayTask.cancel(true);
+								releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
+										garageMarkers, releasesMarkers);
+								releasesOverlayTask
+										.execute(lastAllOverlaysUpdateCenter);
+								lastMapUpdateTime.setToNow();
+						}
 					}
-				}
+				} else
+					showAllParkings(false);
+			} else if(lastAllOverlaysUpdateCenter!=null) {
+				clearAllParkings();
 			}
 
 			mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
@@ -316,10 +319,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			wl.acquire();
 		}
 
-		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
-		lastZoomLevel = mOsmv.getZoomLevel();
+//		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
+//		lastZoomLevel = mOsmv.getZoomLevel();
 
-		mOsmv.setOnTouchListener(this);
+//		mOsmv.setOnTouchListener(this);
 
 		payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 
@@ -355,16 +358,15 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		// RouteMap.this.mLocationOverlay.followLocation(true);
 
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
-		float[] results = new float[3];
-		if(lastAllOverlaysUpdateCenter!=null) {
-			Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
-		}
-		
+			
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
-				if (lastAllOverlaysUpdateCenter == null
-						|| (lastAllOverlaysUpdateCenter != null &&  results[0] > 250)) {
+				float[] results = new float[3];
+				if(lastAllOverlaysUpdateCenter!=null) {
+					Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
+				}
+
+				if (lastAllOverlaysUpdateCenter == null	|| results[0] > 250) {
 					showAllParkings(true);
 					mHandler.removeCallbacks(mUpdateOverlaysTask);
 					mHandler.postDelayed(mUpdateOverlaysTask,
@@ -698,6 +700,21 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 		lastZoomLevel = mOsmv.getZoomLevel();
+	}
+	
+	public void clearAllParkings() {
+		releasesOverlayTask.cancel(true);
+		overlayTask.cancel(true);
+		
+		garageMarkers.clearFromMap();
+		releasesMarkers.clearFromMap();
+		linesMarkers.clearFromMap();
+		
+		lastAllOverlaysUpdateTime.setToNow();
+		lastAllOverlaysUpdateCenter = null;
+		lastZoomLevel = mOsmv.getZoomLevel();
+		
+		mOsmv.invalidate();
 	}
 
 	public void stopNavigation() {
