@@ -689,6 +689,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				showDialog(R.id.loading_info);
 		}
 		
+		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers,
 				releasesMarkers, linesMarkers);
