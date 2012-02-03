@@ -94,5 +94,7 @@ public class LiveGarageMarkers  {
 		return areaParking;
 	}
 	
-
+	public Boolean haveItems() {
+		return (mOverlays!=null && mOverlays.size()>0);
+	} 
 }

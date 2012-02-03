@@ -146,10 +146,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			if(lastAllOverlaysUpdateCenter!=null)
 				Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
 
-			if (mOsmv.getZoomLevel() >= 16) {
+			if (mOsmv.getZoomLevel() >= CityParkConsts.ZOOM_THRESHOLD) {
 				if(lastAllOverlaysUpdateCenter != null) {
-					if (results[0] > 250 || mOsmv.getZoomLevel() > lastZoomLevel) {
-						showAllParkings(false);
+					if (results[0] > 250) {
+						updateAllParkings(false);
 					} else {
 						Time curTime = new Time();
 						curTime.setToNow();
@@ -164,8 +164,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 								lastMapUpdateTime.setToNow();
 						}
 					}
-				} else
-					showAllParkings(false);
+				} else {
+					if(linesMarkers.haveItems() && garageMarkers.haveItems() && releasesMarkers.haveItems()) 
+						showExistingAllParkings();
+					else
+						updateAllParkings(false);
+				}
 			} else if(lastAllOverlaysUpdateCenter!=null) {
 				clearAllParkings();
 			}
@@ -237,7 +241,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		this.mOsmv.getOverlays().add(this.mLocationOverlay);
 
 		mOsmv.getController().setZoom(
-				mPrefs.getInt(getString(R.string.prefs_zoomlevel), 16));
+				mPrefs.getInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD));
 		
 		int x = mPrefs.getInt(getString(R.string.prefs_scrollx), 0);
 		int y = mPrefs.getInt(getString(R.string.prefs_scrolly), 0);
@@ -349,7 +353,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			wl.release();
 		}
 		
-		mPrefs.edit().putInt(getString(R.string.prefs_zoomlevel), 16);
+		mPrefs.edit().putInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD);
 		mPrefs.edit().commit();
 	}
 
@@ -367,7 +371,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				}
 
 				if (lastAllOverlaysUpdateCenter == null	|| results[0] > 250) {
-					showAllParkings(true);
+					updateAllParkings(true);
 					mHandler.removeCallbacks(mUpdateOverlaysTask);
 					mHandler.postDelayed(mUpdateOverlaysTask,
 							CityParkConsts.OVERLAY_UPDATE_INTERVAL);
@@ -396,7 +400,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 
-		showAllParkings(true);
+		updateAllParkings(true);
+		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		mHandler.postDelayed(mUpdateOverlaysTask,
+				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 
 		app.doBindService();
 	}
@@ -627,7 +634,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
 					Toast.LENGTH_LONG).show();
-			showAllParkings(true);
+			updateAllParkings(true);
 			return true;
 		case R.id.garagelist:
 			intent = new Intent(this, GarageListActivity.class);
@@ -675,11 +682,11 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		return true;
 	}
 
-	public void showAllParkings(Boolean showProgDialog) {
+	public void updateAllParkings(Boolean showProgDialog) {
 		if (!LoginTask.isLoggedIn())
 			return;
 
-		if (mOsmv.getZoomLevel() < 16)
+		if (mOsmv.getZoomLevel() < CityParkConsts.ZOOM_THRESHOLD)
 			return;
 
 		if (parking_manager.isParking())
@@ -696,6 +703,27 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers,
 				releasesMarkers, linesMarkers);
 		overlayTask.execute(mOsmv.getMapCenter());
+
+		lastAllOverlaysUpdateTime.setToNow();
+		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
+		lastZoomLevel = mOsmv.getZoomLevel();
+	}
+	
+	public void showExistingAllParkings() {
+		if (!LoginTask.isLoggedIn())
+			return;
+
+		if (mOsmv.getZoomLevel() < CityParkConsts.ZOOM_THRESHOLD)
+			return;
+
+		if (parking_manager.isParking())
+			return;
+
+		linesMarkers.updateMap();
+		releasesMarkers.updateMap();
+		garageMarkers.updateMap();
+		
+		mOsmv.invalidate();
 
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();

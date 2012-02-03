@@ -58,7 +58,7 @@ public final class CityParkConsts {
 	public static final String USER_ALREADY_EXISTS = "USER ALREADY EXISTS";
 	
 	/** Initial zoom level. */
-	public static final int ZOOM = 17;
+	public static final int ZOOM_THRESHOLD = 17;
 	
 	public static final Long OVERLAY_UPDATE_INTERVAL = 1000L;
 	

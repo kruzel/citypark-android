@@ -127,4 +127,8 @@ public class LiveStreetLinesMarkers {
 	public void clearFromMap() {
 		clearSegments(mSegmentsOverlays);
 	}
+	
+	public Boolean haveItems() {
+		return (mSegmentsOverlays!=null && mSegmentsOverlays.size()>0);
+	}
 }
