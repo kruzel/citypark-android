@@ -122,7 +122,7 @@ public class ItemizedGaragesOverlay extends ItemizedOverlay<OverlayItem> {
 			context.startActivity(intent);
 		}
 		
-		return super.onTap(index);
+		return true;
 	}
 
 	
