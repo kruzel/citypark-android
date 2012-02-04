@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.citypark.api.task.AllOverlayFetchTask;
@@ -87,8 +88,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private LiveGarageMarkers garageMarkers;
 	private LiveStreetReleasesMarkers releasesMarkers;
 	private LiveStreetLinesMarkers linesMarkers;
-
-	private Boolean firstOverlayLoading = true;
 
 	/** Parked car location overlay **/
 	protected ItemizedIconOverlay parkedCarOverlay;
@@ -246,6 +245,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		// Initialize map, view & controller
 		setContentView(R.layout.main);
 		this.mOsmv = (MapView) findViewById(R.id.mapview);
+		
+		mProgresBar = (ProgressBar) findViewById(R.id.progressBarMap);
+        mProgresBar.setVisibility(View.INVISIBLE);
 
 		this.mLocationOverlay = new MyLocationOverlay(
 				this.getApplicationContext(), this.mOsmv);
@@ -702,11 +704,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (parking_manager.isParking())
 			return false;
 
-		if (showProgDialog) {
-			firstOverlayLoading = true;
-			if (dialog == null || (dialog != null && !dialog.isShowing()))
-				showDialog(R.id.loading_info);
-		}
+		
+		mProgresBar.setVisibility(View.VISIBLE);
 		
 		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
@@ -854,7 +853,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 								parking_manager.getCarPos().getLongitudeE6() / 1E6);
 						reportParkingReleaseTask.execute();
 						parking_manager.unPark();
-						// firstOverlayLoading = true;
 						LoginTask.setSessionId(null);
 						LoginTask.login(ParkingMap.this); // renew session
 					}
@@ -891,12 +889,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 			}
 
-			if (firstOverlayLoading) {
-				firstOverlayLoading = false;
-
-				if (dialog != null && dialog.isShowing())
-					dialog.dismiss();
-			}
+			mProgresBar.setVisibility(View.INVISIBLE);
 		}
 	}
 

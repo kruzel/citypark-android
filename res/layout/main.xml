@@ -20,6 +20,13 @@ android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw"
     android:gravity="top"
     android:src="@drawable/logo" />
 
+<ProgressBar
+    android:id="@+id/progressBarMap"
+    style="?android:attr/progressBarStyleLarge"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|center_horizontal" />
+
 <LinearLayout
 android:id="@+id/directions_layout"
 android:focusableInTouchMode="true"

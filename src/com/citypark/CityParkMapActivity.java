@@ -3,6 +3,9 @@ package com.citypark;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
@@ -41,6 +44,7 @@ public class CityParkMapActivity extends MapActivity {
         protected SharedPreferences mPrefs;
         protected MapView mOsmv;
         protected MyLocationOverlay mLocationOverlay;
+        protected ProgressBar mProgresBar;
 
         // ===========================================================
         // Constructors
@@ -52,7 +56,6 @@ public class CityParkMapActivity extends MapActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
-
     }
 
     @Override
