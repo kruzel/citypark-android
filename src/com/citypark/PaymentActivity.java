@@ -221,8 +221,8 @@ public class PaymentActivity extends Activity {
 				 
 				 if(stopPayTask!=null)
 					 stopPayTask.cancel(true);
-				 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
-						 parking_manager.getGeoPoint().getLongitudeE6()/1E6, "ACKNOWLEDGED");
+				 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getCarPos().getLatitudeE6()/1E6, 
+						 parking_manager.getCarPos().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				 stopPayTask.execute();
 			 }
 	         else {
@@ -232,8 +232,8 @@ public class PaymentActivity extends Activity {
 	        	 
 	        	 if(payTask!=null)
 					 payTask.cancel(true);
-	        	 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
-						 parking_manager.getGeoPoint().getLongitudeE6()/1E6, "FAILED");
+	        	 stopPayTask = new StopPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getCarPos().getLatitudeE6()/1E6, 
+						 parking_manager.getCarPos().getLongitudeE6()/1E6, "FAILED");
 				 stopPayTask.execute();
 	         }
 		} else {
@@ -246,8 +246,8 @@ public class PaymentActivity extends Activity {
 				//TODO operationStatus values:ACKNOWLEDGED,FAILED,UNVERIFIED\
 				 if(payTask!=null)
 					 payTask.cancel(true);
-				payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
-						parking_manager.getGeoPoint().getLongitudeE6()/1E6, "ACKNOWLEDGED");
+				payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getCarPos().getLatitudeE6()/1E6, 
+						parking_manager.getCarPos().getLongitudeE6()/1E6, "ACKNOWLEDGED");
 				payTask.execute();
 			 }
 	         else {
@@ -257,8 +257,8 @@ public class PaymentActivity extends Activity {
 	        	 
 	        	 if(payTask!=null)
 					 payTask.cancel(true);
-	        	 payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getGeoPoint().getLatitudeE6()/1E6, 
-							parking_manager.getGeoPoint().getLongitudeE6()/1E6, "FAILED");
+	        	 payTask = new StartPaymentTask(this, LoginTask.getSessionId(), getPaymentMethod(), parking_manager.getCarPos().getLatitudeE6()/1E6, 
+							parking_manager.getCarPos().getLongitudeE6()/1E6, "FAILED");
 					payTask.execute();
 	         }
 		}

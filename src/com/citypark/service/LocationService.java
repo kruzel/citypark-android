@@ -3,8 +3,6 @@
  */
 package com.citypark.service;
 
-import java.util.List;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -13,17 +11,15 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.citypark.CityParkApp;
-import com.citypark.R;
 import com.citypark.ParkingMap;
-import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.route.PGeoPoint;
+import com.citypark.R;
 
 /**
  * Service providing live navigation using GPS and notification updates
@@ -63,9 +59,11 @@ public class LocationService extends Service implements LocationListener {
 	private Notification notification;
 	/** Intent for callbacks from notifier. **/
 	private PendingIntent contentIntent;
-	
 	/** Receiver for navigation updates. **/
 	private ParkingHandler mLocationReceiver;
+	
+	private int status = LocationProvider.OUT_OF_SERVICE;
+	private Boolean enabled = true;
 	
 	 /**
      * Class for clients to access.  Because we know this service always
@@ -103,15 +101,8 @@ public class LocationService extends Service implements LocationListener {
         notificationIntent.putExtra(getString(R.string.jump_intent), true);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-//        if (app.getRoute() != null) {
-//        	notification.setLatestEventInfo(app, getText(R.string.notify_title),
-//				app.getSegment().getInstruction(), contentIntent);
-//        	mNM.notify(R.id.notifier, notification);
-//        } else {
-//        	shutdown();
-//        	stopSelf();
-//        }
+        
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, this); //min interval 15 sec
     }
 
     @Override
@@ -136,6 +127,9 @@ public class LocationService extends Service implements LocationListener {
     
     @Override
 	public void onLocationChanged(Location location) {   	
+    	if(status!=LocationProvider.AVAILABLE || !enabled)
+    		return;
+    	
     	mLocationReceiver.run(app,location);
 	}
     
@@ -149,7 +143,7 @@ public class LocationService extends Service implements LocationListener {
 	 */
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
+		enabled = false;
 		
 	}
 
@@ -158,7 +152,7 @@ public class LocationService extends Service implements LocationListener {
 	 */
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
+		enabled = true;
 		
 	}
 
@@ -167,24 +161,7 @@ public class LocationService extends Service implements LocationListener {
 	 */
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
+		this.status =  status;
 	}
-	
-	/**
-	 * Get the cross track error of p0 from the path p1 -> p2
-	 * @param p0 point to get distance to.
-	 * @param p1 start point of line.
-	 * @param p2 end point of line.
-	 * @return the distance from p0 to the path in meters as a double.
-	 */
-	/*
-	private double range(final PGeoPoint p0, final PGeoPoint p1, final PGeoPoint p2) {
-		double dist = Math.asin(Math.sin(p1.distanceTo(p0)/CityParkConsts.EARTH_RADIUS) * 
-				Math.sin(p1.bearingTo(p0) - p1.bearingTo(p2))) * 
-				CityParkConsts.EARTH_RADIUS;
-		
-		return Math.abs(dist);
-	}*/
 
 }

@@ -45,6 +45,8 @@ public class ParkingSessionManager {
 	public static final String PAYMENT_START_TIME = "paystarttime";
 	/** Preference key (alarm target time) **/
 	public static final String ALARM_TIME = "alarmtime";
+	/** Preference key (alarm target time) **/
+	public static final String LOCATION_ACCURACY = "location_accuracy";
 	
 	/** Shared preferences object. **/
 	private final SharedPreferences settings;
@@ -56,8 +58,8 @@ public class ParkingSessionManager {
 		editor = settings.edit();
 	}
 
-	public final void park(final int latitude, final int longitude) {
-		park(new GeoPoint(latitude, longitude));
+	public final void park(final int latitude, final int longitude, float accuray) {
+		park(new GeoPoint(latitude, longitude),accuray);
 	}
 
 	/**
@@ -67,9 +69,10 @@ public class ParkingSessionManager {
 	 * @param p Location to park at.
 	 */
 
-	public final void park(final GeoPoint p) {
+	public final void park(final GeoPoint p, float accuray) {
 		editor.putInt(LAT, p.getLatitudeE6());
 		editor.putInt(LNG, p.getLongitudeE6());
+		editor.putFloat(LOCATION_ACCURACY, accuray);
 		editor.commit();
 	}
 
@@ -100,13 +103,24 @@ public class ParkingSessionManager {
 	 *         found.
 	 */
 
-	public final GeoPoint getGeoPoint() {
+	public final GeoPoint getCarPos() {
 		final int lat = settings.getInt(LAT, -1);
 		final int lng = settings.getInt(LNG, -1);
 		if(lat==-1 || lng==-1)
 			return null;
 		
 		return new GeoPoint(lat, lng);
+	}
+	
+	/**
+	 * Get the location of the current parking spot.
+	 * 
+	 * @return a Geopoint for the location. Sets lat & lng to -1 if values not
+	 *         found.
+	 */
+
+	public final float getCarPosAccuracy() {
+		return settings.getFloat(LOCATION_ACCURACY, 0);
 	}
 	
 	/**

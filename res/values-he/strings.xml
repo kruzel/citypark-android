@@ -13,6 +13,7 @@
 <string name="io_error_msg">התקשרות לשירות ניווט נכשלה</string>
 <string name="result_error_msg">כתובת לא נמצאה</string>
 <string name="fix_msg">...ממתין לאיכון</string>
+<string name="fix_failed_msg">איכון נכשל</string>
 <string name="send_msg">...שולח</string>
 <string name="app_name_itemizedoverlay">OSMViewer ItemizedOverlay</string>
 <string name="unknown">לא ידוע</string>

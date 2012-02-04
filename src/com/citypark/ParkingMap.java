@@ -96,6 +96,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 	/** Location manager. **/
 	protected LocationManager mLocationManager;
+	protected MapCenterHandler mMapCenterHandler;
 
 	/* Constants. */
 	protected boolean isSearching = false;
@@ -236,9 +237,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				this.getApplicationContext(), this.mOsmv);
 		this.mLocationOverlay.enableCompass();
 		this.mLocationOverlay.enableMyLocation();
-		
-		this.mOsmv.displayZoomControls(false);
-		this.mOsmv.getOverlays().add(this.mLocationOverlay);
 
 		mOsmv.getController().setZoom(
 				mPrefs.getInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD));
@@ -248,13 +246,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if(x!=0 && y!=0)
 			mOsmv.scrollTo(x,y);
 		
-		mOsmv.setBuiltInZoomControls(true);
+		this.mOsmv.setBuiltInZoomControls(true);
+		this.mOsmv.displayZoomControls(false);
+		this.mOsmv.getOverlays().add(this.mLocationOverlay);
 		
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		//todo:if this code works move the overlay also to requestLocationUpdates
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, new MapCenterHandler(mOsmv.getController()));
-		centerMap();
 		
 		// Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
@@ -277,8 +274,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		parkedCarOverlayItems = new ArrayList<OverlayItem>(1);
 
 		if (parking_manager.isParking()) {
-			setCarLocationFlag(parking_manager.getGeoPoint());
+			setCarLocationFlag(parking_manager.getCarPos());
 		}
+		
+		//todo:if this code works move the overlay also to requestLocationUpdates
+		mMapCenterHandler = new MapCenterHandler(mOsmv.getController());
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, mMapCenterHandler);
 	}
 
 	@Override
@@ -287,6 +288,11 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			app.finishAllAppObjecs();
 
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		
+		if(mMapCenterHandler!=null) {
+			mLocationManager.removeUpdates(mMapCenterHandler);
+			mMapCenterHandler = null;
+		}
 
 		super.onDestroy();
 	}
@@ -374,13 +380,14 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			} else
 				this.startActivity(new Intent(this, RegisterActivity.class));
 		}
+		
+		centerMap();
 
 		super.onStart();
 	}
 
 	@Override
-	protected void onStop() {
-
+	protected void onStop() {		
 		super.onStop();
 	}
 
@@ -772,8 +779,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				}
 				if (self != null) {
 					parking_manager.park(new GeoPoint((int)(self.getLatitude()*1E6), (int)(self
-							.getLongitude()*1E6)));
-					setCarLocationFlag(parking_manager.getGeoPoint());
+							.getLongitude()*1E6)), self.getAccuracy());
+					
+					setCarLocationFlag(parking_manager.getCarPos());
 
 					if (LoginTask.isLoggedIn()) {
 						reportParkingTask = new ReportParkingTask(
@@ -781,7 +789,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 										.getLatitude(), self.getLongitude());
 						reportParkingTask.execute((Void[]) null);
 					}
-				}
+				} else 
+					Toast.makeText(ParkingMap.this,
+							getString(R.string.fix_failed_msg),
+							Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -826,8 +837,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 						reportParkingReleaseTask = new ReportParkingReleaseTask(
 								ParkingMap.this,
 								LoginTask.getSessionId(),
-								parking_manager.getGeoPoint().getLatitudeE6() / 1E6,
-								parking_manager.getGeoPoint().getLongitudeE6() / 1E6);
+								parking_manager.getCarPos().getLatitudeE6() / 1E6,
+								parking_manager.getCarPos().getLongitudeE6() / 1E6);
 						reportParkingReleaseTask.execute();
 						parking_manager.unPark();
 						// firstOverlayLoading = true;
@@ -858,8 +869,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					releasesMarkers.updateMap();
 				if (garagesRes)
 					garageMarkers.updateMap();
-				if(linesRes || releasesRes || garagesRes)
+				if(linesRes || releasesRes || garagesRes) {
 					mOsmv.invalidate();
+				}
 				
 				mHandler.removeCallbacks(mUpdateOverlaysTask);
 				mHandler.postDelayed(mUpdateOverlaysTask,

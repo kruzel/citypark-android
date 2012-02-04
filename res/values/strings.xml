@@ -14,6 +14,7 @@
 <string name="response_error_msg">Bad server response.</string>
 <string name="result_error_msg">Address not found.</string>
 <string name="fix_msg">Waiting for GPS fix&#8230;</string>
+<string name="fix_failed_msg">GPS fix failed</string>
 <string name="send_msg">Sending&#8230;</string>
 
 <string name="app_name_itemizedoverlay">OSMViewer ItemizedOverlay</string>
