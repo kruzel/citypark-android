@@ -97,6 +97,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	/** Location manager. **/
 	protected LocationManager mLocationManager;
 	protected MapCenterHandler mMapCenterHandler;
+	private Boolean firstMyOverlayLocationUpdate = true;
 
 	/* Constants. */
 	protected boolean isSearching = false;
@@ -140,6 +141,19 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	// map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
+			
+			//dirty work around to missing my location dot on first app launch
+			if(firstMyOverlayLocationUpdate) {
+				mOsmv.getOverlays().remove(mLocationOverlay);
+				mLocationOverlay = new MyLocationOverlay(
+						getApplicationContext(), mOsmv);
+		    	mLocationOverlay.enableCompass();
+		    	mLocationOverlay.enableMyLocation();
+				mOsmv.getOverlays().add(mLocationOverlay);
+				mOsmv.invalidate();
+				firstMyOverlayLocationUpdate = false;
+			}
+			
 			if (parking_manager.isParking())
 				return;
 			
@@ -252,6 +266,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		centerMap();
 		
 		// Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
@@ -380,8 +395,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			} else
 				this.startActivity(new Intent(this, RegisterActivity.class));
 		}
-		
-		centerMap();
 
 		super.onStart();
 	}
