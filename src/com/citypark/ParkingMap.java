@@ -742,6 +742,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	}
 	
 	public void clearAllParkings() {
+		mProgresBar.setVisibility(View.INVISIBLE);
 		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
 		
