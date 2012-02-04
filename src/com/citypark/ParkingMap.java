@@ -713,11 +713,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		
 		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
-		
-		garageMarkers.clearOrphensFromMap();
-		releasesMarkers.clearOrphensFromMap();
-		linesMarkers.clearOrphensFromMap();
-		
+			
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers,
 				releasesMarkers, linesMarkers);
 		overlayTask.execute(mOsmv.getMapCenter());
@@ -725,6 +721,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 		lastZoomLevel = mOsmv.getZoomLevel();
+		
+		//TODO need to be done on verlayfetchComplete) , but right now cleanup is not good
+		linesMarkers.clearOrphensFromMap();
 		
 		return true;
 	}
@@ -884,6 +883,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
+				garageMarkers.clearOrphensFromMap();
+				releasesMarkers.clearOrphensFromMap();
+				linesMarkers.clearOrphensFromMap();
+
 				if (linesRes)
 					linesMarkers.updateMap();
 				if (releasesRes)
