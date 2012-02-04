@@ -11,6 +11,8 @@ android:enabled="true"
 android:clickable="true"
 android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw"
 />
+<!-- android:apiKey="0ssSQIui9PCF-EzztRD-dTPorw-OfYe21CYtJ1g" (release key)
+	 android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw" (ofer debug key)-->
 
 <ImageView
     android:id="@+id/imageViewLogo"

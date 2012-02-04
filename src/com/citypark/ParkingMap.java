@@ -42,6 +42,7 @@ import com.citypark.api.task.ReportParkingReleaseTask;
 import com.citypark.api.task.ReportParkingTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.service.MapCenterHandler;
+import com.citypark.utility.Distance;
 import com.citypark.utility.ParkingSessionManager;
 import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.view.overlay.ItemizedIconOverlay;
@@ -132,6 +133,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private GeoPoint lastAllOverlaysUpdateCenter = null;
 	private Time lastAllOverlaysUpdateTime = new Time();
 	private int lastZoomLevel = 0;
+	private GeoPoint lastMapCenter = null;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -156,13 +158,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			if (parking_manager.isParking())
 				return;
 			
-			float[] results = new float[3];
-			if(lastAllOverlaysUpdateCenter!=null)
-				Location.distanceBetween(lastAllOverlaysUpdateCenter.getLatitudeE6()/1E6, lastAllOverlaysUpdateCenter.getLongitudeE6()/1E6, mOsmv.getMapCenter().getLatitudeE6()/1E6, mOsmv.getMapCenter().getLongitudeE6()/1E6, results);
-
 			if (mOsmv.getZoomLevel() >= CityParkConsts.ZOOM_THRESHOLD) {
 				if(lastAllOverlaysUpdateCenter != null) {
-					if (results[0] > 250) {
+					if (Distance.calculateDistance(lastAllOverlaysUpdateCenter,mOsmv.getMapCenter(), Distance.KILOMETERS ) > 0.25) {
 						updateAllParkings(false);
 					} else {
 						Time curTime = new Time();
@@ -179,7 +177,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 						}
 					}
 				} else {
-					if(linesMarkers.haveItems() || garageMarkers.haveItems() || releasesMarkers.haveItems()) 
+					if (Distance.calculateDistance(lastMapCenter, mOsmv.getMapCenter(), Distance.KILOMETERS) > 0.25) {
+						updateAllParkings(false);
+					} else if(linesMarkers.haveItems() || garageMarkers.haveItems() || releasesMarkers.haveItems()) 
 						showExistingAllParkings();
 					else
 						updateAllParkings(false);
@@ -188,6 +188,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				clearAllParkings();
 			}
 
+			lastMapCenter = mOsmv.getMapCenter();
+			
 			mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		}
 	};
@@ -265,6 +267,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		this.mOsmv.setBuiltInZoomControls(true);
 		this.mOsmv.displayZoomControls(false);
 		this.mOsmv.getOverlays().add(this.mLocationOverlay);
+		
+		lastMapCenter = mOsmv.getMapCenter();
 		
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
