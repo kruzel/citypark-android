@@ -97,6 +97,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	/** Location manager. **/
 	protected LocationManager mLocationManager;
 	protected MapCenterHandler mMapCenterHandler;
+	private Boolean firstMyOverlayLocationUpdate = true;
 
 	/* Constants. */
 	protected boolean isSearching = false;
@@ -139,7 +140,20 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private Handler mHandler = new Handler();
 	// map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
-		public void run() {
+		public void run() {		
+			
+			//dirty work around to missing my location dot on first app launch
+			if(firstMyOverlayLocationUpdate) {
+				mOsmv.getOverlays().remove(mLocationOverlay);
+				mLocationOverlay = new MyLocationOverlay(
+						getApplicationContext(), mOsmv);
+		    	mLocationOverlay.enableCompass();
+		    	mLocationOverlay.enableMyLocation();
+				mOsmv.getOverlays().add(mLocationOverlay);
+				mOsmv.invalidate();
+				firstMyOverlayLocationUpdate = false;
+			}
+			
 			if (parking_manager.isParking())
 				return;
 			
@@ -233,11 +247,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		setContentView(R.layout.main);
 		this.mOsmv = (MapView) findViewById(R.id.mapview);
 
-		this.mLocationOverlay = new MyLocationOverlay(
-				this.getApplicationContext(), this.mOsmv);
-		this.mLocationOverlay.enableCompass();
-		this.mLocationOverlay.enableMyLocation();
-
 		mOsmv.getController().setZoom(
 				mPrefs.getInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD));
 		
@@ -248,7 +257,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		
 		this.mOsmv.setBuiltInZoomControls(true);
 		this.mOsmv.displayZoomControls(false);
-		this.mOsmv.getOverlays().add(this.mLocationOverlay);
 		
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -276,10 +284,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (parking_manager.isParking()) {
 			setCarLocationFlag(parking_manager.getCarPos());
 		}
-		
-		//todo:if this code works move the overlay also to requestLocationUpdates
-		mMapCenterHandler = new MapCenterHandler(mOsmv.getController());
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, mMapCenterHandler);
 	}
 
 	@Override
@@ -288,11 +292,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			app.finishAllAppObjecs();
 
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
-		
-		if(mMapCenterHandler!=null) {
-			mLocationManager.removeUpdates(mMapCenterHandler);
-			mMapCenterHandler = null;
-		}
 
 		super.onDestroy();
 	}
@@ -318,12 +317,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 	@Override
 	public void onResume() {
-		super.onResume();
-
 		/* Units preferences. */
 		unit = mSettings.getString("unitsPref", "km");
-		this.mLocationOverlay.enableMyLocation();
-		this.mLocationOverlay.enableCompass();
 
 		if (mSettings.getBoolean("keepAwake", false)) {
 			wl.acquire();
@@ -343,19 +338,30 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				unparkCompletion();
 			}
 		}
+		
+		mMapCenterHandler = new MapCenterHandler(mOsmv.getController());
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, mMapCenterHandler);
+		
+		super.onResume();
+		
+		centerMap();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		this.mLocationOverlay.disableMyLocation();
-		this.mLocationOverlay.disableCompass();
+		
 		if (wl.isHeld()) {
 			wl.release();
 		}
 		
 		mPrefs.edit().putInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD);
 		mPrefs.edit().commit();
+		
+		if(mMapCenterHandler!=null) {
+			mLocationManager.removeUpdates(mMapCenterHandler);
+			mMapCenterHandler = null;
+		}
 	}
 
 	@Override
@@ -380,8 +386,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			} else
 				this.startActivity(new Intent(this, RegisterActivity.class));
 		}
-		
-		centerMap();
 
 		super.onStart();
 	}

@@ -72,23 +72,34 @@ public class CityParkMapActivity extends MapActivity {
 //        edit.putBoolean(getString(R.string.prefs_followlocation), mLocationOverlay.isFollowLocationEnabled());
         edit.commit();
 
-        this.mLocationOverlay.disableMyLocation();
+        mLocationOverlay.disableMyLocation();
+		mLocationOverlay.disableCompass();
+		
         System.gc();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+    	super.onResume();
+    	
     	System.gc();
-        if(mPrefs.getBoolean(getString(R.string.prefs_showlocation), false)) {
-                this.mLocationOverlay.enableMyLocation();
-        }
+    	mLocationOverlay = new MyLocationOverlay(
+				getApplicationContext(), mOsmv);
+    	mLocationOverlay.enableCompass();
+    	mLocationOverlay.enableMyLocation();
+		mOsmv.getOverlays().add(mLocationOverlay);
+		mOsmv.invalidate();
+    	
+//        if(mPrefs.getBoolean(getString(R.string.prefs_showlocation), false)) {
+//                mLocationOverlay.enableMyLocation();	
+//        }
 //        if(mPrefs.getBoolean(getString(R.string.prefs_followlocation), true)) {
 //        	this.mLocationOverlay.enableFollowLocation();
 //        } else {
 //        	this.mLocationOverlay.disableFollowLocation();
 //        }
-        super.onResume();
+        
     }
 
 
