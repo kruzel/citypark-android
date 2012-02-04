@@ -50,7 +50,8 @@ public class LiveStreetReleasesMarkers {
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
-	private static ItemizedIconOverlay iOverlay;
+	private ItemizedIconOverlay iOverlay;
+	private ItemizedIconOverlay iPrevOverlay;
 	/** summary of fetched parkings **/ 
 	AreaParkings areaParking = new AreaParkings();
 
@@ -67,6 +68,8 @@ public class LiveStreetReleasesMarkers {
 	 */
 
 	public Boolean fetch(final GeoPoint p) {
+		iPrevOverlay = iOverlay;
+		
 		markers = getMarkers(p, RADIUS, context,LoginTask.getSessionId());
 		if(markers!=null) 
 			return true;
@@ -87,8 +90,17 @@ public class LiveStreetReleasesMarkers {
 	}
 	
 	public void clearFromMap() {
+		if (mv.getOverlays().contains(iPrevOverlay)) {
+			mv.getOverlays().remove(iPrevOverlay);
+		}
 		if (mv.getOverlays().contains(iOverlay)) {
 			mv.getOverlays().remove(iOverlay);
+		}
+	}
+	
+	public void clearOrphensFromMap() {
+		if (mv.getOverlays().contains(iPrevOverlay)) {
+			mv.getOverlays().remove(iPrevOverlay);
 		}
 	}
 	

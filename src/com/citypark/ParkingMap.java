@@ -713,6 +713,11 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		
 		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
+		
+		garageMarkers.clearOrphensFromMap();
+		releasesMarkers.clearOrphensFromMap();
+		linesMarkers.clearOrphensFromMap();
+		
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers,
 				releasesMarkers, linesMarkers);
 		overlayTask.execute(mOsmv.getMapCenter());

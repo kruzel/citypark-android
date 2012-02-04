@@ -107,6 +107,8 @@ public class LiveStreetLinesMarkers {
 	 */
 
 	public Boolean fetch(final GeoPoint p) {
+		mOldSegmentsOverlays = mSegmentsOverlays;
+		mSegmentsOverlays = null;
 		mSegmentsOverlays = getSegments(p, RADIUS, context);
 		if(mSegmentsOverlays!=null)
 			return true;
@@ -115,18 +117,19 @@ public class LiveStreetLinesMarkers {
 	}
 	
 	public void updateMap() {
+		clearFromMap();
 		if (mSegmentsOverlays != null){
 			setSegments(mSegmentsOverlays);
-			
-			if(mOldSegmentsOverlays!=mSegmentsOverlays)
-				clearSegments(mOldSegmentsOverlays);
-			
-			mOldSegmentsOverlays = mSegmentsOverlays;
 		}
 	}
 	
 	public void clearFromMap() {
 		clearSegments(mSegmentsOverlays);
+		clearSegments(mOldSegmentsOverlays);
+	}
+	
+	public void clearOrphensFromMap() {
+		clearSegments(mOldSegmentsOverlays);
 	}
 	
 	public Boolean haveItems() {

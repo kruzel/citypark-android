@@ -48,7 +48,8 @@ public class LiveGarageMarkers  {
 	/** List of overlay items. **/
 	private final List<OverlayItem> mOverlays;
 	/** Itemized Overlay. **/
-	private static ItemizedGaragesOverlay iOverlay;
+	private ItemizedGaragesOverlay iOverlay;
+	private ItemizedGaragesOverlay iPrevOverlay;
 	/** summary of fetched parkings **/ 
 	AreaParkings areaParking = new AreaParkings();
 
@@ -65,6 +66,8 @@ public class LiveGarageMarkers  {
 	 */
 
 	public Boolean fetch(final GeoPoint p) {
+		iPrevOverlay = iOverlay;
+		
 		markers = ParkingOverlayHandler.getMarkers(p, CityParkConsts.RADIUS, context,LoginTask.getSessionId());
 		if(markers != null)
 			return true;
@@ -84,8 +87,17 @@ public class LiveGarageMarkers  {
 	}
 	
 	public void clearFromMap() {
+		if (mv.getOverlays().contains(iPrevOverlay)) {
+			mv.getOverlays().remove(iPrevOverlay);
+		}
 		if (mv.getOverlays().contains(iOverlay)) {
 			mv.getOverlays().remove(iOverlay);
+		}
+	}
+	
+	public void clearOrphensFromMap() {
+		if (mv.getOverlays().contains(iPrevOverlay)) {
+			mv.getOverlays().remove(iPrevOverlay);
 		}
 	}
 	
