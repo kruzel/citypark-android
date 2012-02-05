@@ -22,7 +22,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="100dp"
+            android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="0.94"
             android:orientation="vertical" >
@@ -249,7 +249,7 @@
     </TableLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar1"
+        android:id="@+id/progressBar2"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:layout_marginTop="10dp"/>

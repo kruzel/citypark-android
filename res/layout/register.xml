@@ -2,92 +2,99 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imageViewLogo"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" android:background="#FFFFFF">
-        
-        <ImageView
-		    android:id="@+id/imageViewLogo"
-		    android:layout_width="fill_parent"
-		    android:layout_height="40dp"
-		    android:layout_gravity="center_horizontal"
-		    android:gravity="top"
-		    android:src="@drawable/logo" />
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="top"
+        android:src="@drawable/logo" />
 
-        <EditText
-            android:id="@+id/id_email"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:hint="@string/email_hint"
-            android:inputType="textEmailAddress">
+    <EditText
+        android:id="@+id/id_email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:hint="@string/email_hint"
+        android:inputType="textEmailAddress" >
 
-            <requestFocus />
-        </EditText>
+        <requestFocus />
+    </EditText>
 
-        <EditText
-            android:id="@+id/id_password"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/id_password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/id_firstname"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:hint="@string/first_name"
-            android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/id_firstname"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:hint="@string/first_name"
+        android:inputType="textPersonName" />
 
-        <EditText
-            android:id="@+id/id_lastname"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:hint="@string/last_name"
-            android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/id_lastname"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:hint="@string/last_name"
+        android:inputType="textPersonName" />
 
-        <EditText
-            android:id="@+id/id_licenseplate"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:hint="@string/license_plate" android:cursorVisible="false" android:inputType="number" android:visibility="invisible"/>
+    <EditText
+        android:id="@+id/id_licenseplate"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:cursorVisible="false"
+        android:hint="@string/license_plate"
+        android:inputType="number"
+        android:visibility="invisible" />
 
-        <EditText
-            android:id="@+id/id_phone_number"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" 
-            android:layout_marginTop="10dp" 
-            android:hint="@string/phone_number" android:inputType="phone" android:visibility="invisible"/>
+    <EditText
+        android:id="@+id/id_phone_number"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:hint="@string/phone_number"
+        android:inputType="phone"
+        android:visibility="invisible" />
 
-        <Button
-            android:id="@+id/id_payment_method"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:text="@string/payment_method" 
-            android:layout_marginTop="10dp" 
-            android:layout_gravity="center_horizontal" android:clickable="true" android:onClick="OnPaymenMethodClick" android:visibility="invisible"/>
+    <Button
+        android:id="@+id/id_payment_method"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:onClick="OnPaymenMethodClick"
+        android:text="@string/payment_method"
+        android:visibility="invisible" />
 
-        <Button
-            android:id="@+id/id_register"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="@string/register" 
-            android:onClick="onRegister" android:background="@drawable/button_normal" android:textSize="20dp" android:textStyle="bold" android:textColor="#D64700"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/id_register"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_normal"
+        android:onClick="onRegister"
+        android:text="@string/register"
+        android:textColor="#D64700"
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
 </LinearLayout>
