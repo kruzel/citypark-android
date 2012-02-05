@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,51 +33,52 @@ public class CityParkRouteActivity extends ParkingMap {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		double lat = getIntent().getDoubleExtra(CityParkConsts.LATITUDE,0.0d);
-		double lng = getIntent().getDoubleExtra(CityParkConsts.LONGITUDE,0.0d);
-		if(lat==0||lng==0) {			
-			return;
-		}
-		showRoute(lat, lng);
+		super.onCreate(savedInstanceState);		
 	}
-	
 	
 
 	@Override
-	public void onResume() {		
-		super.onResume();
-		double lat = getIntent().getDoubleExtra(CityParkConsts.LATITUDE,0.0d);
-		double lng = getIntent().getDoubleExtra(CityParkConsts.LONGITUDE,0.0d);
-		if(lat==0||lng==0) {			
+	public void onNewIntent(Intent intent) {
+		double lat = intent.getDoubleExtra(CityParkConsts.LATITUDE, 0.0d);
+		double lng = intent.getDoubleExtra(CityParkConsts.LONGITUDE, 0.0d);
+
+		if (lat == 0 || lng == 0) {
 			return;
 		}
 		showRoute(lat, lng);
+		super.onNewIntent(intent);
 	}
 
 
+	@Override
+	public void onResume() {
+		super.onResume();		
+	}
 
 	@Override
 	public void loginComplete(String sessionId) {
-		super.loginComplete(sessionId);	
-		//showRoute(32.081859, 34.772961);
-	}		
-	
-	
-	public void showRoute(/*final double fromLat,final double fromLon,*/final double toLat,final double toLon ){
+		super.loginComplete(sessionId);
+		// showRoute(32.081859, 34.772961);
+	}
+
+	public void showRoute(
+			/* final double fromLat,final double fromLon, */final double toLat,
+			final double toLon) {
 		new Thread() {
 			@Override
 			public void run() {
-				//double fromLat = 32.089859, fromLon = 34.771961, toLat = 32.081859, toLon = 34.772961;
+				// double fromLat = 32.089859, fromLon = 34.771961, toLat =
+				// 32.081859, toLon = 34.772961;
 				Location myLocation = getCurrentLocation();
-				String url = RoadProvider
-						.getUrl(myLocation.getLatitude(), myLocation.getLongitude(), toLat, toLon);
+				String url = RoadProvider.getUrl(myLocation.getLatitude(),
+						myLocation.getLongitude(), toLat, toLon);
 				InputStream is = getConnection(url);
 				mRoad = RoadProvider.getRoute(is);
-				try{
+				try {
 					is.close();
-				}catch(IOException ioe){
-					Log.e("Got error while closing the connection for route display.",ioe.getMessage());
+				} catch (IOException ioe) {
+					Log.e("Got error while closing the connection for route display.",
+							ioe.getMessage());
 				}
 				mHandler.sendEmptyMessage(0);
 			}
@@ -124,8 +126,9 @@ class MapOverlay extends com.google.android.maps.Overlay {
 		if (road.mRoute.length > 0) {
 			mPoints = new ArrayList<GeoPoint>();
 			for (int i = 0; i < road.mRoute.length; i++) {
-				mPoints.add(new GeoPoint((int) (road.mRoute[i][1] * CityParkConsts.MILLION),
-						(int) (road.mRoute[i][0] *  CityParkConsts.MILLION)));
+				mPoints.add(new GeoPoint(
+						(int) (road.mRoute[i][1] * CityParkConsts.MILLION),
+						(int) (road.mRoute[i][0] * CityParkConsts.MILLION)));
 			}
 			int moveToLat = (mPoints.get(0).getLatitudeE6() + (mPoints.get(
 					mPoints.size() - 1).getLatitudeE6() - mPoints.get(0)
@@ -137,7 +140,7 @@ class MapOverlay extends com.google.android.maps.Overlay {
 
 			MapController mapController = mv.getController();
 			mapController.animateTo(moveTo);
-			//mapController.setZoom(7);
+			// mapController.setZoom(7);
 		}
 	}
 
