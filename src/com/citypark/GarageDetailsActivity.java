@@ -12,11 +12,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ import com.citypark.api.task.GarageDetailsFetchTask;
 import com.citypark.api.task.GarageDetailsListener;
 import com.citypark.api.task.LoginTask;
 import com.citypark.constants.CityParkConsts;
+import com.google.android.maps.GeoPoint;
 
 public class GarageDetailsActivity extends Activity implements GarageDetailsListener {
 	
@@ -34,6 +37,8 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 	
 	/** Dialog display. **/
 	protected Dialog dialog;
+	
+	GarageDetailes currentGarageDetails;
 	
 	private int garageId;
 	private TextView garageName;
@@ -79,6 +84,16 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		super.onResume();
 	}
 	
+	public void showDirections(View view) {
+		Intent intent = new Intent(GarageDetailsActivity.this, CityParkRouteActivity.class);
+		
+		intent.putExtra(CityParkConsts.LATITUDE,
+				 currentGarageDetails.getLatitude());
+		intent.putExtra(CityParkConsts.LONGITUDE,
+				currentGarageDetails.getLongitude());
+		startActivity(intent);
+	}
+
 	private void init() {
 		if (!LoginTask.isLoggedIn())
 			return;
@@ -218,6 +233,7 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 		
 		if(dialog!=null && dialog.isShowing())
 			dialog.dismiss();
+		currentGarageDetails = garageDetails;
 	}
 
 	private Drawable ImageOperations(Context ctx, String url, String saveFilename) {

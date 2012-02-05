@@ -262,6 +262,19 @@
     	android:layout_marginRight="5dp"
         android:text="קופונים"
         android:textAppearance="?android:attr/textAppearanceMedium" 
-        android:textColor="#D64700" android:layout_marginTop="10dp"/>
+        android:textColor="#D64700" android:layout_marginTop="10dp" />
+    
+     <Button
+        android:id="@+id/direction_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_normal"
+        android:onClick="showDirections"
+        android:text="@string/showdirections"
+        android:textColor="#D64700"
+        android:textSize="20dp"
+        android:textStyle="bold" android:clickable="true"/>
 
 </LinearLayout>

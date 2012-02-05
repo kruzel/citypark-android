@@ -33,13 +33,35 @@ public class CityParkRouteActivity extends ParkingMap {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		double lat = getIntent().getDoubleExtra(CityParkConsts.LATITUDE,0.0d);
+		double lng = getIntent().getDoubleExtra(CityParkConsts.LONGITUDE,0.0d);
+		if(lat==0||lng==0) {			
+			return;
+		}
+		showRoute(lat, lng);
 	}
+	
+	
+
+	@Override
+	public void onResume() {		
+		super.onResume();
+		double lat = getIntent().getDoubleExtra(CityParkConsts.LATITUDE,0.0d);
+		double lng = getIntent().getDoubleExtra(CityParkConsts.LONGITUDE,0.0d);
+		if(lat==0||lng==0) {			
+			return;
+		}
+		showRoute(lat, lng);
+	}
+
+
 
 	@Override
 	public void loginComplete(String sessionId) {
 		super.loginComplete(sessionId);	
-		showRoute(32.081859, 34.772961);
-	}
+		//showRoute(32.081859, 34.772961);
+	}		
+	
 	
 	public void showRoute(/*final double fromLat,final double fromLon,*/final double toLat,final double toLon ){
 		new Thread() {
