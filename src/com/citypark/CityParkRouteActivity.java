@@ -17,19 +17,23 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.route.Road;
 import com.citypark.utility.route.RoadProvider;
+import com.citypark.view.overlay.ItemizedIconOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class CityParkRouteActivity extends ParkingMap {
 
 	private Road mRoad;
+	MapOverlay mapOverlay;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class CityParkRouteActivity extends ParkingMap {
 	public void showRoute(
 			/* final double fromLat,final double fromLon, */final double toLat,
 			final double toLon) {
+		mProgresBar.setVisibility(View.VISIBLE);
 		new Thread() {
 			@Override
 			public void run() {
@@ -90,11 +95,28 @@ public class CityParkRouteActivity extends ParkingMap {
 			TextView textView = (TextView) findViewById(R.id.description);
 			textView.setText(mRoad.mName + " " + mRoad.mDescription);
 			textView.setVisibility(TextView.VISIBLE);
-			MapOverlay mapOverlay = new MapOverlay(mRoad, mOsmv);
 			List<Overlay> listOfOverlays = mOsmv.getOverlays();
-			listOfOverlays.clear();
+			listOfOverlays.remove(mapOverlay);
+			clearCarLocationFlag();
+			
+			mapOverlay = new MapOverlay(mRoad, mOsmv);
 			listOfOverlays.add(mapOverlay);
+			
+			//draw flag on destination
+			GeoPoint gp = new GeoPoint(
+					(int) (mRoad.mRoute[mRoad.mRoute.length-1][1] * CityParkConsts.MILLION),
+					(int) (mRoad.mRoute[mRoad.mRoute.length-1][0] * CityParkConsts.MILLION));
+			
+			OverlayItem parkedCarFlag = new OverlayItem(gp, "", "");
+			parkedCarOverlayItems.add(parkedCarFlag);
+			parkedCarOverlay = new ItemizedIconOverlay(CityParkRouteActivity.this, getResources()
+					.getDrawable(R.drawable.flag));
+			parkedCarOverlay.addItem(parkedCarFlag);
+			mOsmv.getOverlays().add(parkedCarOverlay);
+			
 			mOsmv.invalidate();
+			
+			mProgresBar.setVisibility(View.INVISIBLE);
 		};
 	};
 
@@ -115,58 +137,61 @@ public class CityParkRouteActivity extends ParkingMap {
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
-}
 
-class MapOverlay extends com.google.android.maps.Overlay {
-	Road mRoad;
-	ArrayList<GeoPoint> mPoints;
+	class MapOverlay extends com.google.android.maps.Overlay {
+		Road mRoad;
+		ArrayList<GeoPoint> mPoints;
 
-	public MapOverlay(Road road, MapView mv) {
-		mRoad = road;
-		if (road.mRoute.length > 0) {
-			mPoints = new ArrayList<GeoPoint>();
-			for (int i = 0; i < road.mRoute.length; i++) {
-				mPoints.add(new GeoPoint(
-						(int) (road.mRoute[i][1] * CityParkConsts.MILLION),
-						(int) (road.mRoute[i][0] * CityParkConsts.MILLION)));
+		public MapOverlay(Road road, MapView mv) {
+			mRoad = road;
+			if (road.mRoute.length > 0) {
+				mPoints = new ArrayList<GeoPoint>();
+				for (int i = 0; i < road.mRoute.length; i++) {
+					mPoints.add(new GeoPoint(
+							(int) (road.mRoute[i][1] * CityParkConsts.MILLION),
+							(int) (road.mRoute[i][0] * CityParkConsts.MILLION)));
+				}
+//				int moveToLat = (mPoints.get(0).getLatitudeE6() + (mPoints.get(
+//						mPoints.size() - 1).getLatitudeE6() - mPoints.get(0)
+//						.getLatitudeE6()) / 2);
+//				int moveToLong = (mPoints.get(0).getLongitudeE6() + (mPoints.get(
+//						mPoints.size() - 1).getLongitudeE6() - mPoints.get(0)
+//						.getLongitudeE6()) / 2);
+//				GeoPoint moveTo = new GeoPoint(moveToLat, moveToLong);
+
+				MapController mapController = mv.getController();
+				mapController.animateTo(mPoints.get(0));
+				// mapController.setZoom(7);
 			}
-			int moveToLat = (mPoints.get(0).getLatitudeE6() + (mPoints.get(
-					mPoints.size() - 1).getLatitudeE6() - mPoints.get(0)
-					.getLatitudeE6()) / 2);
-			int moveToLong = (mPoints.get(0).getLongitudeE6() + (mPoints.get(
-					mPoints.size() - 1).getLongitudeE6() - mPoints.get(0)
-					.getLongitudeE6()) / 2);
-			GeoPoint moveTo = new GeoPoint(moveToLat, moveToLong);
+		}
 
-			MapController mapController = mv.getController();
-			mapController.animateTo(moveTo);
-			// mapController.setZoom(7);
+		@Override
+		public boolean draw(Canvas canvas, MapView mv, boolean shadow, long when) {
+			super.draw(canvas, mv, shadow);
+			drawPath(mv, canvas);
+			return true;
+		}
+
+		public void drawPath(MapView mv, Canvas canvas) {
+			int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
+			Paint paint = new Paint();
+			Point point;
+			
+			paint.setColor(Color.BLUE);
+			paint.setStyle(Paint.Style.STROKE);
+			paint.setStrokeWidth(10);
+			for (int i = 0; i < mPoints.size(); i++) {
+				point = new Point();
+				mv.getProjection().toPixels(mPoints.get(i), point);
+				x2 = point.x;
+				y2 = point.y;
+				if (i > 0) {
+					canvas.drawLine(x1, y1, x2, y2, paint);
+				}
+				x1 = x2;
+				y1 = y2;
+			}
 		}
 	}
-
-	@Override
-	public boolean draw(Canvas canvas, MapView mv, boolean shadow, long when) {
-		super.draw(canvas, mv, shadow);
-		drawPath(mv, canvas);
-		return true;
-	}
-
-	public void drawPath(MapView mv, Canvas canvas) {
-		int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
-		Paint paint = new Paint();
-		paint.setColor(Color.BLUE);
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(10);
-		for (int i = 0; i < mPoints.size(); i++) {
-			Point point = new Point();
-			mv.getProjection().toPixels(mPoints.get(i), point);
-			x2 = point.x;
-			y2 = point.y;
-			if (i > 0) {
-				canvas.drawLine(x1, y1, x2, y2, paint);
-			}
-			x1 = x2;
-			y1 = y2;
-		}
-	}
 }
+

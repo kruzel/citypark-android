@@ -154,7 +154,7 @@ public class PaymentActivity extends Activity {
 
 	@Override
 	public void finish() {
-		Intent intent = new Intent(this,ParkingMap.class);
+		Intent intent = new Intent(this,CityParkRouteActivity.class);
 		intent.putExtra("PaymentActivityResult", resultCode);
 		startActivity(intent);
 		super.finish();

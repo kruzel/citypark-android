@@ -334,7 +334,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		unit = mSettings.getString("unitsPref", "km");
 		this.mLocationOverlay.enableMyLocation();
 		this.mLocationOverlay.enableCompass();
-		firstMyOverlayLocationUpdate = true;
 
 		if (mSettings.getBoolean("keepAwake", false)) {
 			wl.acquire();
