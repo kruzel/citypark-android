@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,31 +56,11 @@ import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.OverlayItem;
 
 /**
- * A class for displaying a route map with overlays for directions and nearby
- * bicycle garages.
+ * This is the main map class (without the route info)
  * 
- * This file is part of BikeRoute.
- * 
- * Copyright (C) 2011 Jonathan Gray
- * 
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- * 
- * @author jono@nanosheep.net
+ * @author Ofer Kruzel & Ran Brandes
  * 
  */
-
 public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		OnTouchListener, OverlayListener {
 
@@ -142,54 +123,60 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	// map overlays thread
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
-			
-			//dirty work around to missing my location dot on first app launch
-			if(firstMyOverlayLocationUpdate) {
+
+			// dirty work around to missing my location dot on first app launch
+			if (firstMyOverlayLocationUpdate) {
 				mOsmv.getOverlays().remove(mLocationOverlay);
 				mLocationOverlay = new MyLocationOverlay(
 						getApplicationContext(), mOsmv);
-		    	mLocationOverlay.enableCompass();
-		    	mLocationOverlay.enableMyLocation();
+				mLocationOverlay.enableCompass();
+				mLocationOverlay.enableMyLocation();
 				mOsmv.getOverlays().add(mLocationOverlay);
 				mOsmv.invalidate();
 				firstMyOverlayLocationUpdate = false;
 			}
-			
+
 			if (parking_manager.isParking())
 				return;
-			
+
 			if (mOsmv.getZoomLevel() >= CityParkConsts.ZOOM_THRESHOLD) {
-				if(lastAllOverlaysUpdateCenter != null) {
-					if (Distance.calculateDistance(lastAllOverlaysUpdateCenter,mOsmv.getMapCenter(), Distance.KILOMETERS ) > 0.25) {
+				if (lastAllOverlaysUpdateCenter != null) {
+					if (Distance.calculateDistance(lastAllOverlaysUpdateCenter,
+							mOsmv.getMapCenter(), Distance.KILOMETERS) > 0.25) {
 						updateAllParkings(false);
 					} else {
 						Time curTime = new Time();
 						curTime.setToNow();
-						if (curTime.toMillis(true) - lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
+						if (curTime.toMillis(true)
+								- lastMapUpdateTime.toMillis(true) > CityParkConsts.OVERLAY_UPDATE_INTERVAL * 15) {
 							// refresh only releases points
-							
-								releasesOverlayTask.cancel(true);
-								releasesOverlayTask = new ReleasesOverlayFetchTask(mOsmv, ParkingMap.this, ParkingMap.this,
-										garageMarkers, releasesMarkers);
-								releasesOverlayTask
-										.execute(lastAllOverlaysUpdateCenter);
-								lastMapUpdateTime.setToNow();
+
+							releasesOverlayTask.cancel(true);
+							releasesOverlayTask = new ReleasesOverlayFetchTask(
+									mOsmv, ParkingMap.this, ParkingMap.this,
+									garageMarkers, releasesMarkers);
+							releasesOverlayTask
+									.execute(lastAllOverlaysUpdateCenter);
+							lastMapUpdateTime.setToNow();
 						}
 					}
 				} else {
-					if (Distance.calculateDistance(lastMapCenter, mOsmv.getMapCenter(), Distance.KILOMETERS) > 0.25) {
+					if (Distance.calculateDistance(lastMapCenter,
+							mOsmv.getMapCenter(), Distance.KILOMETERS) > 0.25) {
 						updateAllParkings(false);
-					} else if(linesMarkers.haveItems() || garageMarkers.haveItems() || releasesMarkers.haveItems()) 
+					} else if (linesMarkers.haveItems()
+							|| garageMarkers.haveItems()
+							|| releasesMarkers.haveItems())
 						showExistingAllParkings();
 					else
 						updateAllParkings(false);
 				}
-			} else if(lastAllOverlaysUpdateCenter!=null) {
+			} else if (lastAllOverlaysUpdateCenter != null) {
 				clearAllParkings();
 			}
 
 			lastMapCenter = mOsmv.getMapCenter();
-			
+
 			mHandler.postDelayed(this, CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 		}
 	};
@@ -230,13 +217,13 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		// TODO proper rotation handling while avoiding re-fetch of all overlays
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		
+
 		// Get application reference
 		app = (CityParkApp) getApplication();
-		
+
 		/* Get Preferences. */
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-		
+
 		payMethod = mPrefs.getString(getString(R.string.payment_method), null);
 
 		// Get wake lock
@@ -247,9 +234,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		// Initialize map, view & controller
 		setContentView(R.layout.main);
 		this.mOsmv = (MapView) findViewById(R.id.mapview);
-		
+
 		mProgresBar = (ProgressBar) findViewById(R.id.progressBarMap);
-        mProgresBar.setVisibility(View.INVISIBLE);
+		mProgresBar.setVisibility(View.INVISIBLE);
 
 		this.mLocationOverlay = new MyLocationOverlay(
 				this.getApplicationContext(), this.mOsmv);
@@ -257,27 +244,27 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		this.mLocationOverlay.enableMyLocation();
 
 		mOsmv.getController().setZoom(
-				mPrefs.getInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD));
-		
+				mPrefs.getInt(getString(R.string.prefs_zoomlevel),
+						CityParkConsts.ZOOM_THRESHOLD));
+
 		int x = mPrefs.getInt(getString(R.string.prefs_scrollx), 0);
 		int y = mPrefs.getInt(getString(R.string.prefs_scrolly), 0);
-		if(x!=0 && y!=0)
-			mOsmv.scrollTo(x,y);
-		
+		if (x != 0 && y != 0)
+			mOsmv.scrollTo(x, y);
+
 		this.mOsmv.setBuiltInZoomControls(true);
 		this.mOsmv.displayZoomControls(false);
 		this.mOsmv.getOverlays().add(this.mLocationOverlay);
-		
+
 		lastMapCenter = mOsmv.getMapCenter();
-		
+
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		centerMap();
-		
+
 		// Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
 		overlay.setVisibility(View.INVISIBLE);
-
 
 		// Initialize parking manager
 		parking_manager = new ParkingSessionManager(this);
@@ -297,10 +284,12 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (parking_manager.isParking()) {
 			setCarLocationFlag(parking_manager.getCarPos());
 		}
-		
-		//todo:if this code works move the overlay also to requestLocationUpdates
+
+		// todo:if this code works move the overlay also to
+		// requestLocationUpdates
 		mMapCenterHandler = new MapCenterHandler(mOsmv.getController());
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, mMapCenterHandler);
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				60000, 50, mMapCenterHandler);
 	}
 
 	@Override
@@ -309,8 +298,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			app.finishAllAppObjecs();
 
 		mHandler.removeCallbacks(mUpdateOverlaysTask);
-		
-		if(mMapCenterHandler!=null) {
+
+		if (mMapCenterHandler != null) {
 			mLocationManager.removeUpdates(mMapCenterHandler);
 			mMapCenterHandler = null;
 		}
@@ -374,22 +363,24 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (wl.isHeld()) {
 			wl.release();
 		}
-		
-		mPrefs.edit().putInt(getString(R.string.prefs_zoomlevel), CityParkConsts.ZOOM_THRESHOLD);
+
+		mPrefs.edit().putInt(getString(R.string.prefs_zoomlevel),
+				CityParkConsts.ZOOM_THRESHOLD);
 		mPrefs.edit().commit();
 	}
 
 	@Override
 	protected void onStart() {
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			
+
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
-				if(garageMarkers.haveItems() || linesMarkers.haveItems() || releasesMarkers.haveItems())
+				if (garageMarkers.haveItems() || linesMarkers.haveItems()
+						|| releasesMarkers.haveItems())
 					showExistingAllParkings();
 				else
 					updateAllParkings(true);
-				
+
 				mHandler.removeCallbacks(mUpdateOverlaysTask);
 				mHandler.postDelayed(mUpdateOverlaysTask,
 						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
@@ -406,7 +397,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	}
 
 	@Override
-	protected void onStop() {		
+	protected void onStop() {
 		super.onStop();
 	}
 
@@ -415,8 +406,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 
-		// if updateAllParkings fails we won't get overlayFetchComplete, so need to start overlay handler here
-		if(!updateAllParkings(true)) {
+		// if updateAllParkings fails we won't get overlayFetchComplete, so need
+		// to start overlay handler here
+		if (!updateAllParkings(true)) {
 			mHandler.removeCallbacks(mUpdateOverlaysTask);
 			mHandler.postDelayed(mUpdateOverlaysTask,
 					CityParkConsts.OVERLAY_UPDATE_INTERVAL);
@@ -477,7 +469,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			mHandler.postDelayed(mUnparkDialogTimer, 30000);
 			break;
 		case R.id.park:
-			//playNotification();
+			// playNotification();
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage(getString(R.string.park_ack))
 					.setCancelable(false)
@@ -689,7 +681,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			break;
 		case R.id.stop_nav:
 			stopNavigation();
-			checkParkAndFinish(true,1);
+			checkParkAndFinish(true, 1);
 			break;
 		default:
 			return false;
@@ -708,12 +700,11 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if (parking_manager.isParking())
 			return false;
 
-		
 		mProgresBar.setVisibility(View.VISIBLE);
-		
+
 		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
-			
+
 		overlayTask = new AllOverlayFetchTask(mOsmv, this, this, garageMarkers,
 				releasesMarkers, linesMarkers);
 		overlayTask.execute(mOsmv.getMapCenter());
@@ -721,13 +712,14 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 		lastZoomLevel = mOsmv.getZoomLevel();
-		
-		//TODO need to be done on verlayfetchComplete) , but right now cleanup is not good
+
+		// TODO need to be done on verlayfetchComplete) , but right now cleanup
+		// is not good
 		linesMarkers.clearOrphensFromMap();
-		
+
 		return true;
 	}
-	
+
 	public void showExistingAllParkings() {
 		if (!LoginTask.isLoggedIn())
 			return;
@@ -741,32 +733,32 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		linesMarkers.updateMap();
 		releasesMarkers.updateMap();
 		garageMarkers.updateMap();
-		
+
 		mOsmv.invalidate();
 
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = mOsmv.getMapCenter();
 		lastZoomLevel = mOsmv.getZoomLevel();
 	}
-	
+
 	public void clearAllParkings() {
 		mProgresBar.setVisibility(View.INVISIBLE);
 		releasesOverlayTask.cancel(true);
 		overlayTask.cancel(true);
-		
+
 		garageMarkers.clearFromMap();
 		releasesMarkers.clearFromMap();
 		linesMarkers.clearFromMap();
-		
+
 		lastAllOverlaysUpdateTime.setToNow();
 		lastAllOverlaysUpdateCenter = null;
 		lastZoomLevel = mOsmv.getZoomLevel();
-		
+
 		mOsmv.invalidate();
 	}
 
 	public void stopNavigation() {
-	
+
 	}
 
 	public void checkParkAndFinish(final Boolean finish, final int result) {
@@ -789,19 +781,13 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			@Override
 			public void run() {
 				Location self = mLocationOverlay.getLastFix();
-
-				if (self == null) {
-					self = mLocationManager
-							.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				}
-				if (self == null) {
-					self = mLocationManager
-							.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-				}
+				self = getCurrentLocation();
 				if (self != null) {
-					parking_manager.park(new GeoPoint((int)(self.getLatitude()*1E6), (int)(self
-							.getLongitude()*1E6)), self.getAccuracy());
-					
+					parking_manager.park(
+							new GeoPoint((int) (self.getLatitude() * 1E6),
+									(int) (self.getLongitude() * 1E6)), self
+									.getAccuracy());
+
 					setCarLocationFlag(parking_manager.getCarPos());
 
 					if (LoginTask.isLoggedIn()) {
@@ -810,7 +796,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 										.getLatitude(), self.getLongitude());
 						reportParkingTask.execute((Void[]) null);
 					}
-				} else 
+				} else
 					Toast.makeText(ParkingMap.this,
 							getString(R.string.fix_failed_msg),
 							Toast.LENGTH_LONG).show();
@@ -893,10 +879,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					releasesMarkers.updateMap();
 				if (garagesRes)
 					garageMarkers.updateMap();
-				if(linesRes || releasesRes || garagesRes) {
+				if (linesRes || releasesRes || garagesRes) {
 					mOsmv.invalidate();
 				}
-				
+
 				mHandler.removeCallbacks(mUpdateOverlaysTask);
 				mHandler.postDelayed(mUpdateOverlaysTask,
 						CityParkConsts.OVERLAY_UPDATE_INTERVAL);
@@ -965,9 +951,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		OverlayItem parkedCarFlag = new OverlayItem(p, "", "");
 		parkedCarOverlayItems.add(parkedCarFlag);
-		parkedCarOverlay = new ItemizedIconOverlay(this,
-						getResources().getDrawable(
-						R.drawable.flag));
+		parkedCarOverlay = new ItemizedIconOverlay(this, getResources()
+				.getDrawable(R.drawable.flag));
 		parkedCarOverlay.addItem(parkedCarFlag);
 		mOsmv.getOverlays().add(parkedCarOverlay);
 	}
@@ -980,21 +965,38 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		parkedCarOverlayItems.clear();
 		parkedCarOverlay = null;
 	}
-	
+
 	protected void centerMap() {
 		Location self = mLocationOverlay.getLastFix();
-
-		if (self == null) {
-			self = mLocationManager
-					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		}
-		if (self == null) {
-			self = mLocationManager
-					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-		}
+		self = getCurrentLocation();
 		if (self != null) {
-			GeoPoint p = new GeoPoint((int)(self.getLatitude()*1E6),(int)(self.getLongitude()*1E6));
+			GeoPoint p = new GeoPoint((int) (self.getLatitude() * 1E6),
+					(int) (self.getLongitude() * 1E6));
 			mOsmv.getController().animateTo(p);
 		}
+	}
+
+	protected Location getCurrentLocation() {
+		Location self = mLocationOverlay.getLastFix();
+		if (self == null) {
+			try {
+				self = mLocationManager
+						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			} catch (Exception ex) {
+				Log.w(ParkingMap.class.toString(),
+						"Could not get GPS location, " + ex.getMessage());
+
+			}
+		}
+		if (self == null) {
+			try {
+				self = mLocationManager
+						.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+			} catch (Exception ex) {
+				Log.w(ParkingMap.class.toString(),
+						"Could not get NETWORK location, " + ex.getMessage());
+			}
+		}
+		return self;
 	}
 }

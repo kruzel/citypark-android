@@ -45,6 +45,7 @@ public final class CityParkConsts {
 	public static final int RADIUS = 500;
 	public static final String LATITUDE = "LATITUDE";
 	public static final String LONGITUDE = "LONGITUDE";
+	public static final int MILLION = 1000000;
 
 	private CityParkConsts() { }
 }

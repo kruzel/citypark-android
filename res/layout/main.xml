@@ -1,90 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent">
-  
-<com.google.android.maps.MapView
-android:id="@+id/mapview"
-android:layout_width="fill_parent" 
-android:layout_height="fill_parent"
-android:enabled="true"
-android:clickable="true"
-android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw"
-/>
-<!-- android:apiKey="0ssSQIui9PCF-EzztRD-dTPorw-OfYe21CYtJ1g" (release key)
-	 android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw" (ofer debug key)-->
-
-<ImageView
-    android:id="@+id/imageViewLogo"
     android:layout_width="fill_parent"
-    android:layout_height="40dp"
-    android:layout_gravity="center_horizontal"
-    android:gravity="top"
-    android:src="@drawable/logo" />
+    android:layout_height="fill_parent" >
 
-<ProgressBar
-    android:id="@+id/progressBarMap"
-    style="?android:attr/progressBarStyleLarge"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical|center_horizontal" />
+    <!-- START OF MAP VIEW -->
 
-<LinearLayout
-android:id="@+id/directions_layout"
-android:focusableInTouchMode="true"
-android:focusable="true"
-android:orientation="vertical"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:gravity="bottom"
-android:paddingLeft="5px"
-android:paddingTop="5px"
-android:paddingRight="5px">
+   <!--  <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" > -->
 
-<com.citypark.view.StepView
-android:layout_width="fill_parent"
-android:id="@+id/directions_overlay"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:gravity="center"
-android:padding="10px">
-<TextView
-android:id="@+id/step_no"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="step no"
-android:gravity="center">
-</TextView>
-<TextView
-android:id="@+id/turn"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Turn direction">
-</TextView>
-<LinearLayout
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:orientation="horizontal"
-android:gravity="center">
-<Button
-android:layout_height="fill_parent"
-android:layout_width="wrap_content"
-android:id="@+id/back_button"
-android:background="@drawable/ic_arrow_left"></Button>
-<TextView
-android:id="@+id/distance"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:text="Distance (total distance)"
-android:gravity="center">
-</TextView>
-<Button
-android:layout_height="fill_parent"
-android:layout_width="wrap_content"
-android:id="@+id/next_button"
-android:background="@drawable/ic_arrow_right"
-></Button>
-</LinearLayout>
-</com.citypark.view.StepView>
-</LinearLayout>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.maps.MapView
+            android:id="@+id/mapview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:apiKey="0bz8gR2rvIQDEk0bwrsLF4-QnpH48DKnigKi1Mw"
+            android:clickable="true"
+            android:enabled="true" />
+        <!--
+     android:apiKey="0ssSQIui9PCF-EzztRD-dTPorw-OfYe21CYtJ1g" (release key)
+	 android:apiKey="0ssSQIui9PCE7lAi_BO6HT_R4kcwk6X6GOx3NTw" (ofer debug key)
+	 0bz8gR2rvIQDEk0bwrsLF4-QnpH48DKnigKi1Mw ran debug        -->
+
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="top"
+            android:src="@drawable/logo" />
+
+        <ProgressBar
+            android:id="@+id/progressBarMap"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal" />
+  <!--   </LinearLayout> -->
+    <!-- END OF MAP VIEW -->
+
+
+    <!-- START OF MENU VIEW -->
+    <LinearLayout
+        android:id="@+id/directions_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingLeft="5px"
+        android:paddingRight="5px"
+        android:paddingTop="5px" >
+
+        <com.citypark.view.StepView
+            android:id="@+id/directions_overlay"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10px" >
+
+            <TextView
+                android:id="@+id/step_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="step no" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/turn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Turn direction" >
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/ic_arrow_left" >
+                </Button>
+
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Distance (total distance)" >
+                </TextView>
+
+                <Button
+                    android:id="@+id/next_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/ic_arrow_right" >
+                </Button>
+            </LinearLayout>
+        </com.citypark.view.StepView>
+    </LinearLayout>
+	<!-- END OF MENU VIEW -->
 </merge>

@@ -24,7 +24,8 @@
         <uses-library android:name="com.google.android.maps" />
 <!--         android:hardwareAccelerated="true"> -->
         <activity android:name="com.citypark.Navigate" android:label="CityPark" />
-        <activity android:name=".ParkingMap" android:label="CityPark" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
+        <!-- .CityParkRouteActivity -->
+        <activity android:name=".ParkingMap"  android:label="CityPark" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
 	    	<intent-filter>
 	        	<action android:name="android.intent.action.MAIN" />
 	        	<category android:name="android.intent.category.LAUNCHER" />

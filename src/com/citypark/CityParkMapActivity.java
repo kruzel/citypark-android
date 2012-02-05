@@ -56,6 +56,7 @@ public class CityParkMapActivity extends MapActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPrefs = getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE);
+        
     }
 
     @Override
