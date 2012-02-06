@@ -978,6 +978,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				.getDrawable(R.drawable.flag));
 		parkedCarOverlay.addItem(parkedCarFlag);
 		mOsmv.getOverlays().add(parkedCarOverlay);
+		
+		centerMap();
 	}
 
 	protected void clearCarLocationFlag() {
