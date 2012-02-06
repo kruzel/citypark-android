@@ -46,10 +46,10 @@ public class CityParkRouteActivity extends ParkingMap {
 		double lat = intent.getDoubleExtra(CityParkConsts.LATITUDE, 0.0d);
 		double lng = intent.getDoubleExtra(CityParkConsts.LONGITUDE, 0.0d);
 
-		if (lat == 0 || lng == 0) {
-			return;
+		if (lat != 0 && lng != 0) {
+			showRoute(lat, lng);
 		}
-		showRoute(lat, lng);
+		
 		super.onNewIntent(intent);
 	}
 
