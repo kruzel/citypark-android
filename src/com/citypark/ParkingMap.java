@@ -876,13 +876,28 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				releasesMarkers.clearOrphensFromMap();
 				linesMarkers.clearOrphensFromMap();
 
-				if (linesRes)
+				//TODO check if we can add overlays and preserve existing overlays on top of new ones
+				if (linesRes) {
 					linesMarkers.updateMap();
+				
+					//move route on top of lines predictions
+					if (mOsmv.getOverlays().contains(mapRouteOverlay)) {
+						mOsmv.getOverlays().remove(mapRouteOverlay);
+						mOsmv.getOverlays().add(mapRouteOverlay);
+					}
+				}
+					
 				if (releasesRes)
 					releasesMarkers.updateMap();
-				if (garagesRes)
+				if (garagesRes || releasesRes)
 					garageMarkers.updateMap();
 				if (linesRes || releasesRes || garagesRes) {
+					// move flag to front
+					if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
+						mOsmv.getOverlays().remove(parkedCarOverlay);
+						mOsmv.getOverlays().add(parkedCarOverlay);
+					}
+					
 					mOsmv.invalidate();
 				}
 
