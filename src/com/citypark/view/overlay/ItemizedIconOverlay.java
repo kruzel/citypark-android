@@ -25,7 +25,7 @@ public class ItemizedIconOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context context;
 	
 	public ItemizedIconOverlay(Context context, Drawable pDefaultMarker) {
-		super(boundCenter(pDefaultMarker));
+		super(boundCenterBottom(pDefaultMarker));
 		this.context = context;
 		populate();
 	}
