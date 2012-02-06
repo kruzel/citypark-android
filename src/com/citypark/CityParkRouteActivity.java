@@ -33,7 +33,6 @@ import com.google.android.maps.OverlayItem;
 public class CityParkRouteActivity extends ParkingMap {
 
 	private Road mRoad;
-	MapOverlay mapOverlay;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,11 +95,11 @@ public class CityParkRouteActivity extends ParkingMap {
 			textView.setText(mRoad.mName + " " + mRoad.mDescription);
 			textView.setVisibility(TextView.VISIBLE);
 			List<Overlay> listOfOverlays = mOsmv.getOverlays();
-			listOfOverlays.remove(mapOverlay);
+			listOfOverlays.remove(mapRouteOverlay);
 			clearCarLocationFlag();
 			
-			mapOverlay = new MapOverlay(mRoad, mOsmv);
-			listOfOverlays.add(mapOverlay);
+			mapRouteOverlay = new MapRouteOverlay(mRoad, mOsmv);
+			listOfOverlays.add(mapRouteOverlay);
 			
 			//draw flag on destination
 			GeoPoint gp = new GeoPoint(
@@ -138,11 +137,11 @@ public class CityParkRouteActivity extends ParkingMap {
 		return false;
 	}
 
-	class MapOverlay extends com.google.android.maps.Overlay {
+	class MapRouteOverlay extends com.google.android.maps.Overlay {
 		Road mRoad;
 		ArrayList<GeoPoint> mPoints;
 
-		public MapOverlay(Road road, MapView mv) {
+		public MapRouteOverlay(Road road, MapView mv) {
 			mRoad = road;
 			if (road.mRoute.length > 0) {
 				mPoints = new ArrayList<GeoPoint>();
@@ -179,7 +178,7 @@ public class CityParkRouteActivity extends ParkingMap {
 			
 			paint.setColor(Color.BLUE);
 			paint.setStyle(Paint.Style.STROKE);
-			paint.setStrokeWidth(10);
+			paint.setStrokeWidth(6);
 			for (int i = 0; i < mPoints.size(); i++) {
 				point = new Point();
 				mv.getProjection().toPixels(mPoints.get(i), point);

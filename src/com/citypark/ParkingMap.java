@@ -34,6 +34,7 @@ import android.view.View.OnTouchListener;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.citypark.CityParkRouteActivity.MapRouteOverlay;
 import com.citypark.api.task.AllOverlayFetchTask;
 import com.citypark.api.task.LoginListener;
 import com.citypark.api.task.LoginTask;
@@ -74,6 +75,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	/** Parked car location overlay **/
 	protected ItemizedIconOverlay parkedCarOverlay;
 	protected List<OverlayItem> parkedCarOverlayItems;
+	
+	protected MapRouteOverlay mapRouteOverlay;
 
 	/** Location manager. **/
 	protected LocationManager mLocationManager;
@@ -942,6 +945,11 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		garageMarkers.clearFromMap();
 		releasesMarkers.clearFromMap();
 		linesMarkers.clearFromMap();
+		
+		// clear car location flag if exist
+		if (mOsmv.getOverlays().contains(mapRouteOverlay)) {
+			mOsmv.getOverlays().remove(mapRouteOverlay);
+		}
 
 		// clear car location flag if exist
 		if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
