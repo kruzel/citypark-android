@@ -164,7 +164,7 @@ public class Feedback extends Activity {
 			int result = OK;
 			
 			try {
-				String[] recipients = new String[]{"support@citypark.co.il", "",};
+				String[] recipients = new String[]{"support@cityparkmobile.com", "",};
 				Intent target = new Intent(Intent.ACTION_SEND);
 				target.putExtra(Intent.EXTRA_EMAIL, recipients );
 				target.putExtra(Intent.EXTRA_SUBJECT, "CityPark Android feedback");
