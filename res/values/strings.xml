@@ -17,6 +17,7 @@
 <string name="fix_failed_msg">GPS fix failed</string>
 <string name="send_msg">Sending&#8230;</string>
 <string name="showdirections">Show directions</string>
+<string name="to">to</string>
 
 
 <string name="app_name_itemizedoverlay">OSMViewer ItemizedOverlay</string>

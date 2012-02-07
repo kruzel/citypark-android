@@ -246,7 +246,7 @@ public class GarageDetailsActivity extends Activity implements GarageDetailsList
 			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Toast.makeText(this, getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, getString(R.string.io_error_msg),Toast.LENGTH_LONG).show();
 			return null;
 		}
 	}

@@ -12,11 +12,18 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.citypark.CityParkApp;
+import com.citypark.R;
+
 public class RoadProvider {
 
 	public static Road getRoute(InputStream is) {
 		KMLHandler handler = new KMLHandler();
 		try {
+			/*
+			 * Reader reader = new InputStreamReader(is, "UTF-8"); InputSource
+			 * inputs = new InputSource(reader); inputs.setEncoding("UTF-8");
+			 */
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			parser.parse(is, handler);
 		} catch (ParserConfigurationException e) {
@@ -32,7 +39,9 @@ public class RoadProvider {
 	public static String getUrl(double fromLat, double fromLon, double toLat,
 			double toLon) {// connect to map web service
 		StringBuffer urlString = new StringBuffer();
-		urlString.append("http://maps.google.com/maps?f=d&hl=en");//todo: add to apis.xml 
+		urlString.append(CityParkApp.getAppContext()
+				.getString(R.string.google_route).trim());// todo: add to
+															// apis.xml
 		urlString.append("&saddr=");// from
 		urlString.append(Double.toString(fromLat));
 		urlString.append(",");
@@ -82,12 +91,13 @@ class KMLHandler extends DefaultHandler {
 		if (mString.length() > 0) {
 			if (localName.equalsIgnoreCase("name")) {
 				if (isPlacemark) {
-					isRoute = mString.equalsIgnoreCase("Route");
+					isRoute = mString.equalsIgnoreCase("Route")||mString.equalsIgnoreCase("נתיב");
 					if (!isRoute) {
 						mRoad.mPoints[mRoad.mPoints.length - 1].mName = mString;
 					}
 				} else {
-					mRoad.mName = mString;
+					mRoad.mName = mString.replaceAll(" to "," "+CityParkApp.getAppContext()
+				.getString(R.string.to)+" ") ;
 				}
 			} else if (localName.equalsIgnoreCase("color") && !isPlacemark) {
 				mRoad.mColor = Integer.parseInt(mString, 16);
