@@ -1,5 +1,7 @@
 package com.citypark;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -140,9 +142,18 @@ public class CityParkRouteActivity extends ParkingMap {
 										dialog.dismiss();
 									}
 								});
-				RouteDialog rd = customBuilder.create();
+				final RouteDialog rd = customBuilder.create();
 
 				rd.show();
+				final Timer t = new Timer();
+				t.schedule(new TimerTask() {
+					public void run() {
+						rd.dismiss(); // when the task active then close the
+										// dialog
+						t.cancel(); // also just top the timer thread,
+									// otherwise, you may receive a crash report
+					}
+				}, 10000);
 			} catch (Exception ex) {
 				Log.e(CityParkRouteActivity.class.toString(), ex.getMessage());
 			}
