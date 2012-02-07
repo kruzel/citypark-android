@@ -8,7 +8,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -20,7 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.dialog.RouteDialog;
@@ -92,57 +90,64 @@ public class CityParkRouteActivity extends ParkingMap {
 
 	Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			/*TextView textView = (TextView) findViewById(R.id.description);
-			textView.setText(mRoad.mName + " " + mRoad.mDescription);
-			textView.setVisibility(TextView.VISIBLE);*/
+			try {
+				/*
+				 * TextView textView = (TextView)
+				 * findViewById(R.id.description); textView.setText(mRoad.mName
+				 * + " " + mRoad.mDescription);
+				 * textView.setVisibility(TextView.VISIBLE);
+				 */
 
-			List<Overlay> listOfOverlays = mOsmv.getOverlays();
-			listOfOverlays.remove(mapRouteOverlay);
-			clearCarLocationFlag();
+				List<Overlay> listOfOverlays = mOsmv.getOverlays();
+				listOfOverlays.remove(mapRouteOverlay);
+				clearCarLocationFlag();
 
-			mapRouteOverlay = new MapRouteOverlay(mRoad, mOsmv);
-			listOfOverlays.add(mapRouteOverlay);
+				mapRouteOverlay = new MapRouteOverlay(mRoad, mOsmv);
+				listOfOverlays.add(mapRouteOverlay);
 
-			// draw flag on destination
-			GeoPoint gp = new GeoPoint(
-					(int) (mRoad.mRoute[mRoad.mRoute.length - 1][1] * CityParkConsts.MILLION),
-					(int) (mRoad.mRoute[mRoad.mRoute.length - 1][0] * CityParkConsts.MILLION));
+				// draw flag on destination
+				GeoPoint gp = new GeoPoint(
+						(int) (mRoad.mRoute[mRoad.mRoute.length - 1][1] * CityParkConsts.MILLION),
+						(int) (mRoad.mRoute[mRoad.mRoute.length - 1][0] * CityParkConsts.MILLION));
 
-			OverlayItem parkedCarFlag = new OverlayItem(gp, "", "");
-			parkedCarOverlayItems.add(parkedCarFlag);
-			parkedCarOverlay = new ItemizedIconOverlay(
-					CityParkRouteActivity.this, getResources().getDrawable(
-							R.drawable.flag));
-			parkedCarOverlay.addItem(parkedCarFlag);
-			mOsmv.getOverlays().add(parkedCarOverlay);
+				OverlayItem parkedCarFlag = new OverlayItem(gp, "", "");
+				parkedCarOverlayItems.add(parkedCarFlag);
+				parkedCarOverlay = new ItemizedIconOverlay(
+						CityParkRouteActivity.this, getResources().getDrawable(
+								R.drawable.flag));
+				parkedCarOverlay.addItem(parkedCarFlag);
+				mOsmv.getOverlays().add(parkedCarOverlay);
 
-			mOsmv.invalidate();
+				mOsmv.invalidate();
 
-			mProgresBar.setVisibility(View.INVISIBLE);
+				mProgresBar.setVisibility(View.INVISIBLE);
 
-			RouteDialog.Builder customBuilder = new RouteDialog.Builder(
-					CityParkRouteActivity.this);
-			customBuilder
-					.setTitle(mRoad.mName)
-					.setMessage(mRoad.mDescription)
-					/*.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									CityParkRouteActivity.this.dismissDialog(1);
-								}
-							})*/
-					.setPositiveButton(R.string.ok,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int which) {
-									dialog.dismiss();
-								}
-							});
-			RouteDialog rd = customBuilder.create();
+				RouteDialog.Builder customBuilder = new RouteDialog.Builder(
+						CityParkRouteActivity.this);
+				customBuilder
+						.setTitle(mRoad.mName)
+						.setMessage(mRoad.mDescription)
+						/*
+						 * .setNegativeButton("Cancel", new
+						 * DialogInterface.OnClickListener() { public void
+						 * onClick(DialogInterface dialog, int which) {
+						 * CityParkRouteActivity.this.dismissDialog(1); } })
+						 */
+						.setPositiveButton(R.string.ok,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+									}
+								});
+				RouteDialog rd = customBuilder.create();
 
-			rd.show();
+				rd.show();
+			} catch (Exception ex) {
+				Log.e(CityParkRouteActivity.class.toString(), ex.getMessage());
+			}
 		};
+
 	};
 
 	private InputStream getConnection(String url) {
@@ -176,9 +181,15 @@ public class CityParkRouteActivity extends ParkingMap {
 							(int) (road.mRoute[i][1] * CityParkConsts.MILLION),
 							(int) (road.mRoute[i][0] * CityParkConsts.MILLION)));
 				}
-				/* int moveToLat = (mPoints.get(0).getLatitudeE6() + (mPoints.get( mPoints.size() - 1).getLatitudeE6() - mPoints.get(0).getLatitudeE6()) / 2);
-				 int moveToLong = (mPoints.get(0).getLongitudeE6() + (mPoints.get( mPoints.size() - 1).getLongitudeE6() - mPoints.get(0).getLongitudeE6()) / 2);
-				 GeoPoint moveTo = new GeoPoint(moveToLat, moveToLong);*/
+				/*
+				 * int moveToLat = (mPoints.get(0).getLatitudeE6() +
+				 * (mPoints.get( mPoints.size() - 1).getLatitudeE6() -
+				 * mPoints.get(0).getLatitudeE6()) / 2); int moveToLong =
+				 * (mPoints.get(0).getLongitudeE6() + (mPoints.get(
+				 * mPoints.size() - 1).getLongitudeE6() -
+				 * mPoints.get(0).getLongitudeE6()) / 2); GeoPoint moveTo = new
+				 * GeoPoint(moveToLat, moveToLong);
+				 */
 
 				MapController mapController = mv.getController();
 				mapController.animateTo(mPoints.get(0));

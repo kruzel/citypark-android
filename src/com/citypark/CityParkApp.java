@@ -37,6 +37,8 @@ import com.citypark.service.LocationService;
 
 public class CityParkApp extends Application {
 	
+	private static Context context;
+	
 	/** preferences file **/
 	protected SharedPreferences mPrefs;
 	
@@ -75,7 +77,12 @@ public class CityParkApp extends Application {
 		ErrorReporter.getInstance().putCustomData("name", name);
 		
 		super.onCreate();
+		CityParkApp.context = getApplicationContext();
 	}
+	
+	public static Context getAppContext() {
+        return CityParkApp.context;
+    }
 	
 	@Override
 	public void onTerminate() {
