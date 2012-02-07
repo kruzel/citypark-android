@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.citypark" android:versionCode="58" android:versionName="1.0.1">
-    
+    package="com.citypark"
+    android:versionCode="58"
+    android:versionName="1.0.1" >
+
     <uses-sdk android:minSdkVersion="7" />
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -10,54 +12,113 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
-    
-    <application android:label="@string/app_name" 
-        android:icon="@drawable/logo_citypark" 
-        android:name="CityParkApp" 
-        android:debuggable="true">
+
+    <application
+        android:name="CityParkApp"
+        android:debuggable="true"
+        android:icon="@drawable/logo_citypark"
+        android:label="@string/app_name" >
         <uses-library android:name="com.google.android.maps" />
-<!--         android:hardwareAccelerated="true"> -->
-        <activity android:name="com.citypark.Navigate" android:label="CityPark" />
+        <!-- android:hardwareAccelerated="true"> -->
+        <activity
+            android:name="com.citypark.Navigate"
+            android:label="CityPark" />
         <!-- .ParkingMap -->
-        <activity android:name=".CityParkRouteActivity"  android:label="CityPark" android:theme="@android:style/Theme.NoTitleBar" android:launchMode="singleTask" android:finishOnTaskLaunch="true">
-	    	<intent-filter>
-	        	<action android:name="android.intent.action.MAIN" />
-	        	<category android:name="android.intent.category.LAUNCHER" />
-	        	<category android:name="android.intent.category.CATEGORY_APP_MAPS"/>
-	        </intent-filter>
-	        <intent-filter>
-	        	<action android:name="android.intent.action.VIEW" />
-	        	<category android:name="android.intent.category.DEFAULT" />
-	        	<category android:name="android.intent.category.BROWSABLE" />
-	        	<data android:scheme="http" /> 
-	  			<data android:scheme="https" /> 
-	  			<data android:scheme="ftp" /> 
-	  			<data android:scheme="file" /> 
-	  			<data android:scheme="content" /> 
-	  			<data android:host="*" />
-	  			<data android:pathPattern=".*\\.citypark" />
-	  			<data android:mimeType="*/*" />
-	  		</intent-filter>
-		</activity>
-		<activity android:name="com.citypark.DirectionsView" android:label="Directions" /> 
-		<activity android:name="com.citypark.SavedRoutes" android:label="Favourites" />
-		<activity android:name="com.citypark.Preferences" android:label="Preferences" />
-		<activity android:name="org.achartengine.GraphicalActivity" android:label="Elevations" />
-		<activity android:name="com.citypark.Feedback" android:label="Feedback" />
-		<activity android:name="com.citypark.RegisterActivity" android:label="Registration" android:theme="@android:style/Theme.Black.NoTitleBar" android:launchMode="singleTop" />
-		<activity android:name="org.acra.CrashReportDialog" android:theme="@android:style/Theme.Dialog" android:launchMode="singleInstance" android:excludeFromRecents="true" android:finishOnTaskLaunch="true" />
-		<activity android:name="com.citypark.PaymentActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>
-		<activity android:name="com.citypark.PaymentPangoActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>
-		<activity android:name="com.citypark.PaymentCelOParkActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Pay" android:launchMode="singleTop"/>
-		<activity android:name="com.citypark.GarageListActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="Garage List" android:launchMode="singleTop"/>
-		<activity android:name=".GarageDetailsActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:label="GarageDetails" android:launchMode="singleTop"/>
-		<service android:name=".service.LocationService" android:enabled="true" android:label="Router" android:exported="false" />
-		<receiver android:name=".service.TimeLimitAlertListener" android:label="TimeAlert"/>
-	</application>
+        <activity
+            android:name=".CityParkRouteActivity"
+            android:finishOnTaskLaunch="true"
+            android:label="CityPark"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.CATEGORY_APP_MAPS" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="ftp" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.citypark" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.citypark.DirectionsView"
+            android:label="Directions" />
+        <activity
+            android:name="com.citypark.SavedRoutes"
+            android:label="Favourites" />
+        <activity
+            android:name="com.citypark.Preferences"
+            android:label="Preferences" />
+        <activity
+            android:name="org.achartengine.GraphicalActivity"
+            android:label="Elevations" />
+        <activity
+            android:name="com.citypark.Feedback"
+            android:label="Feedback" />
+        <activity
+            android:name="com.citypark.RegisterActivity"
+            android:label="Registration"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="org.acra.CrashReportDialog"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name="com.citypark.PaymentActivity"
+            android:label="Pay"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.citypark.PaymentPangoActivity"
+            android:label="Pay"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.citypark.PaymentCelOParkActivity"
+            android:label="Pay"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.citypark.GarageListActivity"
+            android:label="Garage List"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name=".GarageDetailsActivity"
+            android:label="GarageDetails"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+
+        <service
+            android:name=".service.LocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Router" />
+
+        <receiver
+            android:name=".service.TimeLimitAlertListener"
+            android:label="TimeAlert" />
+    </application>
+
 </manifest>
