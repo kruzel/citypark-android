@@ -1,7 +1,5 @@
 package com.citypark;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -9,8 +7,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import android.content.DialogInterface;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,7 +23,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.citypark.constants.CityParkConsts;
-import com.citypark.utility.dialog.RouteDialog;
+import com.citypark.utility.dialog.DialogFactory;
 import com.citypark.utility.route.Road;
 import com.citypark.utility.route.RoadProvider;
 import com.citypark.view.overlay.ItemizedIconOverlay;
@@ -124,25 +124,19 @@ public class CityParkRouteActivity extends ParkingMap {
 
 				mProgresBar.setVisibility(View.INVISIBLE);
 
-				RouteDialog.Builder customBuilder = new RouteDialog.Builder(
-						CityParkRouteActivity.this);
-				customBuilder
-						.setTitle(mRoad.mName)
-						.setMessage(mRoad.mDescription)
-						/*
-						 * .setNegativeButton("Cancel", new
-						 * DialogInterface.OnClickListener() { public void
-						 * onClick(DialogInterface dialog, int which) {
-						 * CityParkRouteActivity.this.dismissDialog(1); } })
-						 */
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.dismiss();
-									}
-								});
-				final RouteDialog rd = customBuilder.create();
+				/*This is customized implementation
+				 * RouteDialog.Builder customBuilder = new RouteDialog.Builder(
+				 * CityParkRouteActivity.this); customBuilder
+				 * .setTitle(mRoad.mName) .setMessage(mRoad.mDescription)
+				 * .setPositiveButton(R.string.ok, new
+				 * DialogInterface.OnClickListener() { public void
+				 * onClick(DialogInterface dialog, int which) {
+				 * dialog.dismiss(); } });
+				 */
+				final/* RouteDialog */AlertDialog rd = DialogFactory
+						.getRouteDialog(CityParkRouteActivity.this,
+								mRoad.mName, mRoad.mDescription);
+				;// customBuilder.create();
 
 				rd.show();
 				final Timer t = new Timer();
