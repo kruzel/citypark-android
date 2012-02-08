@@ -1,7 +1,5 @@
 package com.citypark.utility.dialog;
 
-import com.citypark.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +9,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.citypark.R;
  
 /**
  * 
@@ -25,6 +25,7 @@ import android.widget.TextView;
  */
 public class RouteDialog extends Dialog {
  
+
     public RouteDialog(Context context, int theme) {
         super(context, theme);
     }
@@ -32,8 +33,9 @@ public class RouteDialog extends Dialog {
     public RouteDialog(Context context) {
         super(context);
     }
- 
-    /**
+    
+
+	/**
      * Helper class for creating a custom dialog
      */
     public static class Builder {
@@ -42,7 +44,7 @@ public class RouteDialog extends Dialog {
         private String title;
         private String message;
         private String positiveButtonText;
-        private String negativeButtonText;
+       // private String negativeButtonText;
         private View contentView;
  
         private DialogInterface.OnClickListener 
@@ -131,33 +133,7 @@ public class RouteDialog extends Dialog {
             this.positiveButtonClickListener = listener;
             return this;
         }
- 
-        /**
-         * Set the negative button resource and it's listener
-         * @param negativeButtonText
-         * @param listener
-         * @return
-         */
-        public Builder setNegativeButton(int negativeButtonText,
-                DialogInterface.OnClickListener listener) {
-            this.negativeButtonText = (String) context
-                    .getText(negativeButtonText);
-            this.negativeButtonClickListener = listener;
-            return this;
-        }
- 
-        /**
-         * Set the negative button text and it's listener
-         * @param negativeButtonText
-         * @param listener
-         * @return
-         */
-        public Builder setNegativeButton(String negativeButtonText,
-                DialogInterface.OnClickListener listener) {
-            this.negativeButtonText = negativeButtonText;
-            this.negativeButtonClickListener = listener;
-            return this;
-        }
+  
  
         /**
          * Create the custom dialog
@@ -231,5 +207,12 @@ public class RouteDialog extends Dialog {
         }
  
     }
- 
+
+/*
+	public void setCounter(int count) {
+		LayoutInflater inflater = this.getLayoutInflater();
+		View layout  = inflater.inflate(R.layout.route_dialog, null);
+		((Button) layout.findViewById(R.id.positiveButton)).setText(""+count);
+		
+	}*/
 }
