@@ -91,16 +91,18 @@ public class LocationService extends Service implements LocationListener {
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         app = (CityParkApp) getApplication();
         mLocationReceiver = new ParkingHandler(app);
-        int icon = R.drawable.logo;
-        CharSequence tickerText = "";
-        long when = System.currentTimeMillis();
+        
+        //dead code
+//        int icon = R.drawable.logo;
+//        CharSequence tickerText = "";
+//        long when = System.currentTimeMillis();
 
-        notification = new Notification(icon, tickerText, when);
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        Intent notificationIntent = new Intent(this, ParkingMap.class);
-        notificationIntent.putExtra(getString(R.string.jump_intent), true);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//        notification = new Notification(icon, tickerText, when);
+//        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+//        Intent notificationIntent = new Intent(this, ParkingMap.class);
+//        notificationIntent.putExtra(getString(R.string.jump_intent), true);
+//        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15000, 0, this); //min interval 15 sec
     }

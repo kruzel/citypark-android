@@ -306,6 +306,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			mLocationManager.removeUpdates(mMapCenterHandler);
 			mMapCenterHandler = null;
 		}
+		
+		mLocationOverlay.disableMyLocation();
+		mLocationOverlay.disableCompass();
 
 		super.onDestroy();
 	}
@@ -683,7 +686,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			showDialog(R.id.save);
 			break;
 		case R.id.stop_nav:
-			stopNavigation();
 			checkParkAndFinish(true, 1);
 			break;
 		default:
@@ -760,10 +762,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		mOsmv.invalidate();
 	}
 
-	public void stopNavigation() {
-
-	}
-
 	public void checkParkAndFinish(final Boolean finish, final int result) {
 		// open dialog and ask user if he really un-parked
 		if (parking_manager.isParking() || parking_manager.isPaymentActive()
@@ -806,7 +804,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			}
 		});
 
-		stopNavigation();
 	}
 
 	public void unpark() {
