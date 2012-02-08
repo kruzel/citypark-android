@@ -95,10 +95,14 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 						if(gd.getImage1()!=null&& !"null".equalsIgnoreCase(gd.getImage1())&&!"".equals(gd.getImage1())){
 							try {
 								Drawable image = fetchImage(gd.getImage1());
+								if(image==null){
+									gd.setImageDrawable(null);	
+								}
 								gd.setImageDrawable(image);
 							} catch (URISyntaxException e) {
 								Log.e("Garage data adapter error on garage parking id="+gd.getParkingId(),e.getMessage());
 								e.printStackTrace();
+								gd.setImageDrawable(null);
 							}
 						}else{
 							gd.setImageDrawable(null);
