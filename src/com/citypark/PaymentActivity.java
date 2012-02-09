@@ -128,16 +128,17 @@ public class PaymentActivity extends Activity {
 			tcity.run();	
 		} else { 
 			//hide all payment views
-			tgBtnPay.setVisibility(View.INVISIBLE);
-			myLicensePlate.setVisibility(View.INVISIBLE);
-			parkingCity.setVisibility(View.INVISIBLE);
-			parkingZone.setVisibility(View.INVISIBLE);
-			findViewById(R.id.textView1).setVisibility(View.INVISIBLE);
-			findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
-			findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
-			findViewById(R.id.linearLayout1).setVisibility(View.INVISIBLE);
-			findViewById(R.id.linearLayout2).setVisibility(View.INVISIBLE);
-			findViewById(R.id.linearLayout3).setVisibility(View.INVISIBLE);
+			tgBtnPay.setVisibility(View.GONE);
+			myLicensePlate.setVisibility(View.GONE);
+			parkingCity.setVisibility(View.GONE);
+			parkingZone.setVisibility(View.GONE);
+			findViewById(R.id.textView1).setVisibility(View.GONE);
+			findViewById(R.id.textView2).setVisibility(View.GONE);
+			findViewById(R.id.textView3).setVisibility(View.GONE);
+			findViewById(R.id.linearLayout1).setVisibility(View.GONE);
+			findViewById(R.id.linearLayout2).setVisibility(View.GONE);
+			findViewById(R.id.linearLayout3).setVisibility(View.GONE);
+			findViewById(R.id.linearLayoutStartPayment).setPadding(0, 40, 0, 0);
 		}
    	 			
 		if (getIntent().getBooleanExtra(getString(R.string.reminder_intent), false)) 
