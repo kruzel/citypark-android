@@ -359,6 +359,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				unparkCompletion();
 			}
 		}
+		
+		updateAllParkings(false);
 	}
 
 	@Override

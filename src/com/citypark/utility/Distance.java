@@ -109,5 +109,10 @@ public class Distance {
 		return calclateArc(latitude, longitude, latitudeb, longitudeb)
 				* EARTHS_RADIUS[units];
 	}
+	
+	public static double calculateDistance(double latitude, double longitude, double latitudeb, double longitudeb, int units) {
+			return calclateArc(latitude, longitude, latitudeb, longitudeb)
+				* EARTHS_RADIUS[units];
+	}
 
 }

@@ -112,10 +112,12 @@
 
     <TableLayout
         android:id="@+id/tableLayout1"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
         android:layout_marginLeft="5dp"
-    	android:layout_marginRight="5dp" android:layout_marginTop="10dp">
+    	android:layout_marginRight="5dp" 
+    	android:layout_gravity="center_horizontal"
+    	android:layout_marginTop="10dp">
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -134,16 +136,8 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sun-Thu"
+                android:text="Price"
                 android:textAppearance="?android:attr/textAppearanceLarge" android:layout_gravity="center_horizontal"
-                android:textColor="#D64700" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fri-Sat"
-                android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="10dp" android:layout_gravity="center_horizontal"
                 android:textColor="#D64700" />
 
         </TableRow>
@@ -168,14 +162,6 @@
                 android:gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#D64700" />
-
-            <TextView
-                android:id="@+id/textViewFirstHourWeekend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#D64700" />
 
         </TableRow>
 
@@ -194,14 +180,6 @@
 
             <TextView
                 android:id="@+id/textViewExtraQuaterMidWeek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#D64700" />
-
-            <TextView
-                android:id="@+id/textViewExtraQuaterWeekend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -237,14 +215,6 @@
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceMedium" 
                 android:textColor="#D64700" />
-
-            <TextView
-                android:id="@+id/textViewAllDayWeekend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceMedium" 
-                android:textColor="#D64700" />
 
         </TableRow>
     </TableLayout>
@@ -273,7 +243,7 @@
     
      <Button
         android:id="@+id/direction_button"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
@@ -290,32 +260,40 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" android:layout_marginTop="10dp"/>
      
-     <ToggleButton
-         android:id="@+id/button_report_garage_free"
-         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_green_unselected"
-        android:onClick="onFreePressed"
-        android:textOff="@string/report_garage_free"
-        android:textOn="@string/report_garage_free"
-        android:textColor="#D64700"
-        android:textSize="20dp"
-        android:textStyle="bold" android:clickable="true" android:checked="false"/>
-
-     <ToggleButton
-         android:id="@+id/button_report_garage_busy"
-         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_red_unselected"
-        android:onClick="onBusyPressed"
-        android:textOff="@string/report_garage_busy"
-        android:textOn="@string/report_garage_busy"
-        android:textColor="#D64700"
-        android:textSize="20dp"
-        android:textStyle="bold" android:clickable="true" android:checked="false"/>
-
+     <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" 
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp">
+                
+	     <ToggleButton
+	         android:id="@+id/button_report_garage_free"
+	         android:layout_width="150dp"
+	        android:layout_height="50dp"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginTop="10dp"
+	        android:background="@drawable/button_green_unselected"
+	        android:onClick="onFreePressed"
+	        android:textOff="@string/report_garage_free"
+	        android:textOn="@string/report_garage_free"
+	        android:textColor="#D64700"
+	        android:textSize="20dp"
+	        android:textStyle="bold" android:clickable="true" android:checked="false"/>
+	
+	     <ToggleButton
+	         android:id="@+id/button_report_garage_busy"
+	         android:layout_width="150dp"
+	        android:layout_height="50dp"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginTop="10dp"
+	        android:background="@drawable/button_red_unselected"
+	        android:onClick="onBusyPressed"
+	        android:textOff="@string/report_garage_busy"
+	        android:textOn="@string/report_garage_busy"
+	        android:textColor="#D64700"
+	        android:textSize="20dp"
+	        android:textStyle="bold" android:clickable="true" android:checked="false"/>
+	</LinearLayout>
 </LinearLayout>

@@ -77,12 +77,12 @@ public class LiveStreetLinesMarkers {
 			for (StreetSegment streetSegment : linesList) {
 				if(streetSegment.getSearch_time() == -1 )
 					color = Color.TRANSPARENT;
-				else if(streetSegment.getSearch_time() < CityParkConsts.FAST_PARKING_LIMIT) //sec
-					color = Color.GREEN;
 				else if(streetSegment.getSearch_time() < CityParkConsts.MEDIUM_PARKING_LIMIT) //sec
+					color = Color.RED;
+				else if(streetSegment.getSearch_time() < CityParkConsts.FAST_PARKING_LIMIT) //sec
 					color = Color.YELLOW;
 				else 
-					color = Color.RED;
+					color = Color.GREEN;
 				
 				overlay = new SegmentOverlay(color);
 				

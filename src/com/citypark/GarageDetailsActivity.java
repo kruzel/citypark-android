@@ -15,6 +15,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.citypark.api.task.LoginTask;
 import com.citypark.api.task.ReportGarageStatusTask;
 import com.citypark.constants.CityParkConsts;
 import com.citypark.constants.GarageAvailability;
+import com.citypark.utility.Distance;
+import com.citypark.utility.LocationUtil;
 
 public class GarageDetailsActivity extends Activity implements
 		GarageDetailsListener {
@@ -41,7 +44,8 @@ public class GarageDetailsActivity extends Activity implements
 
 	/** Dialog display. **/
 	protected Dialog dialog;
-
+	Location loc;
+	
 	GarageDetailes currentGarageDetails;
 
 	private int garageId;
@@ -57,12 +61,9 @@ public class GarageDetailsActivity extends Activity implements
 	private ImageView withLock;
 	private ImageView garageImage;
 
-	private TextView fisrtHourMidWeek;
-	private TextView firstHourWeekend;
-	private TextView extraQuaterMidWeek;
-	private TextView extraQuaterWeekend;
-	private TextView allDayMidWeek;
-	private TextView allDayWeekend;
+	private TextView fisrtHour;
+	private TextView extraQuater;
+	private TextView allDay;
 
 	private TextView couponText;
 	
@@ -90,6 +91,9 @@ public class GarageDetailsActivity extends Activity implements
 		task = new GarageDetailsFetchTask(GarageDetailsActivity.this, this,
 				LoginTask.getSessionId(), garageId);
 		task.execute((Void[]) null);
+		
+		loc = LocationUtil.getCurrentLocation(this);
+		
 		super.onResume();
 	}
 
@@ -158,17 +162,17 @@ public class GarageDetailsActivity extends Activity implements
 		withLock = (ImageView) findViewById(R.id.imageViewWithlock);
 		garageImage = (ImageView) findViewById(R.id.imageViewImage);
 		// prices table
-		fisrtHourMidWeek = (TextView) findViewById(R.id.textViewFirstHourMidWeek);
-		firstHourWeekend = (TextView) findViewById(R.id.textViewFirstHourWeekend);
-		extraQuaterMidWeek = (TextView) findViewById(R.id.textViewExtraQuaterMidWeek);
-		extraQuaterWeekend = (TextView) findViewById(R.id.textViewExtraQuaterWeekend);
-		allDayMidWeek = (TextView) findViewById(R.id.textViewAllDayMidWeek);
-		allDayWeekend = (TextView) findViewById(R.id.textViewAllDayWeekend);
+		fisrtHour = (TextView) findViewById(R.id.textViewFirstHourMidWeek);
+		extraQuater = (TextView) findViewById(R.id.textViewExtraQuaterMidWeek);
+		allDay = (TextView) findViewById(R.id.textViewAllDayMidWeek);
+
 		// coupon
 		couponText = (TextView) findViewById(R.id.textViewCouponText);
 		
 		tgBtnReportFree = (ToggleButton) findViewById(R.id.button_report_garage_free);
 		tgBtnReportbusy = (ToggleButton) findViewById(R.id.button_report_garage_busy);
+		tgBtnReportFree.setVisibility(View.INVISIBLE);
+		tgBtnReportbusy.setVisibility(View.INVISIBLE);
 
 	}
 
@@ -276,28 +280,23 @@ public class GarageDetailsActivity extends Activity implements
 
 		// prices table
 		if (garageDetails.getFirstHourPrice() == 0)
-			fisrtHourMidWeek.setText(getString(R.string.parking_free));
+			fisrtHour.setText(getString(R.string.parking_free));
 		if (garageDetails.getFirstHourPrice() > 0)
-			fisrtHourMidWeek.setText(Double.toString(garageDetails
+			fisrtHour.setText(Double.toString(garageDetails
 					.getFirstHourPrice()));
 
 		if (garageDetails.getFirstHourPrice() == 0
 				&& garageDetails.getExtraQuarterPrice() == 0)
-			extraQuaterMidWeek.setText(getString(R.string.parking_free));
+			extraQuater.setText(getString(R.string.parking_free));
 		else if (garageDetails.getExtraQuarterPrice() > 0)
-			extraQuaterMidWeek.setText(Double.toString(garageDetails
+			extraQuater.setText(Double.toString(garageDetails
 					.getExtraQuarterPrice()));
 
 		if (garageDetails.getAllDayPrice() == 0)
-			allDayMidWeek.setText(getString(R.string.parking_free));
+			allDay.setText(getString(R.string.parking_free));
 		if (garageDetails.getAllDayPrice() > 0)
-			allDayMidWeek.setText(Double.toString(garageDetails
+			allDay.setText(Double.toString(garageDetails
 					.getAllDayPrice()));
-
-		// TODO get values from server
-		firstHourWeekend.setText("-");
-		extraQuaterWeekend.setText("-");
-		allDayWeekend.setText("-");
 
 		// coupon
 		if (garageDetails.getCouponText() != null)
@@ -306,14 +305,27 @@ public class GarageDetailsActivity extends Activity implements
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
 		
-		if(garageDetails.getAvailability()==GarageAvailability.FREE) {
-			tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_selected));
-			tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_unselected));
-		} else if(garageDetails.getAvailability()==GarageAvailability.BUSY) {
-			tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_unselected));
-			tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_selected));
-		} 
-		//else info unavailable
+		//show availability buttons only if 500 meters from garage
+		if(loc!=null && Distance.calculateDistance(loc.getLatitude(), loc.getLongitude(), garageDetails.getLatitude(), garageDetails.getLongitude(), Distance.KILOMETERS) < 0.5) {
+			tgBtnReportFree.setVisibility(View.VISIBLE);
+			tgBtnReportbusy.setVisibility(View.VISIBLE);
+			
+			if(garageDetails.getAvailability()==GarageAvailability.FREE) {
+				tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_selected));
+				tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_unselected));
+			} else if(garageDetails.getAvailability()==GarageAvailability.BUSY) {
+				tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_unselected));
+				tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_selected));
+			} else { //info unavailable
+				tgBtnReportFree.setVisibility(View.INVISIBLE);
+				tgBtnReportbusy.setVisibility(View.INVISIBLE);
+			}
+		} else { //info unavailable
+			tgBtnReportFree.setVisibility(View.INVISIBLE);
+			tgBtnReportbusy.setVisibility(View.INVISIBLE);
+		}
+			
+		
 			
 		currentGarageDetails = garageDetails;
 	}
