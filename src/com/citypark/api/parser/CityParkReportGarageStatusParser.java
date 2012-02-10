@@ -47,7 +47,7 @@ public class CityParkReportGarageStatusParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkReportGarageStatusParser(final Context context, final String sessionId, final int parkingId, final GarageAvailability status) {
-		super(context.getString(R.string.citypark_api) + "udpateGarageStatus" + "?sessionId=" + sessionId + "&parkingId="+ parkingId + "&status=" + (int)status );
+		super(context.getString(R.string.citypark_api) + "udpateGarageStatus" + "?sessionId=" + sessionId + "&parkingId="+ parkingId + "&status=" + GarageAvailability.getInt(status) );
 	}
 
 	public boolean parse() {

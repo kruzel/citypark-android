@@ -14,4 +14,18 @@ public enum GarageAvailability {
 
 		}
 	}
+	
+	public static int getInt(GarageAvailability avail) {
+		switch (avail) {
+		case UNKNOWN:
+			return -1;
+		case BUSY:
+			return 0;
+		case FREE:
+			return 1;
+		default:
+			return -1;
+
+		}
+	}
 }
