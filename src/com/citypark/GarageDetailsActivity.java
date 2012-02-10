@@ -305,6 +305,16 @@ public class GarageDetailsActivity extends Activity implements
 
 		if (dialog != null && dialog.isShowing())
 			dialog.dismiss();
+		
+		if(garageDetails.getAvailability()==GarageAvailability.FREE) {
+			tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_selected));
+			tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_unselected));
+		} else if(garageDetails.getAvailability()==GarageAvailability.BUSY) {
+			tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_unselected));
+			tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_selected));
+		} 
+		//else info unavailable
+			
 		currentGarageDetails = garageDetails;
 	}
 
