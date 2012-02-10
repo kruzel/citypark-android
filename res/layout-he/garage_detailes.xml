@@ -155,7 +155,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textViewFirstHourWeekend"
+                android:id="@+id/textViewFirstHourMidWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -177,7 +177,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textViewExtraQuaterWeekend"
+                android:id="@+id/textViewExtraQuaterMidWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -207,7 +207,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/textViewAllDayWeekend"
+                android:id="@+id/textViewAllDayMidWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
