@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import android.app.Activity;
@@ -12,8 +11,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,19 +21,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.citypark.api.parser.GarageDetailes;
 import com.citypark.api.task.GarageDetailsFetchTask;
 import com.citypark.api.task.GarageDetailsListener;
 import com.citypark.api.task.LoginTask;
+import com.citypark.api.task.ReportGarageStatusTask;
 import com.citypark.constants.CityParkConsts;
-import com.google.android.maps.GeoPoint;
+import com.citypark.constants.GarageAvailability;
 
 public class GarageDetailsActivity extends Activity implements
 		GarageDetailsListener {
 
 	private GarageDetailsFetchTask task;
 	Thread t;
+	
+	ReportGarageStatusTask reportTask;
 
 	/** Dialog display. **/
 	protected Dialog dialog;
@@ -62,6 +65,10 @@ public class GarageDetailsActivity extends Activity implements
 	private TextView allDayWeekend;
 
 	private TextView couponText;
+	
+	private ToggleButton tgBtnReportFree;
+	private ToggleButton tgBtnReportbusy;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +102,34 @@ public class GarageDetailsActivity extends Activity implements
 		intent.putExtra(CityParkConsts.LONGITUDE,
 				currentGarageDetails.getLongitude());
 		startActivity(intent);
+	}
+	
+	public void onFreePressed(View view) {
+		if(tgBtnReportFree.isChecked()) {
+			tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_selected));
+			tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_unselected));
+		
+			//run report status task
+			if(reportTask!=null)
+				reportTask.cancel(true);
+			
+			reportTask = new ReportGarageStatusTask(this, LoginTask.getSessionId(), garageId, GarageAvailability.FREE);
+			reportTask.execute(null);
+		} 
+	}
+	
+	public void onBusyPressed(View view) {
+		if(tgBtnReportbusy.isChecked()) {
+			tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_selected));
+			tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_unselected));
+			
+			//run report status task
+			if(reportTask!=null)
+				reportTask.cancel(true);
+			
+			reportTask = new ReportGarageStatusTask(this, LoginTask.getSessionId(), garageId, GarageAvailability.BUSY);
+			reportTask.execute(null);
+		}
 	}
 
 	private void init() {
@@ -131,6 +166,10 @@ public class GarageDetailsActivity extends Activity implements
 		allDayWeekend = (TextView) findViewById(R.id.textViewAllDayWeekend);
 		// coupon
 		couponText = (TextView) findViewById(R.id.textViewCouponText);
+		
+		tgBtnReportFree = (ToggleButton) findViewById(R.id.button_report_garage_free);
+		tgBtnReportbusy = (ToggleButton) findViewById(R.id.button_report_garage_busy);
+
 	}
 
 	@Override

@@ -122,4 +122,7 @@
 
 <string name="parking_free">חינם</string>
 
+<string name="report_garage_free">דווח פנוי</string>
+<string name="report_garage_busy">דווח מלא</string>
+
 </resources>

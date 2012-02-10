@@ -265,6 +265,12 @@
         android:textAppearance="?android:attr/textAppearanceMedium" 
         android:textColor="#D64700" android:layout_marginTop="10dp"/>
     
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="10dp"/>
+    
      <Button
         android:id="@+id/direction_button"
         android:layout_width="wrap_content"
@@ -277,5 +283,39 @@
         android:textColor="#D64700"
         android:textSize="20dp"
         android:textStyle="bold" android:clickable="true"/>
+
+     <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:layout_marginTop="10dp"/>
+     
+     <ToggleButton
+         android:id="@+id/button_report_garage_free"
+         android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_green_unselected"
+        android:onClick="onFreePressed"
+        android:textOff="@string/report_garage_free"
+        android:textOn="@string/report_garage_free"
+        android:textColor="#D64700"
+        android:textSize="20dp"
+        android:textStyle="bold" android:clickable="true" android:checked="false"/>
+
+     <ToggleButton
+         android:id="@+id/button_report_garage_busy"
+         android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_red_unselected"
+        android:onClick="onBusyPressed"
+        android:textOff="@string/report_garage_busy"
+        android:textOn="@string/report_garage_busy"
+        android:textColor="#D64700"
+        android:textSize="20dp"
+        android:textStyle="bold" android:clickable="true" android:checked="false"/>
 
 </LinearLayout>

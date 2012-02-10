@@ -127,5 +127,7 @@
 <string name="citypark_website">http://cityparkmobile.wordpress.com</string>
 
 <string name="parking_free">Free</string>
+<string name="report_garage_free">Report Free</string>
+<string name="report_garage_busy">Report Busy</string>
 
 </resources>
