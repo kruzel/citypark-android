@@ -72,11 +72,12 @@ public class CityParkMapActivity extends MapActivity {
         edit.putInt(getString(R.string.prefs_scrollx), mOsmv.getScrollX());
         edit.putInt(getString(R.string.prefs_scrolly), mOsmv.getScrollY());
         edit.putInt(getString(R.string.prefs_zoomlevel), mOsmv.getZoomLevel());
-        edit.putBoolean(getString(R.string.prefs_showlocation), mLocationOverlay.isMyLocationEnabled());
+        //edit.putBoolean(getString(R.string.prefs_showlocation), mLocationOverlay.isMyLocationEnabled());
 //        edit.putBoolean(getString(R.string.prefs_followlocation), mLocationOverlay.isFollowLocationEnabled());
         edit.commit();
 
         this.mLocationOverlay.disableMyLocation();
+        this.mLocationOverlay.disableCompass();
         System.gc();
         super.onPause();
     }
@@ -84,9 +85,13 @@ public class CityParkMapActivity extends MapActivity {
     @Override
     protected void onResume() {
     	System.gc();
-        if(mPrefs.getBoolean(getString(R.string.prefs_showlocation), false)) {
-                this.mLocationOverlay.enableMyLocation();
-        }
+//        if(mPrefs.getBoolean(getString(R.string.prefs_showlocation), true)) {
+//                this.mLocationOverlay.enableMyLocation();
+//        }
+        
+        this.mLocationOverlay.enableMyLocation();
+        this.mLocationOverlay.enableCompass();
+        
 //        if(mPrefs.getBoolean(getString(R.string.prefs_followlocation), true)) {
 //        	this.mLocationOverlay.enableFollowLocation();
 //        } else {

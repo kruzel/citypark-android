@@ -130,6 +130,9 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			// dirty work around to missing my location dot on first app launch
 			if (firstMyOverlayLocationUpdate) {
 				mOsmv.getOverlays().remove(mLocationOverlay);
+				mLocationOverlay.disableCompass();
+				mLocationOverlay.disableMyLocation();
+				
 				mLocationOverlay = new MyLocationOverlay(
 						getApplicationContext(), mOsmv);
 				mLocationOverlay.enableCompass();
@@ -243,8 +246,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		this.mLocationOverlay = new MyLocationOverlay(
 				this.getApplicationContext(), this.mOsmv);
-		this.mLocationOverlay.enableCompass();
-		this.mLocationOverlay.enableMyLocation();
+//		this.mLocationOverlay.enableCompass();
+//		this.mLocationOverlay.enableMyLocation();
 
 		mOsmv.getController().setZoom(
 				mPrefs.getInt(getString(R.string.prefs_zoomlevel),
@@ -338,8 +341,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		/* Units preferences. */
 		unit = mSettings.getString("unitsPref", "km");
-		this.mLocationOverlay.enableMyLocation();
-		this.mLocationOverlay.enableCompass();
+//		this.mLocationOverlay.enableMyLocation();
+//		this.mLocationOverlay.enableCompass();
 
 		if (mSettings.getBoolean("keepAwake", false)) {
 			wl.acquire();
@@ -361,13 +364,15 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		}
 		
 		updateAllParkings(false);
+		
+		firstMyOverlayLocationUpdate = true;
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		this.mLocationOverlay.disableMyLocation();
-		this.mLocationOverlay.disableCompass();
+//		this.mLocationOverlay.disableMyLocation();
+//		this.mLocationOverlay.disableCompass();
 		if (wl.isHeld()) {
 			wl.release();
 		}
@@ -645,7 +650,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			break;
 		case R.id.center:
 			centerMap();
-			this.mLocationOverlay.enableMyLocation();
+			//this.mLocationOverlay.enableMyLocation();
 			break;
 		case R.id.showparking:
 			Toast.makeText(this, "Getting garages from OpenStreetMap..",
@@ -896,6 +901,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 						mOsmv.getOverlays().remove(parkedCarOverlay);
 						mOsmv.getOverlays().add(parkedCarOverlay);
 					}
+					
+					//myLocation on top of everything
+					mLocationOverlay.disableMyLocation();
+					mLocationOverlay.enableMyLocation();
 					
 					mOsmv.invalidate();
 				}
