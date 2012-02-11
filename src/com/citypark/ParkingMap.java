@@ -117,6 +117,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private Time lastAllOverlaysUpdateTime = new Time();
 	private int lastZoomLevel = 0;
 	private GeoPoint lastMapCenter = null;
+	private Boolean firsTimeMyLocationShown = true;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -127,8 +128,13 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		public void run() {
 
 			if (parking_manager.isParking()) {
-				addMyLocationDot();
+				createMyLocationDot();
 				return;
+			}
+			
+			if(firsTimeMyLocationShown) {
+				createMyLocationDot();
+				firsTimeMyLocationShown = false;
 			}
 
 			if (mOsmv.getZoomLevel() >= CityParkConsts.ZOOM_THRESHOLD) {
@@ -241,7 +247,18 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		this.mOsmv.setBuiltInZoomControls(true);
 		this.mOsmv.displayZoomControls(false);
-		this.mOsmv.getOverlays().add(this.mLocationOverlay);
+		
+		this.mLocationOverlay = new MyLocationOverlay(
+				getApplicationContext(), mOsmv);
+		this.mLocationOverlay.enableCompass();
+		this.mLocationOverlay.enableMyLocation();
+		mLocationOverlay.runOnFirstFix(new Runnable() {	
+			@Override
+			public void run() {
+				refreshMyLocationDot();
+				mOsmv.postInvalidate();
+			}
+		});
 
 		lastMapCenter = mOsmv.getMapCenter();
 
@@ -338,6 +355,16 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				unparkCompletion();
 			}
 		}
+		
+		mLocationOverlay.disableMyLocation();
+		mLocationOverlay.enableMyLocation();
+		mLocationOverlay.runOnFirstFix(new Runnable() {	
+			@Override
+			public void run() {
+				refreshMyLocationDot();
+				mOsmv.postInvalidate();
+			}
+		});
 	}
 
 	@Override
@@ -357,9 +384,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	@Override
 	protected void onStart() {
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-		addMyLocationDot();
-		centerMap();
 		
 		if (parking_manager.isParking()) {
 			setCarLocationFlag(parking_manager.getCarPos());
@@ -386,15 +410,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		}
 
 		super.onStart();
-		
-		mLocationOverlay.runOnFirstFix(new Runnable() {	
-			@Override
-			public void run() {
-				mOsmv.getOverlays().remove(mLocationOverlay);
-				mOsmv.getOverlays().add(mLocationOverlay);
-				mOsmv.postInvalidate();
-			}
-		});
 	}
 
 	@Override
@@ -885,7 +900,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 					garageMarkers.updateMap();
 				if (linesRes || releasesRes || garagesRes) {
 					//need to recreate the dot again
-					addMyLocationDot();
+					refreshMyLocationDot();
 
 					// move flag to front
 					if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
@@ -1024,21 +1039,21 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		return self;
 	}
 	
-	protected void addMyLocationDot() {			
-		MyLocationOverlay newLocationOverlay = new MyLocationOverlay(
-				getApplicationContext(), mOsmv);
-		newLocationOverlay.enableCompass();
-		newLocationOverlay.enableMyLocation();
-		mOsmv.getOverlays().add(newLocationOverlay);
-		
-		if(mLocationOverlay!=null) {
-			mLocationOverlay.disableCompass();
-			mLocationOverlay.disableMyLocation();
-		}
-		
+	protected void refreshMyLocationDot() {					
 		if(mOsmv.getOverlays().contains(mLocationOverlay))
 			mOsmv.getOverlays().remove(mLocationOverlay);
-		
-		mLocationOverlay = newLocationOverlay;
+		mOsmv.getOverlays().add(mLocationOverlay);
+	}
+	
+	protected void createMyLocationDot() {
+		if(mLocationOverlay!=null) {
+			mLocationOverlay.disableCompass();
+			mLocationOverlay.disableMyLocation(); 
+		}
+		mLocationOverlay = new MyLocationOverlay(
+				getApplicationContext(), mOsmv);
+		mLocationOverlay.enableCompass();
+		mLocationOverlay.enableMyLocation();
+		refreshMyLocationDot();
 	}
 }

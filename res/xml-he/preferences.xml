@@ -2,11 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/background">
         <PreferenceCategory
         	android:title="אפשריות ניווט">
-        	<CheckBoxPreference
-        		android:title="ניווט קולי"
-        		android:defaultValue="false"
-        		android:key="tts"
-        		/>
+<!--         	<CheckBoxPreference -->
+<!--         		android:title="ניווט קולי" -->
+<!--         		android:defaultValue="false" -->
+<!--         		android:key="tts" -->
+<!--         		/> -->
         	<CheckBoxPreference
         	android:title="מסך פתוח בניווט"
         	android:defaultValue="true"

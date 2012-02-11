@@ -341,6 +341,7 @@ public final class R {
         public static final int navigation_intent=0x7f06005b;
         public static final int nearparking_title=0x7f06001d;
         public static final int no=0x7f06003a;
+        public static final int no_garages_found=0x7f0600a1;
         public static final int notify_title=0x7f06005a;
         public static final int ok=0x7f060038;
         public static final int openareal_sat=0x7f06002c;

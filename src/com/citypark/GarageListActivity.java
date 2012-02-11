@@ -80,13 +80,13 @@ public class GarageListActivity extends ListActivity implements GarageDetailsLis
 
 	@Override
 	public void GarageDetailsFetchComplete(List<GarageData> gdList) {
-		if(gdList!=null){
+		if(gdList!=null && gdList.size()>0){
 			m_garage.clear();
 			m_garage.addAll(gdList);
 			m_adapter.notifyDataSetChanged();
 		}
 		else
-			Toast.makeText(this, getString(R.string.io_error_msg), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.no_garages_found), Toast.LENGTH_LONG).show();
 		
 		if(dialog!=null && dialog.isShowing())
 			dialog.dismiss();

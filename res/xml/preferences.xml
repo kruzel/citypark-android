@@ -2,11 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/background">
         <PreferenceCategory
         	android:title="Navigation Options">
-        	<CheckBoxPreference
-        		android:title="Speak directions"
-        		android:defaultValue="false"
-        		android:key="tts"
-        		/>
+<!--         	<CheckBoxPreference -->
+<!--         		android:title="Speak directions" -->
+<!--         		android:defaultValue="false" -->
+<!--         		android:key="tts" -->
+<!--         		/> -->
         	<CheckBoxPreference
         	android:title="Keep screen awake"
         	android:defaultValue="true"

@@ -130,4 +130,5 @@
 <string name="report_garage_free">Report Free</string>
 <string name="report_garage_busy">Report Busy</string>
 
+<string name="no_garages_found">No parking lots found</string>
 </resources>

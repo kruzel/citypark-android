@@ -51,16 +51,16 @@ public class Preferences extends PreferenceActivity {
                 
                 addPreferencesFromResource(R.xml.preferences);
                 
-                tts = findPreference("tts");
-                
-                //Check for TTS
-                try {
-                	Intent checkIntent = new Intent();
-                	checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-                	startActivityForResult(checkIntent, R.id.tts_check); //This can fail if TTS not installed at all
-                } catch (ActivityNotFoundException e) {
-                	tts.setEnabled(false);
-                }
+//                tts = findPreference("tts");
+//                
+//                //Check for TTS
+//                try {
+//                	Intent checkIntent = new Intent();
+//                	checkIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+//                	startActivityForResult(checkIntent, R.id.tts_check); //This can fail if TTS not installed at all
+//                } catch (ActivityNotFoundException e) {
+//                	tts.setEnabled(false);
+//                }
         }
         
         @Override
@@ -114,13 +114,13 @@ public class Preferences extends PreferenceActivity {
     	@Override
 		protected void onActivityResult(
 		        final int requestCode, final int resultCode, final Intent data) {
-		    if (requestCode == R.id.tts_check) {
-		        if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-		        	tts.setEnabled(true);
-		        } else {
-		           showDialog(R.id.tts_check);
-		        }
-		    }
+//		    if (requestCode == R.id.tts_check) {
+//		        if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+//		        	tts.setEnabled(true);
+//		        } else {
+//		           showDialog(R.id.tts_check);
+//		        }
+//		    }
 		   
 		    if ((requestCode == R.id.trace) && (resultCode == 1)) {
 		    	setResult(1);
@@ -140,21 +140,21 @@ public class Preferences extends PreferenceActivity {
     		Dialog dialog;
     		AlertDialog.Builder builder;
     		switch(id) {
-    		case R.id.tts_check:
-    			builder = new AlertDialog.Builder(this);
-    			builder.setMessage(R.string.tts_msg);
-    			builder.setCancelable(false);
-    			builder.setPositiveButton(getString(R.string.ok),
-    				new DialogInterface.OnClickListener() {
-    					@Override
-    					public void onClick(final DialogInterface dialog,
-    							final int id) {
-    						ttsInstall();
-    					}
-    				});
-    			builder.setTitle(R.string.tts_msg_title);
-    			dialog = builder.create();
-    			break;
+//    		case R.id.tts_check:
+//    			builder = new AlertDialog.Builder(this);
+//    			builder.setMessage(R.string.tts_msg);
+//    			builder.setCancelable(false);
+//    			builder.setPositiveButton(getString(R.string.ok),
+//    				new DialogInterface.OnClickListener() {
+//    					@Override
+//    					public void onClick(final DialogInterface dialog,
+//    							final int id) {
+//    						ttsInstall();
+//    					}
+//    				});
+//    			builder.setTitle(R.string.tts_msg_title);
+//    			dialog = builder.create();
+//    			break;
     		default:
     			dialog = DialogFactory.getAboutDialog(this);
     			break;
@@ -166,11 +166,11 @@ public class Preferences extends PreferenceActivity {
     	 * 
     	 */
     	
-    	private void ttsInstall() { 
-    		final Intent installIntent = new Intent();
-            installIntent.setAction(
-                TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-            startActivity(installIntent); 
-    	}
+//    	private void ttsInstall() { 
+//    		final Intent installIntent = new Intent();
+//            installIntent.setAction(
+//                TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+//            startActivity(installIntent); 
+//    	}
     	
 }

@@ -125,4 +125,5 @@
 <string name="report_garage_free">דווח פנוי</string>
 <string name="report_garage_busy">דווח מלא</string>
 
+<string name="no_garages_found">לא נמצאו חניונים באיזור</string>
 </resources>

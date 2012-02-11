@@ -317,8 +317,8 @@ public class GarageDetailsActivity extends Activity implements
 				tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_unselected));
 				tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_selected));
 			} else { //info unavailable
-				tgBtnReportFree.setVisibility(View.INVISIBLE);
-				tgBtnReportbusy.setVisibility(View.INVISIBLE);
+				tgBtnReportFree.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_green_selected));
+				tgBtnReportbusy.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_red_unselected));
 			}
 		} else { //info unavailable
 			tgBtnReportFree.setVisibility(View.INVISIBLE);
