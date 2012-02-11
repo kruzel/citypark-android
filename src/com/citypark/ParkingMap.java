@@ -126,8 +126,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	private Runnable mUpdateOverlaysTask = new Runnable() {
 		public void run() {
 
-			if (parking_manager.isParking())
+			if (parking_manager.isParking()) {
+				addMyLocationDot();
 				return;
+			}
 
 			if (mOsmv.getZoomLevel() >= CityParkConsts.ZOOM_THRESHOLD) {
 				if (lastAllOverlaysUpdateCenter != null) {
@@ -973,6 +975,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		mOsmv.getOverlays().add(parkedCarOverlay);
 		
 		centerMap();
+		
+		mHandler.removeCallbacks(mUpdateOverlaysTask);
+		mHandler.postDelayed(mUpdateOverlaysTask,
+				CityParkConsts.OVERLAY_UPDATE_INTERVAL);
 	}
 
 	protected void clearCarLocationFlag() {
@@ -1018,7 +1024,13 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		return self;
 	}
 	
-	protected void addMyLocationDot() {		
+	protected void addMyLocationDot() {			
+		MyLocationOverlay newLocationOverlay = new MyLocationOverlay(
+				getApplicationContext(), mOsmv);
+		newLocationOverlay.enableCompass();
+		newLocationOverlay.enableMyLocation();
+		mOsmv.getOverlays().add(newLocationOverlay);
+		
 		if(mLocationOverlay!=null) {
 			mLocationOverlay.disableCompass();
 			mLocationOverlay.disableMyLocation();
@@ -1027,12 +1039,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		if(mOsmv.getOverlays().contains(mLocationOverlay))
 			mOsmv.getOverlays().remove(mLocationOverlay);
 		
-		mLocationOverlay = new MyLocationOverlay(
-				getApplicationContext(), mOsmv);
-		mLocationOverlay.enableCompass();
-		mLocationOverlay.enableMyLocation();
-		mOsmv.getOverlays().add(mLocationOverlay);
-		
-		
+		mLocationOverlay = newLocationOverlay;
 	}
 }
