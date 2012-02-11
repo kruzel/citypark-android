@@ -228,11 +228,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		mProgresBar = (ProgressBar) findViewById(R.id.progressBarMap);
 		mProgresBar.setVisibility(View.INVISIBLE);
 
-		this.mLocationOverlay = new MyLocationOverlay(
-				this.getApplicationContext(), this.mOsmv);
-//		this.mLocationOverlay.enableCompass();
-//		this.mLocationOverlay.enableMyLocation();
-
 		mOsmv.getController().setZoom(
 				mPrefs.getInt(getString(R.string.prefs_zoomlevel),
 						CityParkConsts.ZOOM_THRESHOLD));
@@ -250,7 +245,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 
 		/* Get location manager. */
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		centerMap();
 
 		// Directions overlay
 		final View overlay = findViewById(R.id.directions_overlay);
@@ -270,10 +264,6 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				garageMarkers, releasesMarkers);
 
 		parkedCarOverlayItems = new ArrayList<OverlayItem>(1);
-
-		if (parking_manager.isParking()) {
-			setCarLocationFlag(parking_manager.getCarPos());
-		}
 
 		// todo:if this code works move the overlay also to
 		// requestLocationUpdates
@@ -366,6 +356,13 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	protected void onStart() {
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+		addMyLocationDot();
+		centerMap();
+		
+		if (parking_manager.isParking()) {
+			setCarLocationFlag(parking_manager.getCarPos());
+		}
+		
 		if (LoginTask.isLoggedIn()) {
 			if (!parking_manager.isParking()) {
 				if (garageMarkers.haveItems() || linesMarkers.haveItems()
@@ -387,6 +384,15 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 		}
 
 		super.onStart();
+		
+		mLocationOverlay.runOnFirstFix(new Runnable() {	
+			@Override
+			public void run() {
+				mOsmv.getOverlays().remove(mLocationOverlay);
+				mOsmv.getOverlays().add(mLocationOverlay);
+				mOsmv.postInvalidate();
+			}
+		});
 	}
 
 	@Override
@@ -876,15 +882,8 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 				if (garagesRes || releasesRes)
 					garageMarkers.updateMap();
 				if (linesRes || releasesRes || garagesRes) {
-					mOsmv.getOverlays().remove(mLocationOverlay);
-					mLocationOverlay.disableCompass();
-					mLocationOverlay.disableMyLocation();
-					
-					mLocationOverlay = new MyLocationOverlay(
-							getApplicationContext(), mOsmv);
-					mLocationOverlay.enableCompass();
-					mLocationOverlay.enableMyLocation();
-					mOsmv.getOverlays().add(mLocationOverlay);
+					//need to recreate the dot again
+					addMyLocationDot();
 
 					// move flag to front
 					if (mOsmv.getOverlays().contains(parkedCarOverlay)) {
@@ -1017,5 +1016,23 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			}
 		}
 		return self;
+	}
+	
+	protected void addMyLocationDot() {		
+		if(mLocationOverlay!=null) {
+			mLocationOverlay.disableCompass();
+			mLocationOverlay.disableMyLocation();
+		}
+		
+		if(mOsmv.getOverlays().contains(mLocationOverlay))
+			mOsmv.getOverlays().remove(mLocationOverlay);
+		
+		mLocationOverlay = new MyLocationOverlay(
+				getApplicationContext(), mOsmv);
+		mLocationOverlay.enableCompass();
+		mLocationOverlay.enableMyLocation();
+		mOsmv.getOverlays().add(mLocationOverlay);
+		
+		
 	}
 }
