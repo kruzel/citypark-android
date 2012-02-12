@@ -10,4 +10,5 @@
 <string name="citypark_api">http://api.cityparkmobile.com/CityParkWS/CityParkService.asmx/</string>
 <string name="citypark_images_root">http://api.cityparkmobile.com/</string>
 <string name="google_route">http://maps.google.com/maps?f=d&amp;hl=iw</string>
+<string name="language">he</string>
 </resources>

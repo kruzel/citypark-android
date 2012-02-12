@@ -54,7 +54,7 @@ public class CityParkGaragesByIdParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkGaragesByIdParser(final Context context, final String sessionId, final int parkingId) {
-		super(context.getString(R.string.citypark_api) + "fetchGarageParkingById" + "?sessionId=" + sessionId + "&parkingId=" + parkingId);
+		super(context.getString(R.string.citypark_api) + "fetchGarageParkingById" + "?sessionId=" + sessionId + "&parkingId=" + parkingId+"&language="+context.getString(R.string.language));		
 	}
 
 	public GarageDetailes parse() {

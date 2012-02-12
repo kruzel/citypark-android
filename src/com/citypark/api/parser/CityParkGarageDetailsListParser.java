@@ -40,7 +40,7 @@ public class CityParkGarageDetailsListParser extends XMLParser {
 	 * @param feedUrl
 	 */
 	public CityParkGarageDetailsListParser(final Context context, final String sessionId, final double latitude, final double longitude, final int distance) {
-		super(context.getString(R.string.citypark_api) + "findAllGarageParkingDataByLatitudeLongitude" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance);
+		super(context.getString(R.string.citypark_api) + "findAllGarageParkingDataByLatitudeLongitude" + "?sessionId=" + sessionId + "&latitude="+ latitude/1E6 + "&longitude=" + longitude/1E6 + "&distance=" + distance+"&language="+context.getString(R.string.language));		
 	}
 
 	
