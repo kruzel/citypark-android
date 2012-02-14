@@ -131,4 +131,5 @@
 <string name="report_garage_busy">Report Busy</string>
 
 <string name="no_garages_found">No parking lots found</string>
+<string name="thanks_for_reporting">Thanks for reporting parking status.</string>
 </resources>

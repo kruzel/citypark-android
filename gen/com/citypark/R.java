@@ -406,6 +406,7 @@ public final class R {
         public static final int start_payment=0x7f060088;
         public static final int stop_nav_title=0x7f06005e;
         public static final int stop_payment=0x7f06008d;
+        public static final int thanks_for_reporting=0x7f0600a3;
         public static final int thanks_message=0x7f060063;
         public static final int time_limit_reached=0x7f06008e;
         public static final int to=0x7f060044;

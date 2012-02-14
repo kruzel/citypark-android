@@ -19,7 +19,7 @@
     </item>
     <item android:id="@+id/stop_nav" android:title="@string/stop_nav_title" android:icon="@drawable/ic_menu_close_clear_cancel" android:visible="false">
     </item>
-    <item android:id="@+id/share" android:title="Share" android:visible="true" android:icon="@drawable/ic_menu_share"></item>
+    <item android:id="@+id/share" android:title="@string/sharing_title" android:visible="true" android:icon="@drawable/ic_menu_share"></item>
     <item android:id="@+id/feedback" android:title="@string/feedback_title"></item>
     
     <item android:id="@+id/navigate"

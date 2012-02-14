@@ -119,6 +119,8 @@ public class GarageDetailsActivity extends Activity implements
 			
 			reportTask = new ReportGarageStatusTask(this, LoginTask.getSessionId(), garageId, GarageAvailability.FREE);
 			reportTask.execute(null);
+			Toast.makeText(this, getString(R.string.thanks_for_reporting),
+					Toast.LENGTH_LONG).show();
 		} 
 	}
 	
@@ -133,6 +135,8 @@ public class GarageDetailsActivity extends Activity implements
 			
 			reportTask = new ReportGarageStatusTask(this, LoginTask.getSessionId(), garageId, GarageAvailability.BUSY);
 			reportTask.execute(null);
+			Toast.makeText(this, getString(R.string.thanks_for_reporting),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 

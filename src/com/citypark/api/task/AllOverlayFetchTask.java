@@ -61,21 +61,21 @@ public class AllOverlayFetchTask extends AsyncTask<GeoPoint, Void, Void> {
 		try {
 			lineTask.get();
 		} catch (Exception e) {
-			Log.e(AllOverlayFetchTask.class.toString(),
+			Log.d(AllOverlayFetchTask.class.toString(),
 					"Line segment exception, " + e.getMessage());
 		}
 
 		try {
 			relTask.get();
 		} catch (Exception e) {
-			Log.e(AllOverlayFetchTask.class.toString(),
+			Log.d(AllOverlayFetchTask.class.toString(),
 					"Release parkings exception, " + e.getMessage());
 		}
 
 		try {
 			garageTask.get();
 		} catch (Exception e) {
-			Log.e(AllOverlayFetchTask.class.toString(),
+			Log.d(AllOverlayFetchTask.class.toString(),
 					"Parking lot exception, " + e.getMessage());
 		}
 
