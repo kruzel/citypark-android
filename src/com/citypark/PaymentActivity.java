@@ -76,7 +76,18 @@ public class PaymentActivity extends Activity {
 		parkingZone = (EditText) findViewById(R.id.editTextParkingZone);
 		
 		timePicker.setIs24HourView(true);
-		tgBtnRemind.setChecked(parking_manager.isReminderActive());
+		
+		if(parking_manager.isReminderActive()){
+			//reminder is set
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_pressed)); 
+			tgBtnRemind.setText(getResources().getString(R.string.reminder_button_unset));
+			tgBtnRemind.setChecked(true);
+		} else {
+			// reminder is unset
+			tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal)); 
+			tgBtnRemind.setText(getResources().getString(R.string.reminder_button));
+			tgBtnRemind.setChecked(false);
+		}
 
 		//enable payment only if payment provider is defined
 		if(!getPaymentMethod().equals("None")) {
@@ -322,6 +333,7 @@ public class PaymentActivity extends Activity {
 		parking_manager.stopReminder();
 		tgBtnRemind.setChecked(false);
 		tgBtnRemind.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_normal)); 
+		tgBtnRemind.setText(getResources().getString(R.string.reminder_button));
 	}
 	
 }

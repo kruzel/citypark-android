@@ -257,6 +257,7 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 			public void run() {
 				refreshMyLocationDot();
 				mOsmv.postInvalidate();
+				centerMap();
 			}
 		});
 
@@ -817,8 +818,10 @@ public class ParkingMap extends CityParkMapActivity implements LoginListener,
 	}
 
 	public void unpark() {
-		if (parking_manager.isPaymentActive()
-				|| parking_manager.isReminderActive()) {
+		if(parking_manager.isReminderActive())
+			parking_manager.stopReminder();
+		
+		if (parking_manager.isPaymentActive()) {
 			Intent intent;
 
 			if (payMethod.contains("Pango")) {
