@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.citypark.constants.CityParkConsts;
 import com.citypark.utility.dialog.DialogFactory;
@@ -75,17 +76,22 @@ public class CityParkRouteActivity extends ParkingMap {
 				// double fromLat = 32.089859, fromLon = 34.771961, toLat =
 				// 32.081859, toLon = 34.772961;
 				Location myLocation = getCurrentLocation();
-				String url = RoadProvider.getUrl(myLocation.getLatitude(),
-						myLocation.getLongitude(), toLat, toLon);
-				InputStream is = getConnection(url);
-				mRoad = RoadProvider.getRoute(is);
-				try {
-					is.close();
-				} catch (IOException ioe) {
-					Log.e("Got error while closing the connection for route display.",
-							ioe.getMessage());
-				}
-				mHandler.sendEmptyMessage(0);
+				if(myLocation!=null) {
+					String url = RoadProvider.getUrl(myLocation.getLatitude(),
+							myLocation.getLongitude(), toLat, toLon);
+					InputStream is = getConnection(url);
+					mRoad = RoadProvider.getRoute(is);
+					try {
+						is.close();
+					} catch (IOException ioe) {
+						Log.e("Got error while closing the connection for route display.",
+								ioe.getMessage());
+					}
+					mHandler.sendEmptyMessage(0);
+				} else 
+					Toast.makeText(CityParkRouteActivity.this,
+							getString(R.string.fix_failed_msg),
+							Toast.LENGTH_LONG).show();
 			}
 		}.start();
 	}
