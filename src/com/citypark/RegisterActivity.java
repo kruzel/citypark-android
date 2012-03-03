@@ -1,6 +1,12 @@
 package com.citypark;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.regex.Pattern;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +30,13 @@ import com.citypark.api.task.LoginTask;
 import com.citypark.api.task.RegisterationListener;
 import com.citypark.api.task.RegistrationTask;
 import com.citypark.constants.CityParkConsts;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
+import com.facebook.android.Util;
 
 public class RegisterActivity extends Activity implements RegisterationListener {
 	public final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
@@ -36,11 +49,16 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 	          ")+"
 	      );
 
+
+	public static final String TAG = "FACEBOOK";
+	private Facebook facebook = new Facebook("253072914778231");
+	private AsyncFacebookRunner mAsyncRunner = new AsyncFacebookRunner(facebook);
+	private String fbId, fbName, fbEmail;
+
+	private RegistrationTask regTask;
 	
-	RegistrationTask regTask;
-	
-	SharedPreferences mPrefs = null;
-    SharedPreferences.Editor mEditor = null;
+	private SharedPreferences mPrefs = null;
+	private SharedPreferences.Editor mEditor = null;
     
 	private EditText txtEmail = null;
 	private EditText txtPassword  = null;
@@ -91,6 +109,128 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         strPaymentMethod = mPrefs.getString(getString(R.string.payment_method),"None");
         btnPaymentMethod.setText(strPaymentMethod);
     } 
+    
+    public void onFBConnect(View view) {
+    	showDialog(R.id.awaiting_register);
+    	/*
+         * Get existing access_token if any
+         */
+        String access_token = mPrefs.getString("access_token", null);
+        long expires = mPrefs.getLong("access_expires", 0);
+        if(access_token != null) {
+            facebook.setAccessToken(access_token);
+        }
+        if(expires != 0) {
+            facebook.setAccessExpires(expires);
+        }
+        
+        /*
+         * Only call authorize if the access_token has expired.
+         */
+        if(!facebook.isSessionValid()) {
+
+            facebook.authorize(this, new String[] { "email"}, new DialogListener() {
+                @Override
+                public void onComplete(Bundle values) {
+                	Log.d(TAG, "LoginONComplete");
+                    mEditor.putString("access_token", facebook.getAccessToken());
+                    mEditor.putLong("access_expires", facebook.getAccessExpires());
+                    mEditor.commit();
+                    
+                    mAsyncRunner.request("me", new RequestListener() {
+
+						@Override
+						public void onComplete(String response, Object state) {
+							try {
+                                Log.d(TAG, "IDRequestONComplete");
+                                Log.d(TAG, "Response: " + response.toString());
+                                JSONObject json = Util.parseJson(response);
+                                fbId = json.getString("id");
+                                fbName = json.getString("name");
+                                fbEmail = json.getString("email");
+
+	                        } catch (JSONException e) {
+	                                Log.d(TAG, "JSONException: " + e.getMessage());
+		                    } catch (FacebookError e) {
+		                            Log.d(TAG, "FacebookError: " + e.getMessage());
+	                        }
+							
+							//showDialog(R.id.awaiting_register);
+					    	if(strPaymentMethod.contains("Payment Method"))
+					    		strPaymentMethod = "None";
+					    		
+					        mEditor.putString("email", fbEmail);
+					        mEditor.putString("password", fbId);
+					        mEditor.putString("first_name", fbName);
+					        mEditor.putString("last_name", "");
+					        mEditor.putString("license_plate", txtLicensePlate.getText().toString());
+					        mEditor.putString("phone_number",txtPhoneNumber.getText().toString());
+					        mEditor.putString(getString(R.string.payment_method), strPaymentMethod);
+					        
+					        //spawn registration task
+					        //we finish only after receiving response from the server
+					        if(regTask!=null)
+					        	regTask.cancel(false);
+					        regTask = new RegistrationTask(RegisterActivity.this, RegisterActivity.this, fbEmail, 
+					        		fbId, "", 
+					        		"", txtPhoneNumber.getText().toString(), txtLicensePlate.getText().toString(), strPaymentMethod);
+					        regTask.execute((Void[])null);
+						}
+
+						@Override
+						public void onIOException(IOException e, Object state) {
+							Log.d(TAG, "onIOException: " + e.getMessage());
+						}
+
+						@Override
+						public void onFileNotFoundException(
+								FileNotFoundException e, Object state) {
+							Log.d(TAG, "onFileNotFoundException: " + e.getMessage());
+						}
+
+						@Override
+						public void onMalformedURLException(
+								MalformedURLException e, Object state) {	
+							Log.d(TAG, "onMalformedURLException: " + e.getMessage());
+						}
+
+						@Override
+						public void onFacebookError(FacebookError e,
+								Object state) {
+							Log.d(TAG, "onFacebookError: " + e.getMessage());
+						}
+                    	
+                    });
+
+                }
+    
+                @Override
+                public void onFacebookError(FacebookError e) 
+                {
+                	Log.d(TAG, "FacebookError: " + e.getMessage());
+                }
+    
+                @Override
+                public void onError(DialogError e) 
+                {
+                	Log.d(TAG, "Error: " + e.getMessage());
+                }
+    
+                @Override
+                public void onCancel() 
+                {
+                	Log.d(TAG, "OnCancel");
+                }
+            });
+        }
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        facebook.authorizeCallback(requestCode, resultCode, data);
+    }
    
     public void onRegister(View view) {    	
     	//remove trailing and leading spaces

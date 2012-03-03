@@ -10,7 +10,20 @@
 	    android:layout_height="fill_parent"
 	    android:background="#FFFFFF"
 	    android:orientation="vertical" >
-
+	    
+	    <Button
+	        android:id="@+id/fbconnect"
+	        android:layout_width="wrap_content"
+	        android:layout_height="50dp"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginTop="20dp"
+	        android:background="@drawable/button_normal"
+	        android:onClick="onFBConnect"
+	        android:text="FBconnect"
+	        android:textColor="#D64700"
+	        android:textSize="20dp"
+	        android:textStyle="bold" />
+
 	    <ImageView
 	        android:id="@+id/imageViewLogo"
 	        android:layout_width="fill_parent"
@@ -105,8 +118,7 @@
 	        android:text="@string/payment_method"
 	        android:visibility="invisible" />
 	</LinearLayout>
-
-		<ImageView
+		<ImageView
 		    android:id="@+id/imageViewBG"
 		    android:layout_width="fill_parent"
 		    android:layout_height="80dp"
