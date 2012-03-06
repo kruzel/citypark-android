@@ -9,21 +9,8 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:background="#FFFFFF"
-	    android:orientation="vertical" >
+	    android:orientation="vertical" >	  
 	    
-	    <Button
-	        android:id="@+id/fbconnect"
-	        android:layout_width="wrap_content"
-	        android:layout_height="50dp"
-	        android:layout_gravity="center_horizontal"
-	        android:layout_marginTop="20dp"
-	        android:background="@drawable/button_normal"
-	        android:onClick="onFBConnect"
-	        android:text="FBconnect"
-	        android:textColor="#D64700"
-	        android:textSize="20dp"
-	        android:textStyle="bold" />
-
 	    <ImageView
 	        android:id="@+id/imageViewLogo"
 	        android:layout_width="fill_parent"
@@ -65,6 +52,27 @@
 	        android:textColor="#D64700"
 	        android:textSize="20dp"
 	        android:textStyle="bold" />
+	    
+	    <ImageButton
+            android:id="@+id/fbconnect"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_marginTop="20dp"
+            android:background="@drawable/fbselector"
+            android:focusable="true" 
+            android:clickable="true"
+	        android:onClick="onFBConnect"> 
+        </ImageButton>
+		<!-- <Button
+	         android:id="@+id/fbconnect"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="center_horizontal"
+	         android:layout_marginTop="20dp"
+	         android:background="@drawable/login2"
+	         android:clickable="true"
+	         android:onClick="onFBConnect" /> -->
 
 	    <EditText
 	        android:id="@+id/id_firstname"
@@ -106,6 +114,8 @@
 	        android:hint="@string/phone_number"
 	        android:inputType="phone"
 	        android:visibility="invisible" />
+	    
+	    
 
 	    <Button
 	        android:id="@+id/id_payment_method"
@@ -117,7 +127,10 @@
 	        android:onClick="OnPaymenMethodClick"
 	        android:text="@string/payment_method"
 	        android:visibility="invisible" />
+	      
+	   
 	</LinearLayout>
+	
 		<ImageView
 		    android:id="@+id/imageViewBG"
 		    android:layout_width="fill_parent"
