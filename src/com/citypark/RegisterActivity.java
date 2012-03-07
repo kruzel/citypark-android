@@ -3,6 +3,8 @@ package com.citypark;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.json.JSONException;
@@ -130,6 +132,25 @@ public class RegisterActivity extends Activity implements RegisterationListener 
         if(!facebook.isSessionValid()) {
 
             facebook.authorize(this, new String[] { "email"}, new DialogListener() {
+            	
+            	/*public void postOnWall(String msg) {
+            		Log.d("Tests", "Testing graph API wall post");
+            		try {
+            			String response = facebook.request("me");
+            			Bundle parameters = new Bundle();
+            			parameters.putString("message", msg);
+            			parameters.putString("description", "test test test");
+            			response = facebook.request("me/feed", parameters, "POST");
+            			Log.d("Tests", "got response: " + response);
+            			if (response == null || response.equals("")
+            					|| response.equals("false")) {
+            				Log.v("Error", "Blank response");
+            			}
+            		} catch (Exception e) {
+            			e.printStackTrace();
+            		}
+            	}*/
+            	
                 @Override
                 public void onComplete(Bundle values) {
                 	Log.d(TAG, "LoginONComplete");
@@ -137,6 +158,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
                     mEditor.putLong("access_expires", facebook.getAccessExpires());
                     mEditor.commit();
                     
+                   
                     mAsyncRunner.request("me", new RequestListener() {
 
 						@Override
@@ -148,6 +170,10 @@ public class RegisterActivity extends Activity implements RegisterationListener 
                                 fbId = json.getString("id");
                                 fbName = json.getString("name");
                                 fbEmail = json.getString("email");
+                               // postOnWall("ran");
+                                
+                                
+
 
 	                        } catch (JSONException e) {
 	                                Log.d(TAG, "JSONException: " + e.getMessage());
@@ -175,8 +201,11 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 					        		fbId, "", 
 					        		"", txtPhoneNumber.getText().toString(), txtLicensePlate.getText().toString(), strPaymentMethod);
 					        regTask.execute((Void[])null);
+					        
+									
 						}
-
+						
+								
 						@Override
 						public void onIOException(IOException e, Object state) {
 							Log.d(TAG, "onIOException: " + e.getMessage());
@@ -222,9 +251,58 @@ public class RegisterActivity extends Activity implements RegisterationListener 
                 	Log.d(TAG, "OnCancel");
                 }
             });
+            
+            
+            
+            // if facebookClient.authorize(...) was
+			// successful, this runs // this also runs
+			// after successful post // after posting,
+			// "post_id" is added to the values bundle
+			// // I use that to differentiate between a
+			// call from // faceBook.authorize(...) and
+			// a call from a successful post // is there
+			// a better way of doing this? if
+					//if (!values.containsKey("post_id")) {
+            
+            //--------------------------
+            
+            	/*if (facebook.isSessionValid()) {	
+            		Bundle parameters = new Bundle();	
+            		parameters.putString("message", "Check it out!");
+            		try {				String response = facebook.request("me/feed", parameters,"POST");
+            		System.out.println(response);
+            		} catch (IOException e) {	
+            			e.printStackTrace();	
+            			}		
+            	}*/
+            
+            //--------------------
+            //Facebook post
+						try {
+						// if (facebook.isSessionValid()){
+							Bundle parameters = new Bundle();
+							parameters.putString("message",
+									"CityPark - I've Just Parked My Car!");
+							facebook.dialog(this, "stream.publish",
+									parameters, new Facebook.DialogListener() {										
+										@Override
+										public void onFacebookError(FacebookError arg0) {}										
+										@Override
+										public void onError(DialogError arg0) {}										
+										@Override
+										public void onComplete(Bundle arg0) {}										
+										@Override
+										public void onCancel() {}
+									});
+							//}
+							} catch (Exception e) { 
+							Log.d(TAG,e.getMessage());
+						}
         }
     }
-    
+
+	
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
