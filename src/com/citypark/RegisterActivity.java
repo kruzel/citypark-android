@@ -131,7 +131,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
          */
         if(!facebook.isSessionValid()) {
 
-            facebook.authorize(this, new String[] { "email"}, new DialogListener() {
+            facebook.authorize(this, new String[] { "email","publish_stream"}, new DialogListener() {
             	
             	/*public void postOnWall(String msg) {
             		Log.d("Tests", "Testing graph API wall post");
@@ -202,6 +202,23 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 					        		"", txtPhoneNumber.getText().toString(), txtLicensePlate.getText().toString(), strPaymentMethod);
 					        regTask.execute((Void[])null);
 					        
+					        Bundle parameters = new Bundle();
+							parameters.putString("message", "CityPark - The application that will help you find low cost nearby on street and parking lots parking.");
+							parameters.putString("description", "CityPark - Just Parked!");
+						/*	parameters.putString("attachment",
+									"{\"name\":\"CityPark\",\"href\":\"http://cityparkmobile.com/\",\"caption\":\"CityPark\",\"description\":\"CityPark - Just Parked!\",\"media\":[{\"type\":\"image\",\"src\":\"https://lh4.ggpht.com/Oah6A0zgWndMQvXvADKyLmpMK5kwaViAW7MnLbBjDIPP0HoCYLb8HU5C-7skM5ZRRkE=w124\",\"href\":\"http://cityparkmobile.com/\"}]}");
+*/
+
+							try {
+								String responsePost = facebook.request("me/feed", parameters,
+										"POST");
+								Log.i(TAG,responsePost);
+							} catch (IOException e) {
+								//e.printStackTrace();
+								Log.e(TAG,e.toString());
+							}
+				              
+					        
 									
 						}
 						
@@ -266,19 +283,10 @@ public class RegisterActivity extends Activity implements RegisterationListener 
             
             //--------------------------
             
-            	/*if (facebook.isSessionValid()) {	
-            		Bundle parameters = new Bundle();	
-            		parameters.putString("message", "Check it out!");
-            		try {				String response = facebook.request("me/feed", parameters,"POST");
-            		System.out.println(response);
-            		} catch (IOException e) {	
-            			e.printStackTrace();	
-            			}		
-            	}*/
-            
+			          
             //--------------------
             //Facebook post
-						try {
+						/*try {
 						// if (facebook.isSessionValid()){
 							Bundle parameters = new Bundle();
 							parameters.putString("message",
@@ -297,7 +305,7 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 							//}
 							} catch (Exception e) { 
 							Log.d(TAG,e.getMessage());
-						}
+						}*/
         }
     }
 
