@@ -107,6 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal" 
+        android:background="@drawable/buttonselector"       
         android:layout_marginTop="10dp" android:text="@string/reminder_button" android:textOff="@string/reminder_button" android:textOn="@string/reminder_button_unset" android:onClick="OnRemind" android:layout_marginBottom="10dp" android:duplicateParentState="false" android:hapticFeedbackEnabled="false" android:checked="true" android:textSize="20dp" android:textColor="#D64700" android:textStyle="bold"/>
 </LinearLayout>
 </LinearLayout>
