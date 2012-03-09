@@ -46,7 +46,7 @@
 	        android:layout_height="50dp"
 	        android:layout_gravity="center_horizontal"
 	        android:layout_marginTop="20dp"
-	        android:background="@drawable/button_normal"
+	        android:background="@drawable/buttonselector"
 	        android:onClick="onRegister"
 	        android:text="@string/register"
 	        android:textColor="#D64700"
