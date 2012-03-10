@@ -203,8 +203,8 @@ public class RegisterActivity extends Activity implements RegisterationListener 
 					        regTask.execute((Void[])null);
 					        
 					        Bundle parameters = new Bundle();
-							parameters.putString("message", "CityPark - The application that will help you find low cost nearby on street and parking lots parking. Check the Android application http://play.google.com/store/apps/details?id=com.citypark");
-							parameters.putString("description", "CityPark - Just Parked!");
+							parameters.putString("message", getString(R.string.facebook_message));
+							parameters.putString("description", getString(R.string.facebook_description));
 						/*	parameters.putString("attachment",
 									"{\"name\":\"CityPark\",\"href\":\"http://cityparkmobile.com/\",\"caption\":\"CityPark\",\"description\":\"CityPark - Just Parked!\",\"media\":[{\"type\":\"image\",\"src\":\"https://lh4.ggpht.com/Oah6A0zgWndMQvXvADKyLmpMK5kwaViAW7MnLbBjDIPP0HoCYLb8HU5C-7skM5ZRRkE=w124\",\"href\":\"http://cityparkmobile.com/\"}]}");
 */

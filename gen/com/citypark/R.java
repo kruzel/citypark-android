@@ -311,6 +311,8 @@ public final class R {
         public static final int end_input=0x7f06000d;
         public static final int export_gpx_title=0x7f060067;
         public static final int export_title=0x7f060065;
+        public static final int facebook_description=0x7f0600a5;
+        public static final int facebook_message=0x7f0600a4;
         public static final int favourites=0x7f060022;
         public static final int feedback_api=0x7f060005;
         public static final int feedback_fail_message=0x7f060064;

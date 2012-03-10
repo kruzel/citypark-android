@@ -127,4 +127,8 @@
 
 <string name="no_garages_found">לא נמצאו חניונים באיזור</string>
 <string name="thanks_for_reporting">תודה על דיווח סטאטוס החניה</string>
+
+<string name="facebook_message">CityPark - האפליקציה שתעזור לך למצוא את החניה הכי זולה והכי קרובה בחניונין וברחוב. http://play.google.com/store/apps/details?id=com.citypark נסה את האפליקציה עוד היום</string>
+<string name="facebook_description">CityPark - מוצאת לך חניה</string>
+
 </resources>
