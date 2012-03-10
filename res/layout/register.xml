@@ -46,7 +46,7 @@
 	        android:layout_height="50dp"
 	        android:layout_gravity="center_horizontal"
 	        android:layout_marginTop="20dp"
-	        android:background="@drawable/buttonselector"
+	        android:background="@layout/buttonselector"
 	        android:onClick="onRegister"
 	        android:text="@string/register"
 	        android:textColor="#D64700"
@@ -59,7 +59,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="center_horizontal"
 	        android:layout_marginTop="20dp"
-            android:background="@drawable/fbselector"
+            android:background="@layout/fbselector"
             android:focusable="true" 
             android:clickable="true"
 	        android:onClick="onFBConnect"> 
