@@ -59,7 +59,7 @@ public class XMLParser {
 		try {
 			final String encodedUrl;
 			if(feedUrl!=null){
-				encodedUrl = URLEncoder.encode(feedUrl);
+				encodedUrl = feedUrl.replaceAll(" ", "+");
 			}else
 			{
 				encodedUrl = feedUrl;
