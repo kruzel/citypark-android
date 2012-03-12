@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
@@ -56,7 +57,14 @@ public class XMLParser {
 	
 	protected XMLParser(final String feedUrl) {
 		try {
-			this.feedUrl = new URL(feedUrl);
+			final String encodedUrl;
+			if(feedUrl!=null){
+				encodedUrl = URLEncoder.encode(feedUrl);
+			}else
+			{
+				encodedUrl = feedUrl;
+			}
+			this.feedUrl = new URL(encodedUrl);
 		} catch (MalformedURLException e) {
 			Log.e(e.getMessage(), "XML parser - " + feedUrl);
 		}
