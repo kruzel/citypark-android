@@ -89,9 +89,13 @@ public class CityParkRouteActivity extends ParkingMap {
 					}
 					mHandler.sendEmptyMessage(0);
 				} else 
-					Toast.makeText(CityParkRouteActivity.this,
-							getString(R.string.fix_failed_msg),
-							Toast.LENGTH_LONG).show();
+					CityParkRouteActivity.this.runOnUiThread(new Runnable() {
+						public void run() {
+							Toast.makeText(CityParkRouteActivity.this,
+									getString(R.string.fix_failed_msg),
+									Toast.LENGTH_LONG).show();
+						}
+					});
 			}
 		}.start();
 	}
